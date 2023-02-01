@@ -72,15 +72,34 @@ void RoundNeoEffect(int neocolor)
 
 void RoundNeoToggle(int neoColor, int toggle){
   if(toggle%2 == 1){
-    // pixels[ROUND].lightColor(color[BLACK]);
-    // pixels[ROUND_SUB].lightColor(color[BLACK]);
     pixels[ROUND].lightColor(color[neoColor]);
     pixels[ROUND_SUB].lightColor(color[neoColor]);
   }
   else{
-    // pixels[ROUND].lightColor(color[neoColor]);
-    // pixels[ROUND_SUB].lightColor(color[neoColor]);
     pixels[ROUND].lightColor(color[BLACK]);
     pixels[ROUND_SUB].lightColor(color[BLACK]);
   }
+}
+void LineNeoToggle(int neoColor, int toggle){
+  if(toggle%2 == 1){
+    pixels[LINE].lightColor(color[neoColor]);
+    pixels[LINE_SUB].lightColor(color[neoColor]);
+  }
+  else{
+    pixels[LINE].lightColor(color[BLACK]);
+    pixels[LINE_SUB].lightColor(color[BLACK]);
+  }
+}
+
+void RoundNeoUp(int changeColr, int baseColor, int cnt){
+  for(int i = 0; i < NumPixels[ROUND]; i++){
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+    pixels[VROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+  }
+  for(int i = NumPixels[ROUND]; i > NumPixels[ROUND] - cnt; i--){
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
+    pixels[ROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
+  }
+  pixels[ROUND].show();
+  pixels[ROUND_SUB].show();
 }

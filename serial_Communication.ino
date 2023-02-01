@@ -37,4 +37,3 @@ void SubSerialFlush(){
   while(toSubSerial.available())      //시리얼 통신 버퍼 flush
       toSubSerial.read();
 }
-

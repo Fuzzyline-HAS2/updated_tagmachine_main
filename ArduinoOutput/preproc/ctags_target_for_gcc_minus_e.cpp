@@ -1,4 +1,4 @@
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
  ;/**
 
  * @file Done_ItemBox_code.ino
@@ -18,8 +18,8 @@
  *
 
  */
-# 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
-# 13 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino" 2
+# 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
+# 13 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino" 2
 
 void setup() {
     Serial.begin(115200);
@@ -40,7 +40,7 @@ void loop() {
     GameTimer.run();
     SubSerialTimer.run();
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Game_system.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Game_system.ino"
 void WhichTagged()
 {
     ptrRfidMain();
@@ -65,7 +65,7 @@ void GhostDoorOpen(){
     digitalWrite(21, 0x0);
     delay(3000);
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void DataChanged()
 {
   static StaticJsonDocument<500> cur; //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
@@ -128,7 +128,7 @@ void GameSetting(){
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\dfplayer.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\dfplayer.ino"
 //****************************************mp3_setup()****************************************************************
 void Mp3_Setup(){
   //Serial.println();
@@ -150,7 +150,7 @@ void Mp3_Setup(){
   myDFPlayer.outputDevice(2);
 
 }//void MP3_SETUP
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void NeopixelInit()
 {
   for (int i = 0; i < NeopixelNum; ++i)
@@ -225,19 +225,38 @@ void RoundNeoEffect(int neocolor)
 
 void RoundNeoToggle(int neoColor, int toggle){
   if(toggle%2 == 1){
-    // pixels[ROUND].lightColor(color[BLACK]);
-    // pixels[ROUND_SUB].lightColor(color[BLACK]);
     pixels[ROUND].lightColor(color[neoColor]);
     pixels[ROUND_SUB].lightColor(color[neoColor]);
   }
   else{
-    // pixels[ROUND].lightColor(color[neoColor]);
-    // pixels[ROUND_SUB].lightColor(color[neoColor]);
     pixels[ROUND].lightColor(color[BLACK]);
     pixels[ROUND_SUB].lightColor(color[BLACK]);
   }
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+void LineNeoToggle(int neoColor, int toggle){
+  if(toggle%2 == 1){
+    pixels[LINE].lightColor(color[neoColor]);
+    pixels[LINE_SUB].lightColor(color[neoColor]);
+  }
+  else{
+    pixels[LINE].lightColor(color[BLACK]);
+    pixels[LINE_SUB].lightColor(color[BLACK]);
+  }
+}
+
+void RoundNeoUp(int changeColr, int baseColor, int cnt){
+  for(int i = 0; i < NumPixels[ROUND]; i++){
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+    pixels[VROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+  }
+  for(int i = NumPixels[ROUND]; i > NumPixels[ROUND] - cnt; i--){
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
+    pixels[ROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
+  }
+  pixels[ROUND].show();
+  pixels[ROUND_SUB].show();
+}
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void RfidInit()
 {
   RestartPn532:
@@ -474,7 +493,7 @@ void GhostOpenFailLock()
   ptrRfidFail = WaitFunc;
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\serial_Communication.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\serial_Communication.ino"
 void CommnunicationBeetle(){
   // Serial.println("READ");
   if(toSubSerial.available() > 0){
@@ -514,7 +533,7 @@ void SubSerialFlush(){
   while(toSubSerial.available()) //시리얼 통신 버퍼 flush
       toSubSerial.read();
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void TimerInit(){
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     // gameTimerId = GameTimer.setInterval(500,GameTimerFunc);
@@ -528,7 +547,7 @@ void TimerInit(){
  * @brief WIFI read 타이머 주기별로 받는 함수
 
  */
-# 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void WifiIntervalFunc(){
     has2wifi.Loop(DataChanged);
     CommnunicationBeetle();
@@ -539,7 +558,7 @@ void WifiIntervalFunc(){
  * @brief 다중 태그를 인식하기 위한 타이머 함수
 
  */
-# 20 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 20 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void GameTimerFunc(){
     Serial.println("GameTimer");
     ptrGameTimer();
@@ -550,7 +569,7 @@ void GameTimerFunc(){
  * @brief 반대쪽 SUB 태그머신(Beetle)에서 데이터를 타이머 주기별로 받는 함수
 
  */
-# 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void SubSerialTimerFunc(){
     SubSerialTimer.deleteTimer(subSerialTimerId);
     SubSerialTimerStart = true;
@@ -564,7 +583,7 @@ void SubSerialTimerFunc(){
  * @brief 일반 상태로 돌아가는 함수
 
  */
-# 39 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 39 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void ReturnNormalState(){
     ptrRfidMain = RfidLoopMain;
     ptrRfidSub = CommnunicationBeetle;
@@ -583,7 +602,7 @@ void ReturnNormalState(){
  * @brief 잠기지 않은 도어를 플레이어가 도어가 잠금을 하기위한 함수
 
  */
-# 55 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 55 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void PlayerLockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
@@ -609,7 +628,7 @@ void PlayerLockTimerFunc(){
  * @brief 잠겨있는 도어를 플레이어가 잠금해제를 하기위한 함수
 
  */
-# 78 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 78 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void PlayerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
@@ -635,7 +654,7 @@ void PlayerUnlockTimerFunc(){
  * @brief 잠겨있는 도어를 술래가 잠금해제를 하기위한 함수
 
  */
-# 101 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 101 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void TaggerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(PURPLE,gameTimerCnt);
@@ -661,7 +680,7 @@ void TaggerUnlockTimerFunc(){
  * @brief 잠겨있는 도어를 유령이 잠금해제를 하기위한 함수
 
  */
-# 124 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 124 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void GhostUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(BLUE,gameTimerCnt);
@@ -688,7 +707,7 @@ void GhostUnlockTimerFunc(){
  * @brief 잠겨있지 않은 도어 유령이 잠금해제를 하기위한 함수
 
  */
-# 148 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+# 148 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void GhostLockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(BLUE,gameTimerCnt);

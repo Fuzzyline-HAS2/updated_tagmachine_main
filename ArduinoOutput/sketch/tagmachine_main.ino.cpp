@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
  ;/**
  * @file Done_ItemBox_code.ino
  * @author 김병준 (you@domain.com)
@@ -13,89 +13,93 @@
 
 #include "tagmachine_main.h"
 
-#line 14 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
+#line 14 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
 void setup();
-#line 27 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
+#line 27 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
 void loop();
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Game_system.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Game_system.ino"
 void WhichTagged();
-#line 7 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Game_system.ino"
+#line 7 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Game_system.ino"
 void DoorOpen();
-#line 18 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Game_system.ino"
+#line 18 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Game_system.ino"
 void GhostDoorOpen();
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void DataChanged();
-#line 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void WaitFunc();
-#line 31 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 31 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void SettingFunc(void);
-#line 40 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 40 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void ActivateFunc(void);
-#line 50 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 50 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void ReadyFunc(void);
-#line 57 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 57 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void GameSetting();
-#line 2 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\dfplayer.ino"
+#line 2 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\dfplayer.ino"
 void Mp3_Setup();
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void NeopixelInit();
-#line 13 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 13 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void NeoBlink(int neo, int neoColor, int cnt, int blinkTime);
-#line 24 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 24 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void AllNeoOn(int neoColor);
-#line 29 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 29 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void LineNeoDown(int changeColr, int baseColor, int cnt);
-#line 41 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 41 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void LineNeoUp(int changeColr, int baseColor, int cnt);
-#line 53 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 53 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void RoundNeoEffect(int neocolor);
-#line 73 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 73 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void RoundNeoToggle(int neoColor, int toggle);
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 83 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
+void LineNeoToggle(int neoColor, int toggle);
+#line 94 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
+void RoundNeoUp(int changeColr, int baseColor, int cnt);
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void RfidInit();
-#line 21 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 21 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void RfidLoopMain();
-#line 50 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 50 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void CheckingPlayers(String tagUser);
-#line 87 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 87 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void Login(char role);
-#line 112 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 112 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void WaitRfid(char role);
-#line 116 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 116 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void LoginTimerSelector(char role);
-#line 177 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 177 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void LockFail();
-#line 194 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 194 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void UnlockFail();
-#line 209 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 209 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void GhostOpenFailUnlock();
-#line 223 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+#line 223 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void GhostOpenFailLock();
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\serial_Communication.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\serial_Communication.ino"
 void CommnunicationBeetle();
-#line 36 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\serial_Communication.ino"
+#line 36 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\serial_Communication.ino"
 void SubSerialFlush();
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void TimerInit();
-#line 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void WifiIntervalFunc();
-#line 20 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 20 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void GameTimerFunc();
-#line 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void SubSerialTimerFunc();
-#line 39 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 39 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void ReturnNormalState();
-#line 55 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 55 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void PlayerLockTimerFunc();
-#line 78 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 78 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void PlayerUnlockTimerFunc();
-#line 101 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 101 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void TaggerUnlockTimerFunc();
-#line 124 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 124 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void GhostUnlockTimerFunc();
-#line 148 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 148 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void GhostLockTimerFunc();
-#line 14 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
+#line 14 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
 void setup() {
     Serial.begin(115200);
     toSubSerial.begin(9600, SERIAL_8N1, BEETLE_RX_PIN, BEETLE_TX_PIN);
@@ -116,7 +120,7 @@ void loop() {
     SubSerialTimer.run();
 }
 
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Game_system.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Game_system.ino"
 void WhichTagged()
 {
     ptrRfidMain();
@@ -141,7 +145,7 @@ void GhostDoorOpen(){
     digitalWrite(RELAY_PIN, LOW);
     delay(3000);
 }
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\Wifi.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
 void DataChanged()
 {
   static StaticJsonDocument<500> cur;   //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
@@ -204,7 +208,7 @@ void GameSetting(){
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
 }
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\dfplayer.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\dfplayer.ino"
 //****************************************mp3_setup()****************************************************************
 void Mp3_Setup(){
   //Serial.println();
@@ -227,7 +231,7 @@ void Mp3_Setup(){
 
 }//void MP3_SETUP
    
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\neopixel.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
 void NeopixelInit()
 {
   for (int i = 0; i < NeopixelNum; ++i)
@@ -302,19 +306,38 @@ void RoundNeoEffect(int neocolor)
 
 void RoundNeoToggle(int neoColor, int toggle){
   if(toggle%2 == 1){
-    // pixels[ROUND].lightColor(color[BLACK]);
-    // pixels[ROUND_SUB].lightColor(color[BLACK]);
     pixels[ROUND].lightColor(color[neoColor]);
     pixels[ROUND_SUB].lightColor(color[neoColor]);
   }
   else{
-    // pixels[ROUND].lightColor(color[neoColor]);
-    // pixels[ROUND_SUB].lightColor(color[neoColor]);
     pixels[ROUND].lightColor(color[BLACK]);
     pixels[ROUND_SUB].lightColor(color[BLACK]);
   }
 }
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\rfid.ino"
+void LineNeoToggle(int neoColor, int toggle){
+  if(toggle%2 == 1){
+    pixels[LINE].lightColor(color[neoColor]);
+    pixels[LINE_SUB].lightColor(color[neoColor]);
+  }
+  else{
+    pixels[LINE].lightColor(color[BLACK]);
+    pixels[LINE_SUB].lightColor(color[BLACK]);
+  }
+}
+
+void RoundNeoUp(int changeColr, int baseColor, int cnt){
+  for(int i = 0; i < NumPixels[ROUND]; i++){
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+    pixels[VROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+  }
+  for(int i = NumPixels[ROUND]; i > NumPixels[ROUND] - cnt; i--){
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
+    pixels[ROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
+  }
+  pixels[ROUND].show();
+  pixels[ROUND_SUB].show();
+}
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
 void RfidInit()
 {
   RestartPn532:
@@ -551,7 +574,7 @@ void GhostOpenFailLock()
   ptrRfidFail = WaitFunc;
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\serial_Communication.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\serial_Communication.ino"
 void CommnunicationBeetle(){
   // Serial.println("READ");
   if(toSubSerial.available() > 0){
@@ -591,9 +614,7 @@ void SubSerialFlush(){
   while(toSubSerial.available())      //시리얼 통신 버퍼 flush
       toSubSerial.read();
 }
-
-
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\Final_Code\\tagmachine_main\\timer.ino"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
 void TimerInit(){
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     // gameTimerId = GameTimer.setInterval(500,GameTimerFunc);
