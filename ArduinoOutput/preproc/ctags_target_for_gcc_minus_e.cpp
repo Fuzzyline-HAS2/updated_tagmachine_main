@@ -1,4 +1,4 @@
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
  ;/**
 
  * @file Done_ItemBox_code.ino
@@ -18,19 +18,20 @@
  *
 
  */
-# 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino"
-# 13 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.ino" 2
+# 12 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\tagmachine_main.ino"
+# 13 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\tagmachine_main.ino" 2
 
 void setup() {
     Serial.begin(115200);
     toSubSerial.begin(9600, 0x800001c, 19, 23);
+    has2wifi.Setup("badland");
+    // has2wifi.Setup("KT_GiGA_6C64","ed46zx1198");
+    // has2wifi.Setup();
     NeopixelInit();
     RfidInit();
     TimerInit();
     Mp3_Setup();
     pinMode(21, 0x03);
-    // has2wifi.Setup("KT_GiGA_6C64","ed46zx1198");
-    has2wifi.Setup();
     GameSetting();
     DataChanged();
 }
@@ -40,7 +41,7 @@ void loop() {
     GameTimer.run();
     SubSerialTimer.run();
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Game_system.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\Game_system.ino"
 void WhichTagged()
 {
     ptrRfidMain();
@@ -48,24 +49,18 @@ void WhichTagged()
 }
 
 void DoorOpen(){
-    delay(100);
-    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-    delay(1000);
     digitalWrite(21, 0x0);
-    delay(3000);
+    RoundNeoEffectDown(BLACK);
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
     AllNeoOn(YELLOW);
-    delay(1000);
 }
 
 void GhostDoorOpen(){
-    delay(100);
-    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-    delay(1000);
     digitalWrite(21, 0x0);
-    delay(3000);
+    RoundNeoEffectDown(BLACK);
+    // delay(3000);
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\Wifi.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\Wifi.ino"
 void DataChanged()
 {
   static StaticJsonDocument<500> cur; //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
@@ -128,7 +123,7 @@ void GameSetting(){
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\dfplayer.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\dfplayer.ino"
 //****************************************mp3_setup()****************************************************************
 void Mp3_Setup(){
   //Serial.println();
@@ -150,7 +145,7 @@ void Mp3_Setup(){
   myDFPlayer.outputDevice(2);
 
 }//void MP3_SETUP
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\neopixel.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\neopixel.ino"
 void NeopixelInit()
 {
   for (int i = 0; i < NeopixelNum; ++i)
@@ -218,7 +213,19 @@ void RoundNeoEffect(int neocolor)
     pixels[ROUND_SUB].setPixelColor(NumPixels[ROUND]-i,pixels[ROUND_SUB].Color(color[neocolor][0],color[neocolor][1],color[neocolor][2]));
     pixels[ROUND].show();
     pixels[ROUND_SUB].show();
-
+    delay(100);
+  }
+}
+void RoundNeoEffectDown(int neocolor)
+{
+  for(int i = NumPixels[ROUND]/2; i >= 0; i--)
+  {
+    pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[neocolor][0],color[neocolor][1],color[neocolor][2]));
+    pixels[ROUND].setPixelColor(NumPixels[ROUND]-i,pixels[ROUND].Color(color[neocolor][0],color[neocolor][1],color[neocolor][2]));
+    pixels[ROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[neocolor][0],color[neocolor][1],color[neocolor][2]));
+    pixels[ROUND_SUB].setPixelColor(NumPixels[ROUND]-i,pixels[ROUND_SUB].Color(color[neocolor][0],color[neocolor][1],color[neocolor][2]));
+    pixels[ROUND].show();
+    pixels[ROUND_SUB].show();
     delay(100);
   }
 }
@@ -245,18 +252,18 @@ void LineNeoToggle(int neoColor, int toggle){
 }
 
 void RoundNeoUp(int changeColr, int baseColor, int cnt){
-  for(int i = 0; i < NumPixels[ROUND]; i++){
+  for(int i = 0; i < 30; i++){
     pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
-    pixels[VROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
+    pixels[ROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
   }
-  for(int i = NumPixels[ROUND]; i > NumPixels[ROUND] - cnt; i--){
+  for(int i = 0; i < cnt; i++){
     pixels[ROUND].setPixelColor(i,pixels[ROUND].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
     pixels[ROUND_SUB].setPixelColor(i,pixels[ROUND_SUB].Color(color[changeColr][0],color[changeColr][1],color[changeColr][2]));
   }
   pixels[ROUND].show();
   pixels[ROUND_SUB].show();
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\rfid.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\rfid.ino"
 void RfidInit()
 {
   RestartPn532:
@@ -440,6 +447,7 @@ void LockFail()
   Serial.println("Lock Fail Door Open");
   GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
   digitalWrite(21, 0x1);
+  has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
   RoundNeoEffect(YELLOW);
   AllNeoOn(YELLOW);
   DoorOpen();
@@ -493,7 +501,7 @@ void GhostOpenFailLock()
   ptrRfidFail = WaitFunc;
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\serial_Communication.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\serial_Communication.ino"
 void CommnunicationBeetle(){
   // Serial.println("READ");
   if(toSubSerial.available() > 0){
@@ -533,7 +541,7 @@ void SubSerialFlush(){
   while(toSubSerial.available()) //시리얼 통신 버퍼 flush
       toSubSerial.read();
 }
-# 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void TimerInit(){
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     // gameTimerId = GameTimer.setInterval(500,GameTimerFunc);
@@ -547,7 +555,7 @@ void TimerInit(){
  * @brief WIFI read 타이머 주기별로 받는 함수
 
  */
-# 12 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 12 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void WifiIntervalFunc(){
     has2wifi.Loop(DataChanged);
     CommnunicationBeetle();
@@ -558,7 +566,7 @@ void WifiIntervalFunc(){
  * @brief 다중 태그를 인식하기 위한 타이머 함수
 
  */
-# 20 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 20 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void GameTimerFunc(){
     Serial.println("GameTimer");
     ptrGameTimer();
@@ -569,7 +577,7 @@ void GameTimerFunc(){
  * @brief 반대쪽 SUB 태그머신(Beetle)에서 데이터를 타이머 주기별로 받는 함수
 
  */
-# 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 28 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void SubSerialTimerFunc(){
     SubSerialTimer.deleteTimer(subSerialTimerId);
     SubSerialTimerStart = true;
@@ -583,7 +591,7 @@ void SubSerialTimerFunc(){
  * @brief 일반 상태로 돌아가는 함수
 
  */
-# 39 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 39 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void ReturnNormalState(){
     ptrRfidMain = RfidLoopMain;
     ptrRfidSub = CommnunicationBeetle;
@@ -602,7 +610,7 @@ void ReturnNormalState(){
  * @brief 잠기지 않은 도어를 플레이어가 도어가 잠금을 하기위한 함수
 
  */
-# 55 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 55 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void PlayerLockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
@@ -628,7 +636,7 @@ void PlayerLockTimerFunc(){
  * @brief 잠겨있는 도어를 플레이어가 잠금해제를 하기위한 함수
 
  */
-# 78 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 78 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void PlayerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
@@ -642,6 +650,7 @@ void PlayerUnlockTimerFunc(){
         myDFPlayer.playLargeFolder(1, VD7);
         ReturnNormalState();
         digitalWrite(21, 0x1);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(YELLOW);
         DoorOpen();
         has2wifi.ReceiveMine();
@@ -654,7 +663,7 @@ void PlayerUnlockTimerFunc(){
  * @brief 잠겨있는 도어를 술래가 잠금해제를 하기위한 함수
 
  */
-# 101 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 102 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void TaggerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(PURPLE,gameTimerCnt);
@@ -669,6 +678,7 @@ void TaggerUnlockTimerFunc(){
         Serial.println("DOOR UNLOCK!");
         ReturnNormalState();
         digitalWrite(21, 0x1);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(PURPLE);
         DoorOpen();
         SubSerialFlush(); //시리얼 통신 버퍼 flush
@@ -680,11 +690,12 @@ void TaggerUnlockTimerFunc(){
  * @brief 잠겨있는 도어를 유령이 잠금해제를 하기위한 함수
 
  */
-# 124 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 126 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void GhostUnlockTimerFunc(){
     gameTimerCnt++;
-    RoundNeoToggle(BLUE,gameTimerCnt);
-    LineNeoDown(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    // RoundNeoToggle(BLUE,gameTimerCnt);
+    // LineNeoDown(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    RoundNeoUp(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
         loginDone = false;
@@ -692,6 +703,7 @@ void GhostUnlockTimerFunc(){
         Serial.println("GHOST OPEN");
         ReturnNormalState();
         digitalWrite(21, 0x1);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(BLUE);
         GhostDoorOpen();
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
@@ -707,11 +719,12 @@ void GhostUnlockTimerFunc(){
  * @brief 잠겨있지 않은 도어 유령이 잠금해제를 하기위한 함수
 
  */
-# 148 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\timer.ino"
+# 152 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\timer.ino"
 void GhostLockTimerFunc(){
     gameTimerCnt++;
-    RoundNeoToggle(BLUE,gameTimerCnt);
-    LineNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    // RoundNeoToggle(BLUE,gameTimerCnt);
+    // LineNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    RoundNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
         loginDone = false;
@@ -719,6 +732,7 @@ void GhostLockTimerFunc(){
         Serial.println("GHOST OPEN");
         ReturnNormalState();
         digitalWrite(21, 0x1);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(BLUE);
         GhostDoorOpen();
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");

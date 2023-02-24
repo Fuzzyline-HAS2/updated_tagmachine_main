@@ -88,6 +88,7 @@ void PlayerUnlockTimerFunc(){
         myDFPlayer.playLargeFolder(1, VD7);
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(YELLOW);
         DoorOpen();
         has2wifi.ReceiveMine();
@@ -111,7 +112,8 @@ void TaggerUnlockTimerFunc(){
         myDFPlayer.playLargeFolder(1, VD1);
         Serial.println("DOOR UNLOCK!");
         ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH);
+        digitalWrite(RELAY_PIN, HIGH); 
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(PURPLE);
         DoorOpen();
         SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
@@ -123,8 +125,9 @@ void TaggerUnlockTimerFunc(){
  */
 void GhostUnlockTimerFunc(){                                                
     gameTimerCnt++;
-    RoundNeoToggle(BLUE,gameTimerCnt);
-    LineNeoDown(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    // RoundNeoToggle(BLUE,gameTimerCnt);
+    // LineNeoDown(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    RoundNeoUp(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
         loginDone = false;
@@ -132,6 +135,7 @@ void GhostUnlockTimerFunc(){
         Serial.println("GHOST OPEN");
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(BLUE);
         GhostDoorOpen();
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
@@ -147,8 +151,9 @@ void GhostUnlockTimerFunc(){
  */
 void GhostLockTimerFunc(){      
     gameTimerCnt++;
-    RoundNeoToggle(BLUE,gameTimerCnt);
-    LineNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    // RoundNeoToggle(BLUE,gameTimerCnt);
+    // LineNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[LINE]));
+    RoundNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
         loginDone = false;
@@ -156,6 +161,7 @@ void GhostLockTimerFunc(){
         Serial.println("GHOST OPEN");
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(BLUE);
         GhostDoorOpen();
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");

@@ -181,6 +181,7 @@ void LockFail()
   Serial.println("Lock Fail Door Open");
   GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   digitalWrite(RELAY_PIN, HIGH);
+  has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
   RoundNeoEffect(YELLOW);
   AllNeoOn(YELLOW);
   DoorOpen();

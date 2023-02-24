@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\tagmachine_main.h"
+#line 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\tagmachine_main.h"
 #ifndef _DONE_ITEMBOX_CODE_
 #define _DONE_ITEMBOX_CODE_
 
@@ -15,6 +15,16 @@ void GameSetting();
 void WaitFunc();
 void WifiIntervalLoop(unsigned long intervalValue);
 unsigned long wifiInterval = 0;
+int wifiNum = 0;
+struct WIFISSID
+{
+    String strDevice;
+};
+struct WIFISSID wifissid[5] = { {"badland_auto"}, 
+                                {"badland_ruins"}, 
+                                {"badland_shoot"}, 
+                                {"badland_prison"}, 
+                                {"badland_chack"}};
 //****************************************Pointer System****************************************************************
 void (*ptrCurrentMode)();   //현재모드 저장용 포인터 함수
 void (*ptrRfidMode)(char inputRole);      //rfid모드 저장용 포인터 함수
