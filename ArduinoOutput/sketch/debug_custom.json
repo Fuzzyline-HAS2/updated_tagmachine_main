@@ -1,4 +1,4 @@
-#line 1 "c:\\Users\\teamh\\OneDrive\\바탕 화면\\BBangJunCode\\Final_Code\\tagmachine_main\\debug_custom.json"
+#line 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\debug_custom.json"
 {
 	"name":"Arduino on ESP32",
 	"toolchainPrefix":"xtensa-esp32-elf",
