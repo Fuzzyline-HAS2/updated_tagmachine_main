@@ -24,8 +24,8 @@
 void setup() {
     Serial.begin(115200);
     toSubSerial.begin(9600, 0x800001c, 19, 23);
-    has2wifi.Setup("city");
-    // has2wifi.Setup("badland");
+//    has2wifi.Setup("city");
+     has2wifi.Setup("badland");
     // has2wifi.Setup("KT_GiGA_6C64","ed46zx1198");
     // has2wifi.Setup();
     NeopixelInit();

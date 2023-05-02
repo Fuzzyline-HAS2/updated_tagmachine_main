@@ -241,4 +241,9 @@ c:\Users\HAS1\Desktop\BBangJun\HAS2_Final_Code\tagmachine_main\ArduinoOutput\ske
  C:\Users\HAS1\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson.h \
  C:\Users\HAS1\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson.hpp \
  C:\Users\HAS1\Documents\Arduino\libraries\ArduinoJson\src/ArduinoJson/Configuration.hpp \
+ C:\Users\HAS1\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\libraries\HTTPUpdate\src/HTTPUpdate.h \
+ C:\Users\HAS1\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\libraries\WiFi\src/WiFiUdp.h \
+ C:\Users\HAS1\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\libraries\Update\src/Update.h \
+ C:\Users\HAS1\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/MD5Builder.h \
+ C:\Users\HAS1\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4/tools/sdk/esp32/include/esp_rom/include/esp_rom_md5.h \
  C:\Users\HAS1\Documents\Arduino\libraries\SimpleTimer/SimpleTimer.h

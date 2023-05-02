@@ -61,6 +61,16 @@
   },
   {
     "Sourcefile": "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\ArduinoOutput\\sketch\\tagmachine_main.ino.cpp",
+    "Include": "HTTPUpdate.h",
+    "Includepath": "C:\\Users\\HAS1\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.4\\libraries\\HTTPUpdate\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\ArduinoOutput\\sketch\\tagmachine_main.ino.cpp",
+    "Include": "Update.h",
+    "Includepath": "C:\\Users\\HAS1\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.4\\libraries\\Update\\src"
+  },
+  {
+    "Sourcefile": "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Final_Code\\tagmachine_main\\ArduinoOutput\\sketch\\tagmachine_main.ino.cpp",
     "Include": "SimpleTimer.h",
     "Includepath": "C:\\Users\\HAS1\\Documents\\Arduino\\libraries\\SimpleTimer"
   },
@@ -196,6 +206,21 @@
   },
   {
     "Sourcefile": "C:\\Users\\HAS1\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.4\\libraries\\WiFiClientSecure\\src\\ssl_client.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\HAS1\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.4\\libraries\\HTTPUpdate\\src\\HTTPUpdate.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\HAS1\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.4\\libraries\\Update\\src\\HttpsOTAUpdate.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\HAS1\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.4\\libraries\\Update\\src\\Updater.cpp",
     "Include": "",
     "Includepath": null
   },
