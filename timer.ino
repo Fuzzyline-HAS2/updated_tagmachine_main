@@ -4,6 +4,8 @@ void TimerInit(){
     // GameTimer.disable(gameTimerId);
     // subSerialTimerId = SubSerialTimer.setInterval(1000,SubSerialTimerFunc);
     // SubSerialTimer.disable(subSerialTimerId);
+    // debuffTimerId = DebuffTimer.setTimeout(1000,DebuffTimerFunc);
+    // DebuffTimer.disable(debuffTimerId);
 }
 
 /**
@@ -32,6 +34,12 @@ void SubSerialTimerFunc(){
     while(toSubSerial.available())
       toSubSerial.read();
 }
+void DebuffTimerFunc(){
+    DebuffTimer.deleteTimer(debuffTimerId);
+    Serial.println("debuff time end");
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+    ReturnNormalState();
+}
 
 /**
  * @brief 일반 상태로 돌아가는 함수
@@ -42,7 +50,8 @@ void ReturnNormalState(){
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
     gameTimerCnt = 0;
-    GameTimer.deleteTimer(gameTimerId);                                             //게임 타이머 종료
+    GameTimer.deleteTimer(gameTimerId);    
+    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     SubSerialTimer.disable(subSerialTimerId);
     Serial.println("Return Normal State");
@@ -58,17 +67,22 @@ void PlayerLockTimerFunc(){
     LineNeoUp(GREEN, YELLOW, map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
     Serial.println(map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
     if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
-        myDFPlayer.playLargeFolder(1, VD11);
+        Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-        loginDone = false;
-        Serial.println("DOOR LOCK!");
-        myDFPlayer.playLargeFolder(1, VD4);
-        has2wifi.ReceiveMine();
-        ReturnNormalState();
-        RoundNeoEffect(GREEN);
-        SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
+        if(strCurState != "activate"){
+            has2wifi.Loop(DataChanged);
+        }
+        else {
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+            loginDone = false;
+            Serial.println("DOOR LOCK!");
+            Mp3PlayLargeFolder(1, VD4);
+            has2wifi.ReceiveMine();
+            ReturnNormalState();
+            RoundNeoEffect(GREEN);
+            SubSerialFlush();         
+        }                                                     //시리얼 통신 버퍼 flush
     }
 }
 
@@ -80,12 +94,12 @@ void PlayerUnlockTimerFunc(){
     RoundNeoToggle(GREEN,gameTimerCnt);
     LineNeoDown(YELLOW, GREEN, map(gameTimerCnt,0,playerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
-        myDFPlayer.playLargeFolder(1, VD11);
+        Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerUnlockTime))
     {
         loginDone = false;
         Serial.println("DOOR UNLOCK!");
-        myDFPlayer.playLargeFolder(1, VD7);
+        Mp3PlayLargeFolder(1, VD7);
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
@@ -104,12 +118,12 @@ void TaggerUnlockTimerFunc(){
     RoundNeoToggle(PURPLE,gameTimerCnt);
     if(gameTimerCnt%3 == 1)                                                         // 3번마다 "술래 침입시도" 나오게 하기
         if(gameTimerCnt < (taggerUnlockTime - 2))                                   // 마지막에는 효과음 안나오게 해서 짤리지 않게 하는 함수
-            myDFPlayer.playLargeFolder(1, VD10);
+            Mp3PlayLargeFolder(1, VD10);
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
         loginDone = false;
-        myDFPlayer.playLargeFolder(1, VD1);
+        Mp3PlayLargeFolder(1, VD1);
         Serial.println("DOOR UNLOCK!");
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH); 
@@ -131,7 +145,7 @@ void GhostUnlockTimerFunc(){
     if(gameTimerCnt > (ghostOpenTime))
     {
         loginDone = false;
-        myDFPlayer.playLargeFolder(1, VD1);
+        Mp3PlayLargeFolder(1, VD1);
         Serial.println("GHOST OPEN");
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);
@@ -140,7 +154,7 @@ void GhostUnlockTimerFunc(){
         GhostDoorOpen();
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
         AllNeoOn(GREEN);
-        SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
+        SubSerialFlush();                                                        //시리얼 통신 버퍼 flush
         delay(1000);
     }
     
@@ -157,7 +171,7 @@ void GhostLockTimerFunc(){
     if(gameTimerCnt > (ghostOpenTime))
     {
         loginDone = false;
-        myDFPlayer.playLargeFolder(1, VD1);
+        Mp3PlayLargeFolder(1, VD1);
         Serial.println("GHOST OPEN");
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);

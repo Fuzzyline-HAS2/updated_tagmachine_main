@@ -19,4 +19,36 @@ void Mp3_Setup(){
   myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);
 
 }//void MP3_SETUP
-   
+
+
+void Mp3PlayLargeFolder(uint8_t folder_number, uint16_t file_number)
+{
+  static uint8_t play_error_count = 0; // MP3 파일이 처음 실행되면
+  if ((String)(const char *)shift_machine["selected_language"] == "EN")
+  {
+    folder_number = 2 + folder_number;
+  }
+  if (myDFPlayer.available())
+  {
+    myDFPlayer.playLargeFolder(folder_number, file_number);
+    play_error_count = 0;
+  }
+  else
+  {
+    if (play_error_count < 3)
+    {
+      myDFPlayer.playLargeFolder(folder_number, file_number);
+      play_error_count++;
+      Serial.print("에러횟수 :");
+      Serial.println(play_error_count);
+    }
+    else
+    {
+      if (!(send_mp3_err))
+      {
+        send_mp3_err = true;
+        has2wifi.Send((String)(const char *)my["device_name"], "device_state", "MP3");
+      }
+    }
+  }
+}

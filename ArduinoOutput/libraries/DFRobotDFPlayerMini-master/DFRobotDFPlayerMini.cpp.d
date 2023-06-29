@@ -1,4 +1,4 @@
-c:\Users\HAS1\Desktop\BBangJun\HAS2_Final_Code\tagmachine_main\ArduinoOutput\libraries\DFRobotDFPlayerMini-master\DFRobotDFPlayerMini.cpp.o: \
+c:\Users\HAS1\Desktop\BBangJun\HAS2_Code\HAS2_Final_Code\tagmachine_main_geekble\ArduinoOutput\libraries\DFRobotDFPlayerMini-master\DFRobotDFPlayerMini.cpp.o: \
  C:\Users\HAS1\Documents\Arduino\libraries\DFRobotDFPlayerMini-master\DFRobotDFPlayerMini.cpp \
  C:\Users\HAS1\Documents\Arduino\libraries\DFRobotDFPlayerMini-master\DFRobotDFPlayerMini.h \
  C:\Users\HAS1\AppData\Local\Arduino15\packages\esp32\hardware\esp32\2.0.4\cores\esp32/Arduino.h \

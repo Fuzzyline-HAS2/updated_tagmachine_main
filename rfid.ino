@@ -127,13 +127,53 @@ void LoginTimerSelector(char role){
     {
       ptrGameTimer = GhostUnlockTimerFunc;
       ptrRfidFail = GhostOpenFailLock;
-      ptrRfidMode = WaitRfid;
+      ptrRfidMode = WaitRfid; 
     }
     else if(role == 'T')  
     {
       ptrGameTimer = TaggerUnlockTimerFunc;
       ptrRfidFail = UnlockFail;
       ptrRfidMode = WaitRfid;
+    }
+  }
+  else if((String)(const char*)my["device_state"] == "debuff")
+  {
+    AllNeoOn(PURPLE);
+    if(role == 'P')       
+    {
+      loginDone = false;
+      NeoBlink(ROUND,RED,2,400);
+      AllNeoOn(PURPLE);
+      ReturnNormalState(); 
+    }
+    else if(role == 'G')  
+    {
+      loginDone = false;
+      NeoBlink(ROUND,RED,2,400);
+      AllNeoOn(PURPLE);
+      ReturnNormalState(); 
+    }
+    else if(role == 'T')  
+    {
+      loginDone = false;
+      Mp3PlayLargeFolder(1, VD1);
+      Serial.println("Tagger Door Open");
+      GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
+      digitalWrite(RELAY_PIN, HIGH);  
+      
+      RoundNeoEffect(PURPLE);
+      AllNeoOn(PURPLE);
+      digitalWrite(RELAY_PIN, LOW);
+      RoundNeoEffectDown(BLACK);
+
+      ptrRfidMain = RfidLoopMain;
+      ptrRfidSub = CommnunicationBeetle;
+      ptrRfidMode = Login;
+      ptrRfidFail = WaitFunc;
+
+      WifiTimer.deleteTimer(wifiTimerId); 
+      wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);                                                        //시리얼 통신 버퍼 flush
+      AllNeoOn(PURPLE);
     }
   }
   else
@@ -154,7 +194,7 @@ void LoginTimerSelector(char role){
     else if(role == 'T') 
     {
       loginDone = false;
-      myDFPlayer.playLargeFolder(1, VD1);
+      Mp3PlayLargeFolder(1, VD1);
       Serial.println("Tagger Door Open");
       GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
       digitalWrite(RELAY_PIN, HIGH);  
@@ -170,6 +210,7 @@ void LoginTimerSelector(char role){
       ptrRfidMode = Login;
       ptrRfidFail = WaitFunc;
 
+      WifiTimer.deleteTimer(wifiTimerId); 
       wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     }
   }
@@ -177,7 +218,7 @@ void LoginTimerSelector(char role){
 void LockFail()
 { 
   loginDone = false;
-  myDFPlayer.playLargeFolder(1, VD1);
+  Mp3PlayLargeFolder(1, VD1);
   Serial.println("Lock Fail Door Open");
   GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   digitalWrite(RELAY_PIN, HIGH);
@@ -190,12 +231,14 @@ void LockFail()
   ptrRfidSub = CommnunicationBeetle;
   ptrRfidMode = Login;
   ptrRfidFail = WaitFunc;
+
+  WifiTimer.deleteTimer(wifiTimerId); 
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }
 void UnlockFail()
 { 
   loginDone = false;
-  myDFPlayer.playLargeFolder(1, VD6);
+  Mp3PlayLargeFolder(1, VD6);
   Serial.println("Unlock Fail Door Shut");
   GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
@@ -204,13 +247,15 @@ void UnlockFail()
   ptrRfidSub = CommnunicationBeetle;
   ptrRfidMode = Login;
   ptrRfidFail = WaitFunc;
+
+  WifiTimer.deleteTimer(wifiTimerId); 
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }
 
 void GhostOpenFailUnlock()
 { 
   loginDone = false;
-  myDFPlayer.playLargeFolder(1, VD6);
+  Mp3PlayLargeFolder(1, VD6);
   Serial.println("Ghost Door OpenFail");
   GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
@@ -219,12 +264,14 @@ void GhostOpenFailUnlock()
   ptrRfidSub = CommnunicationBeetle;
   ptrRfidMode = Login;
   ptrRfidFail = WaitFunc;
+
+  WifiTimer.deleteTimer(wifiTimerId); 
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }
 void GhostOpenFailLock()
 { 
   loginDone = false;
-  myDFPlayer.playLargeFolder(1, VD6);
+  Mp3PlayLargeFolder(1, VD6);
   Serial.println("Unlock Fail Door Shut");
   GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
@@ -233,5 +280,7 @@ void GhostOpenFailLock()
   ptrRfidSub = CommnunicationBeetle;
   ptrRfidMode = Login;
   ptrRfidFail = WaitFunc;
+
+  WifiTimer.deleteTimer(wifiTimerId); 
   wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
 }

@@ -5,7 +5,7 @@
 const int rfid_num = 1; // 설치된 pn532의 개수
 
 //****************************************WIFI****************************************************************
-HAS2_Wifi has2wifi("http://172.30.1.43");
+HAS2_Wifi has2wifi("http://172.30.1.44");
 void DataChanged();
 void SettingFunc(void);
 void ActivateFunc(void);
@@ -38,6 +38,8 @@ volatile int taggerUnlockTime = 15;
 volatile int ghostOpenTime = 15;
 void WhichTagged();
 void DoorOpen();
+
+String strCurState = "";
 //****************************************Serial Communication*********************************************************
 void CommnunicationBeetle();
 void SubSerialFlush();
@@ -47,15 +49,18 @@ bool tagState = false;
 SimpleTimer GameTimer;
 SimpleTimer WifiTimer;
 SimpleTimer SubSerialTimer;
+SimpleTimer DebuffTimer;
 
 void TimerInit();
 void WifiIntervalFunc();
 void GameTimerFunc();
 void SubSerialTimerFunc();
+void DebuffTimerFunc();
 
 int wifiTimerId;
 int gameTimerId;
 int subSerialTimerId;
+int debuffTimerId;
 
 int gameTimerCnt = 0;
 bool SubSerialTimerStart = false;
@@ -64,6 +69,7 @@ HardwareSerial MP3Serial(2);
 DFRobotDFPlayerMini myDFPlayer;
 void Mp3_Setup();
 enum{VD1 = 1, VD2, VD3, VD4, VD5, VD6, VD7, VD8, VD9, VD10, VD11};
+bool send_mp3_err = false;
 //****************************************Neopixel SETUP****************************************************************
 void NeopixelInit();
 void NeoBlink(int neo, int neoColor, int cnt, int blinkTime);
