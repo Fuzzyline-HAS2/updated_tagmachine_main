@@ -117,5 +117,5 @@ void WaitRfid(char role);
 
 bool loginDone = false;     //처음 로그인 하면 true로 바뀌어서 wifi 안쓰게하기위함
 char loginRole = 'P';        //처음 로그인 하고 나면 role 저장용.
-
+String strLastTagUser = "";
 #endif

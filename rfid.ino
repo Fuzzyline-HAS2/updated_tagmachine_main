@@ -35,9 +35,7 @@ void RfidLoopMain()
         String tagUser = "";
         for(int i = 0; i < 4; i++)    //GxPx 데이터만 배열에서 추출해서 string으로 저장
           tagUser += (char)data[i];
-
         CheckingPlayers(tagUser);
-
       }
     }
     else
@@ -50,48 +48,58 @@ void RfidLoopMain()
 void CheckingPlayers(String tagUser) //어떤 카드가 들어왔는지 확인용
 { 
   Serial.println("tag_user_data : " + tagUser);     // 1. 태그한 플레이어의 역할과 생명칩갯수, 최대생명칩갯수 등 읽어오기
-  if(tagUser == "MMMM"){  //스태프카드 초기화
+  if(tagUser == "MMMM"){  //스태프카드 
     digitalWrite(RELAY_PIN, HIGH);
     delay(500);
     digitalWrite(RELAY_PIN, LOW);
   }
-  if(loginDone == false)                            // 로그인할때만 체크함
-  {
-    has2wifi.Receive(tagUser);                      // 2. 술래인지, 플레이어인지 구분
-    if((String)(const char*)tag["role"] == "player"){ // 3. 태그한 사용자가 플레이어고
-      Serial.println("Player Tagged");
-      loginRole = 'P';
-      ptrRfidMode('P');
+  else{
+    if(loginDone == false)                            // 로그인할때만 체크함
+    {
+      has2wifi.Receive(tagUser);                      // 2. 술래인지, 플레이어인지 구분
+      if((String)(const char*)tag["role"] == "player"){ // 3. 태그한 사용자가 플레이어고
+        Serial.println("Player Tagged");
+        loginRole = 'P';
+        ptrRfidMode('P');
+      }
+      else if((String)(const char*)tag["role"] == "tagger"){ // 3. 태그한 사용자가 플레이어고
+        Serial.println("Tagger Tagged");
+        loginRole = 'T';
+        ptrRfidMode('T');
+      }
+      else if((String)(const char*)tag["role"] == "ghost" || (String)(const char*)tag["role"] == "revival"){ // 3. 태그한 
+        Serial.println("Ghost Tagged");
+        loginRole = 'G';
+        ptrRfidMode('G');
+      }
+      else{ 
+        Serial.println("Wrong TAG");
+      }
     }
-    else if((String)(const char*)tag["role"] == "tagger"){ // 3. 태그한 사용자가 플레이어고
-      Serial.println("Tagger Tagged");
-      loginRole = 'T';
-      ptrRfidMode('T');
+    else
+    {
+      if(strLastTagUser == tagUser){  //Login 진행한 태그와 같은지 확인
+        Serial.println("LoginRole: " + String(loginRole));
+        ptrRfidMode(loginRole);
+      }
+      else{
+        Serial.println("Different TAG deteced");
+        ptrRfidFail();
+      }
     }
-    else if((String)(const char*)tag["role"] == "ghost" || (String)(const char*)tag["role"] == "revival"){ // 3. 태그한 
-      Serial.println("Ghost Tagged");
-      loginRole = 'G';
-      ptrRfidMode('G');
-    }
-    else{ 
-      Serial.println("Wrong TAG");
-    }
+    strLastTagUser = tagUser;
   }
-  else
-  {
-    Serial.println("LoginRole: " + String(loginRole));
-    ptrRfidMode(loginRole);
-  }
+  
 }
 
 void Login(char role)
 { 
   Serial.println("LOGIN");
-  // GameTimer.enable(gameTimerId);        //게임 타이머  
   loginDone = true;
   pixels[ROUND].lightColor(color[BLACK]);
   pixels[ROUND_SUB].lightColor(color[BLACK]);
-  
+
+  GameTimer.deleteTimer(gameTimerId);
   gameTimerId = GameTimer.setInterval(1000,GameTimerFunc);
   WifiTimer.deleteTimer(wifiTimerId); 
   gameTimerCnt = 0;
@@ -141,42 +149,31 @@ void LoginTimerSelector(char role){
     AllNeoOn(PURPLE);
     if(role == 'P')       
     {
-      loginDone = false;
       NeoBlink(ROUND,RED,2,400);
       AllNeoOn(PURPLE);
       ReturnNormalState(); 
     }
     else if(role == 'G')  
     {
-      loginDone = false;
       NeoBlink(ROUND,RED,2,400);
       AllNeoOn(PURPLE);
       ReturnNormalState(); 
     }
     else if(role == 'T')  
     {
-      loginDone = false;
       Mp3PlayLargeFolder(1, VD1);
       Serial.println("Tagger Door Open");
-      GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
       digitalWrite(RELAY_PIN, HIGH);  
-      
+  
       RoundNeoEffect(PURPLE);
       AllNeoOn(PURPLE);
-      digitalWrite(RELAY_PIN, LOW);
       RoundNeoEffectDown(BLACK);
-
-      ptrRfidMain = RfidLoopMain;
-      ptrRfidSub = CommnunicationBeetle;
-      ptrRfidMode = Login;
-      ptrRfidFail = WaitFunc;
-
-      WifiTimer.deleteTimer(wifiTimerId); 
-      wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);                                                        //시리얼 통신 버퍼 flush
+      DoorOpen();
+      ReturnNormalState();                                                       //시리얼 통신 버퍼 flush
       AllNeoOn(PURPLE);
     }
   }
-  else
+  else  //도어 UNLOCK 일때
   {
     if(role == 'P')       
     {
@@ -193,94 +190,85 @@ void LoginTimerSelector(char role){
     }
     else if(role == 'T') 
     {
-      loginDone = false;
       Mp3PlayLargeFolder(1, VD1);
       Serial.println("Tagger Door Open");
-      GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
       digitalWrite(RELAY_PIN, HIGH);  
-      
+      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
       RoundNeoEffect(PURPLE);
-      
       AllNeoOn(PURPLE);
       DoorOpen();
       AllNeoOn(YELLOW);
-
-      ptrRfidMain = RfidLoopMain;
-      ptrRfidSub = CommnunicationBeetle;
-      ptrRfidMode = Login;
-      ptrRfidFail = WaitFunc;
-
-      WifiTimer.deleteTimer(wifiTimerId); 
-      wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+      ReturnNormalState();
     }
   }
 }
 void LockFail()
 { 
-  loginDone = false;
-  Mp3PlayLargeFolder(1, VD1);
-  Serial.println("Lock Fail Door Open");
-  GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
-  digitalWrite(RELAY_PIN, HIGH);
-  has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-  RoundNeoEffect(YELLOW);
-  AllNeoOn(YELLOW);
-  DoorOpen();
-  AllNeoOn(YELLOW);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId); 
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  has2wifi.ReceiveMine();
+  DataChanged();
+  // Serial.println("strCurState:" + String(strCurState));
+  if(strCurState != "activate"){
+      Serial.println("debuff on");
+      loginDone = false;
+  }
+  else{
+    Mp3PlayLargeFolder(1, VD1);
+    Serial.println("Lock Fail Door Open");
+    digitalWrite(RELAY_PIN, HIGH);
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+    RoundNeoEffect(YELLOW);
+    AllNeoOn(YELLOW);
+    DoorOpen();
+    ReturnNormalState();
+  }
 }
 void UnlockFail()
 { 
-  loginDone = false;
-  Mp3PlayLargeFolder(1, VD6);
-  Serial.println("Unlock Fail Door Shut");
-  GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
-  NeoBlink(ROUND,RED,5,500);
-  AllNeoOn(GREEN);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId); 
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  has2wifi.ReceiveMine();
+  DataChanged();
+  // Serial.println("strCurState:" + String(strCurState));
+  if(strCurState != "lock"){
+      Serial.println("debuff on");
+      loginDone = false;
+  }
+  else{
+    Mp3PlayLargeFolder(1, VD6);
+    Serial.println("Unlock Fail Door Shut");
+    NeoBlink(ROUND,RED,5,500);
+    AllNeoOn(GREEN);
+    ReturnNormalState();
+  }
 }
 
 void GhostOpenFailUnlock()
 { 
-  loginDone = false;
+  // has2wifi.ReceiveMine();
+  // DataChanged();
+  // // Serial.println("strCurState:" + String(strCurState));
+  // if(strCurState != "lock"){
+  //     Serial.println("debuff on");
+  // }
+  // else{
   Mp3PlayLargeFolder(1, VD6);
   Serial.println("Ghost Door OpenFail");
-  GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
   AllNeoOn(YELLOW);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId); 
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  ReturnNormalState();
+  // // }
 }
 void GhostOpenFailLock()
 { 
-  loginDone = false;
+  // has2wifi.ReceiveMine();
+  // DataChanged();
+  // // Serial.println("strCurState:" + String(strCurState));
+  // if(strCurState != "activate"){
+  //     Serial.println("debuff on");
+  // }
+  // else{
   Mp3PlayLargeFolder(1, VD6);
   Serial.println("Unlock Fail Door Shut");
-  GameTimer.deleteTimer(gameTimerId);        //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
   AllNeoOn(GREEN);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId); 
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  ReturnNormalState();
+  // }
 }

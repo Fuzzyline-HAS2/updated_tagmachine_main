@@ -29,17 +29,14 @@ void setup() {
     TimerInit();
     Mp3_Setup();
     pinMode(21, 0x03);
-//        has2wifi.Setup("city");
-     has2wifi.Setup("badland");
+    has2wifi.Setup("city");
+//     has2wifi.Setup("badland");
     DataChanged();
     GameSetting();
 }
 void loop() {
     ptrCurrentMode();
-    WifiTimer.run();
-    GameTimer.run();
-    SubSerialTimer.run();
-    DebuffTimer.run();
+    TimerRun();
 }
 # 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\Game_system.ino"
 void WhichTagged()
@@ -50,12 +47,16 @@ void WhichTagged()
 
 void DoorOpen(){
     digitalWrite(21, 0x0);
-    if(strCurState == "lock"){
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+    if(strCurState == "debuff"){ //debuff 인경우위해서?
+        Serial.println("DEBUFF OPEN");
     }
-    RoundNeoEffectDown(BLACK);
-    has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
-    AllNeoOn(YELLOW);
+    else{
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+        RoundNeoEffectDown(BLACK);
+        has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+        AllNeoOn(YELLOW);
+    }
+    digitalWrite(21, 0x0);
 }
 
 void GhostDoorOpen(){
@@ -92,26 +93,33 @@ void DataChanged()
         digitalWrite(21, 0x0);
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", (String)(const char*)cur["device_state"]);
     }
-    else if((String)(const char*)my["device_state"] == "debuff"){
-      strCurState = "debuff";
-      AllNeoOn(PURPLE);
-      Serial.println("디버프 시작");
-      DebuffTimer.deleteTimer(debuffTimerId);
-      debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
-    }
     else if((String)(const char*)my["device_state"] == "activate"){
         strCurState = "activate";
         ActivateFunc();
     }
+  }
+  if((String)(const char*)my["device_state"] == "debuff"){
+    strCurState = "debuff";
+    ptrRfidFail = WaitFunc;
+    AllNeoOn(PURPLE);
+    Serial.println("디버프 시작");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
+    ReturnNormalState();
   }
   cur = my; // cur 데이터 그룹에 현재 읽어온 데이터 저장
 }
 void WaitFunc(){
 
 }
-void SettingFunc(void)
-{
+void SettingFunc(void){
     Serial.println("SETTING");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    GameTimer.deleteTimer(gameTimerId);
+    WifiTimer.deleteTimer(wifiTimerId); //게임 타이머 종료
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
     AllNeoOn(WHITE);
     digitalWrite(21, 0x1);
     ptrCurrentMode = WaitFunc;
@@ -120,6 +128,12 @@ void SettingFunc(void)
 }
 void ActivateFunc(void){
     Serial.println("ACTIVATE");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    GameTimer.deleteTimer(gameTimerId);
+    WifiTimer.deleteTimer(wifiTimerId); //게임 타이머 종료
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
     AllNeoOn(YELLOW);
     digitalWrite(21, 0x0);
     ptrCurrentMode = WhichTagged;
@@ -130,6 +144,12 @@ void ActivateFunc(void){
 }
 void ReadyFunc(void){
     Serial.println("READY");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    GameTimer.deleteTimer(gameTimerId);
+    WifiTimer.deleteTimer(wifiTimerId); //게임 타이머 종료
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
     AllNeoOn(RED);
     digitalWrite(21, 0x1);
     ptrCurrentMode = WaitFunc;
@@ -352,9 +372,7 @@ void RfidLoopMain()
         String tagUser = "";
         for(int i = 0; i < 4; i++) //GxPx 데이터만 배열에서 추출해서 string으로 저장
           tagUser += (char)data[i];
-
         CheckingPlayers(tagUser);
-
       }
     }
     else
@@ -367,48 +385,58 @@ void RfidLoopMain()
 void CheckingPlayers(String tagUser) //어떤 카드가 들어왔는지 확인용
 {
   Serial.println("tag_user_data : " + tagUser); // 1. 태그한 플레이어의 역할과 생명칩갯수, 최대생명칩갯수 등 읽어오기
-  if(tagUser == "MMMM"){ //스태프카드 초기화
+  if(tagUser == "MMMM"){ //스태프카드 
     digitalWrite(21, 0x1);
     delay(500);
     digitalWrite(21, 0x0);
   }
-  if(loginDone == false) // 로그인할때만 체크함
-  {
-    has2wifi.Receive(tagUser); // 2. 술래인지, 플레이어인지 구분
-    if((String)(const char*)tag["role"] == "player"){ // 3. 태그한 사용자가 플레이어고
-      Serial.println("Player Tagged");
-      loginRole = 'P';
-      ptrRfidMode('P');
+  else{
+    if(loginDone == false) // 로그인할때만 체크함
+    {
+      has2wifi.Receive(tagUser); // 2. 술래인지, 플레이어인지 구분
+      if((String)(const char*)tag["role"] == "player"){ // 3. 태그한 사용자가 플레이어고
+        Serial.println("Player Tagged");
+        loginRole = 'P';
+        ptrRfidMode('P');
+      }
+      else if((String)(const char*)tag["role"] == "tagger"){ // 3. 태그한 사용자가 플레이어고
+        Serial.println("Tagger Tagged");
+        loginRole = 'T';
+        ptrRfidMode('T');
+      }
+      else if((String)(const char*)tag["role"] == "ghost" || (String)(const char*)tag["role"] == "revival"){ // 3. 태그한 
+        Serial.println("Ghost Tagged");
+        loginRole = 'G';
+        ptrRfidMode('G');
+      }
+      else{
+        Serial.println("Wrong TAG");
+      }
     }
-    else if((String)(const char*)tag["role"] == "tagger"){ // 3. 태그한 사용자가 플레이어고
-      Serial.println("Tagger Tagged");
-      loginRole = 'T';
-      ptrRfidMode('T');
+    else
+    {
+      if(strLastTagUser == tagUser){ //Login 진행한 태그와 같은지 확인
+        Serial.println("LoginRole: " + String(loginRole));
+        ptrRfidMode(loginRole);
+      }
+      else{
+        Serial.println("Different TAG deteced");
+        ptrRfidFail();
+      }
     }
-    else if((String)(const char*)tag["role"] == "ghost" || (String)(const char*)tag["role"] == "revival"){ // 3. 태그한 
-      Serial.println("Ghost Tagged");
-      loginRole = 'G';
-      ptrRfidMode('G');
-    }
-    else{
-      Serial.println("Wrong TAG");
-    }
+    strLastTagUser = tagUser;
   }
-  else
-  {
-    Serial.println("LoginRole: " + String(loginRole));
-    ptrRfidMode(loginRole);
-  }
+
 }
 
 void Login(char role)
 {
   Serial.println("LOGIN");
-  // GameTimer.enable(gameTimerId);        //게임 타이머  
   loginDone = true;
   pixels[ROUND].lightColor(color[BLACK]);
   pixels[ROUND_SUB].lightColor(color[BLACK]);
 
+  GameTimer.deleteTimer(gameTimerId);
   gameTimerId = GameTimer.setInterval(1000,GameTimerFunc);
   WifiTimer.deleteTimer(wifiTimerId);
   gameTimerCnt = 0;
@@ -458,42 +486,31 @@ void LoginTimerSelector(char role){
     AllNeoOn(PURPLE);
     if(role == 'P')
     {
-      loginDone = false;
       NeoBlink(ROUND,RED,2,400);
       AllNeoOn(PURPLE);
       ReturnNormalState();
     }
     else if(role == 'G')
     {
-      loginDone = false;
       NeoBlink(ROUND,RED,2,400);
       AllNeoOn(PURPLE);
       ReturnNormalState();
     }
     else if(role == 'T')
     {
-      loginDone = false;
       Mp3PlayLargeFolder(1, VD1);
       Serial.println("Tagger Door Open");
-      GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
       digitalWrite(21, 0x1);
 
       RoundNeoEffect(PURPLE);
       AllNeoOn(PURPLE);
-      digitalWrite(21, 0x0);
       RoundNeoEffectDown(BLACK);
-
-      ptrRfidMain = RfidLoopMain;
-      ptrRfidSub = CommnunicationBeetle;
-      ptrRfidMode = Login;
-      ptrRfidFail = WaitFunc;
-
-      WifiTimer.deleteTimer(wifiTimerId);
-      wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc); //시리얼 통신 버퍼 flush
+      DoorOpen();
+      ReturnNormalState(); //시리얼 통신 버퍼 flush
       AllNeoOn(PURPLE);
     }
   }
-  else
+  else //도어 UNLOCK 일때
   {
     if(role == 'P')
     {
@@ -510,96 +527,87 @@ void LoginTimerSelector(char role){
     }
     else if(role == 'T')
     {
-      loginDone = false;
       Mp3PlayLargeFolder(1, VD1);
       Serial.println("Tagger Door Open");
-      GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
       digitalWrite(21, 0x1);
-
+      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
       RoundNeoEffect(PURPLE);
-
       AllNeoOn(PURPLE);
       DoorOpen();
       AllNeoOn(YELLOW);
-
-      ptrRfidMain = RfidLoopMain;
-      ptrRfidSub = CommnunicationBeetle;
-      ptrRfidMode = Login;
-      ptrRfidFail = WaitFunc;
-
-      WifiTimer.deleteTimer(wifiTimerId);
-      wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+      ReturnNormalState();
     }
   }
 }
 void LockFail()
 {
-  loginDone = false;
-  Mp3PlayLargeFolder(1, VD1);
-  Serial.println("Lock Fail Door Open");
-  GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
-  digitalWrite(21, 0x1);
-  has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-  RoundNeoEffect(YELLOW);
-  AllNeoOn(YELLOW);
-  DoorOpen();
-  AllNeoOn(YELLOW);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId);
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  has2wifi.ReceiveMine();
+  DataChanged();
+  // Serial.println("strCurState:" + String(strCurState));
+  if(strCurState != "activate"){
+      Serial.println("debuff on");
+      loginDone = false;
+  }
+  else{
+    Mp3PlayLargeFolder(1, VD1);
+    Serial.println("Lock Fail Door Open");
+    digitalWrite(21, 0x1);
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+    RoundNeoEffect(YELLOW);
+    AllNeoOn(YELLOW);
+    DoorOpen();
+    ReturnNormalState();
+  }
 }
 void UnlockFail()
 {
-  loginDone = false;
-  Mp3PlayLargeFolder(1, VD6);
-  Serial.println("Unlock Fail Door Shut");
-  GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
-  NeoBlink(ROUND,RED,5,500);
-  AllNeoOn(GREEN);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId);
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  has2wifi.ReceiveMine();
+  DataChanged();
+  // Serial.println("strCurState:" + String(strCurState));
+  if(strCurState != "lock"){
+      Serial.println("debuff on");
+      loginDone = false;
+  }
+  else{
+    Mp3PlayLargeFolder(1, VD6);
+    Serial.println("Unlock Fail Door Shut");
+    NeoBlink(ROUND,RED,5,500);
+    AllNeoOn(GREEN);
+    ReturnNormalState();
+  }
 }
 
 void GhostOpenFailUnlock()
 {
-  loginDone = false;
+  // has2wifi.ReceiveMine();
+  // DataChanged();
+  // // Serial.println("strCurState:" + String(strCurState));
+  // if(strCurState != "lock"){
+  //     Serial.println("debuff on");
+  // }
+  // else{
   Mp3PlayLargeFolder(1, VD6);
   Serial.println("Ghost Door OpenFail");
-  GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
   AllNeoOn(YELLOW);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId);
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  ReturnNormalState();
+  // // }
 }
 void GhostOpenFailLock()
 {
-  loginDone = false;
+  // has2wifi.ReceiveMine();
+  // DataChanged();
+  // // Serial.println("strCurState:" + String(strCurState));
+  // if(strCurState != "activate"){
+  //     Serial.println("debuff on");
+  // }
+  // else{
   Mp3PlayLargeFolder(1, VD6);
   Serial.println("Unlock Fail Door Shut");
-  GameTimer.deleteTimer(gameTimerId); //게임 타이머 정지
   NeoBlink(ROUND,RED,5,500);
   AllNeoOn(GREEN);
-  ptrRfidMain = RfidLoopMain;
-  ptrRfidSub = CommnunicationBeetle;
-  ptrRfidMode = Login;
-  ptrRfidFail = WaitFunc;
-
-  WifiTimer.deleteTimer(wifiTimerId);
-  wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+  ReturnNormalState();
+  // }
 }
 # 1 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\serial_Communication.ino"
 void CommnunicationBeetle(){
@@ -645,11 +653,17 @@ void SubSerialFlush(){
 void TimerInit(){
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     // gameTimerId = GameTimer.setInterval(500,GameTimerFunc);
-    // GameTimer.disable(gameTimerId);
+    // GameTimer.deleteTimer(gameTimerId);
     // subSerialTimerId = SubSerialTimer.setInterval(1000,SubSerialTimerFunc);
-    // SubSerialTimer.disable(subSerialTimerId);
-    // debuffTimerId = DebuffTimer.setTimeout(1000,DebuffTimerFunc);
-    // DebuffTimer.disable(debuffTimerId);
+    // SubSerialTimer.deleteTimer(subSerialTimerId);
+    // debuffTimerId = DebuffTimer.setInterval(1000,DebuffTimerFunc);
+    // DebuffTimer.deleteTimer(debuffTimerId);
+}
+void TimerRun(){
+    WifiTimer.run();
+    GameTimer.run();
+    SubSerialTimer.run();
+    DebuffTimer.run();
 }
 
 /**
@@ -657,7 +671,7 @@ void TimerInit(){
  * @brief WIFI read 타이머 주기별로 받는 함수
 
  */
-# 14 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 20 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void WifiIntervalFunc(){
     has2wifi.Loop(DataChanged);
     CommnunicationBeetle();
@@ -668,7 +682,7 @@ void WifiIntervalFunc(){
  * @brief 다중 태그를 인식하기 위한 타이머 함수
 
  */
-# 22 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 28 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void GameTimerFunc(){
     Serial.println("GameTimer");
     ptrGameTimer();
@@ -679,7 +693,7 @@ void GameTimerFunc(){
  * @brief 반대쪽 SUB 태그머신(Beetle)에서 데이터를 타이머 주기별로 받는 함수
 
  */
-# 30 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 36 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void SubSerialTimerFunc(){
     SubSerialTimer.deleteTimer(subSerialTimerId);
     SubSerialTimerStart = true;
@@ -699,27 +713,30 @@ void DebuffTimerFunc(){
  * @brief 일반 상태로 돌아가는 함수
 
  */
-# 47 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 53 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void ReturnNormalState(){
     ptrRfidMain = RfidLoopMain;
     ptrRfidSub = CommnunicationBeetle;
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
     gameTimerCnt = 0;
+
+    loginDone = false;
     GameTimer.deleteTimer(gameTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
     WifiTimer.deleteTimer(wifiTimerId); //게임 타이머 종료
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
-    SubSerialTimer.disable(subSerialTimerId);
+
     Serial.println("Return Normal State");
     SubSerialFlush(); //시리얼 통신 버퍼 flush
 }
 
-/**
+/** 
 
  * @brief 잠기지 않은 도어를 플레이어가 도어가 잠금을 하기위한 함수
 
  */
-# 64 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 73 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void PlayerLockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
@@ -729,12 +746,16 @@ void PlayerLockTimerFunc(){
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
-            has2wifi.Loop(DataChanged);
+            Serial.println("debuff on");
+            loginDone = false;
         }
         else {
+            Serial.println("debuff off");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-            loginDone = false;
             Serial.println("DOOR LOCK!");
             Mp3PlayLargeFolder(1, VD4);
             has2wifi.ReceiveMine();
@@ -750,7 +771,7 @@ void PlayerLockTimerFunc(){
  * @brief 잠겨있는 도어를 플레이어가 잠금해제를 하기위한 함수
 
  */
-# 92 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 105 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void PlayerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
@@ -759,16 +780,24 @@ void PlayerUnlockTimerFunc(){
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerUnlockTime))
     {
-        loginDone = false;
-        Serial.println("DOOR UNLOCK!");
-        Mp3PlayLargeFolder(1, VD7);
-        ReturnNormalState();
-        digitalWrite(21, 0x1);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(YELLOW);
-        DoorOpen();
         has2wifi.ReceiveMine();
-        SubSerialFlush(); //시리얼 통신 버퍼 flush
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else {
+            Serial.println("DOOR UNLOCK!");
+            Mp3PlayLargeFolder(1, VD7);
+            ReturnNormalState();
+            digitalWrite(21, 0x1);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(YELLOW);
+            DoorOpen();
+            has2wifi.ReceiveMine();
+            SubSerialFlush();
+        } //시리얼 통신 버퍼 flush
     }
 }
 
@@ -777,7 +806,7 @@ void PlayerUnlockTimerFunc(){
  * @brief 잠겨있는 도어를 술래가 잠금해제를 하기위한 함수
 
  */
-# 116 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 137 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void TaggerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(PURPLE,gameTimerCnt);
@@ -787,15 +816,23 @@ void TaggerUnlockTimerFunc(){
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
-        loginDone = false;
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("DOOR UNLOCK!");
-        ReturnNormalState();
-        digitalWrite(21, 0x1);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(PURPLE);
-        DoorOpen();
-        SubSerialFlush(); //시리얼 통신 버퍼 flush
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else {
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("DOOR UNLOCK!");
+            ReturnNormalState();
+            digitalWrite(21, 0x1);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(PURPLE);
+            DoorOpen();
+            SubSerialFlush();
+        } //시리얼 통신 버퍼 flush
     }
 }
 
@@ -804,7 +841,7 @@ void TaggerUnlockTimerFunc(){
  * @brief 잠겨있는 도어를 유령이 잠금해제를 하기위한 함수
 
  */
-# 140 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 169 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void GhostUnlockTimerFunc(){
     gameTimerCnt++;
     // RoundNeoToggle(BLUE,gameTimerCnt);
@@ -812,18 +849,27 @@ void GhostUnlockTimerFunc(){
     RoundNeoUp(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
-        loginDone = false;
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("GHOST OPEN");
-        ReturnNormalState();
-        digitalWrite(21, 0x1);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(BLUE);
-        GhostDoorOpen();
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-        AllNeoOn(GREEN);
-        SubSerialFlush(); //시리얼 통신 버퍼 flush
-        delay(1000);
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else{
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("GHOST OPEN");
+            ReturnNormalState();
+            digitalWrite(21, 0x1);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(BLUE);
+            GhostDoorOpen();
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+            AllNeoOn(GREEN);
+            SubSerialFlush(); //시리얼 통신 버퍼 flush
+            delay(1000);
+            has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+        }
     }
 
 }
@@ -833,7 +879,7 @@ void GhostUnlockTimerFunc(){
  * @brief 잠겨있지 않은 도어 유령이 잠금해제를 하기위한 함수
 
  */
-# 166 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
+# 204 "c:\\Users\\HAS1\\Desktop\\BBangJun\\HAS2_Code\\HAS2_Final_Code\\tagmachine_main_geekble\\timer.ino"
 void GhostLockTimerFunc(){
     gameTimerCnt++;
     // RoundNeoToggle(BLUE,gameTimerCnt);
@@ -841,17 +887,25 @@ void GhostLockTimerFunc(){
     RoundNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
-        loginDone = false;
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("GHOST OPEN");
-        ReturnNormalState();
-        digitalWrite(21, 0x1);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(BLUE);
-        GhostDoorOpen();
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
-        AllNeoOn(YELLOW);
-        SubSerialFlush(); //시리얼 통신 버퍼 flush
-        delay(1000);
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "activate"){
+            Serial.println("debuff on");
+        }
+        else {
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("GHOST OPEN");
+            ReturnNormalState();
+            digitalWrite(21, 0x1);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(BLUE);
+            GhostDoorOpen();
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+            AllNeoOn(YELLOW);
+            SubSerialFlush(); //시리얼 통신 버퍼 flush
+            delay(1000);
+            has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+        }
     }
 }

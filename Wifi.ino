@@ -26,26 +26,33 @@ void DataChanged()
         digitalWrite(RELAY_PIN, LOW);
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", (String)(const char*)cur["device_state"]);
     }
-    else if((String)(const char*)my["device_state"] == "debuff"){ 
-      strCurState = "debuff";
-      AllNeoOn(PURPLE);
-      Serial.println("디버프 시작");
-      DebuffTimer.deleteTimer(debuffTimerId);
-      debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
-    }
     else if((String)(const char*)my["device_state"] == "activate"){
         strCurState = "activate";
         ActivateFunc();
     }
+  }
+  if((String)(const char*)my["device_state"] == "debuff"){ 
+    strCurState = "debuff";
+    ptrRfidFail = WaitFunc;
+    AllNeoOn(PURPLE);
+    Serial.println("디버프 시작");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
+    ReturnNormalState();
   }
   cur = my; // cur 데이터 그룹에 현재 읽어온 데이터 저장
 }
 void WaitFunc(){
 
 }
-void SettingFunc(void)
-{
+void SettingFunc(void){
     Serial.println("SETTING");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    GameTimer.deleteTimer(gameTimerId);
+    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+    
     AllNeoOn(WHITE);
     digitalWrite(RELAY_PIN, HIGH);
     ptrCurrentMode = WaitFunc;
@@ -54,6 +61,12 @@ void SettingFunc(void)
 }
 void ActivateFunc(void){
     Serial.println("ACTIVATE");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    GameTimer.deleteTimer(gameTimerId);
+    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
     AllNeoOn(YELLOW);
     digitalWrite(RELAY_PIN, LOW);
     ptrCurrentMode = WhichTagged;
@@ -64,6 +77,12 @@ void ActivateFunc(void){
 }
 void ReadyFunc(void){
     Serial.println("READY");
+    DebuffTimer.deleteTimer(debuffTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    GameTimer.deleteTimer(gameTimerId);
+    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
     AllNeoOn(RED);
     digitalWrite(RELAY_PIN, HIGH);
     ptrCurrentMode = WaitFunc;

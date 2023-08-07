@@ -1,11 +1,17 @@
 void TimerInit(){
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     // gameTimerId = GameTimer.setInterval(500,GameTimerFunc);
-    // GameTimer.disable(gameTimerId);
+    // GameTimer.deleteTimer(gameTimerId);
     // subSerialTimerId = SubSerialTimer.setInterval(1000,SubSerialTimerFunc);
-    // SubSerialTimer.disable(subSerialTimerId);
-    // debuffTimerId = DebuffTimer.setTimeout(1000,DebuffTimerFunc);
-    // DebuffTimer.disable(debuffTimerId);
+    // SubSerialTimer.deleteTimer(subSerialTimerId);
+    // debuffTimerId = DebuffTimer.setInterval(1000,DebuffTimerFunc);
+    // DebuffTimer.deleteTimer(debuffTimerId);
+}
+void TimerRun(){
+    WifiTimer.run();
+    GameTimer.run();
+    SubSerialTimer.run();
+    DebuffTimer.run();
 }
 
 /**
@@ -50,15 +56,18 @@ void ReturnNormalState(){
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
     gameTimerCnt = 0;
-    GameTimer.deleteTimer(gameTimerId);    
+
+    loginDone = false;
+    GameTimer.deleteTimer(gameTimerId); 
+    SubSerialTimer.deleteTimer(subSerialTimerId);   
     WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
-    SubSerialTimer.disable(subSerialTimerId);
+    
     Serial.println("Return Normal State");
     SubSerialFlush();                                                               //시리얼 통신 버퍼 flush
 }
 
-/**
+/** 
  * @brief 잠기지 않은 도어를 플레이어가 도어가 잠금을 하기위한 함수
  */
 void PlayerLockTimerFunc(){
@@ -70,12 +79,16 @@ void PlayerLockTimerFunc(){
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
-            has2wifi.Loop(DataChanged);
+            Serial.println("debuff on");
+            loginDone = false;
         }
         else {
+            Serial.println("debuff off");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-            loginDone = false;
             Serial.println("DOOR LOCK!");
             Mp3PlayLargeFolder(1, VD4);
             has2wifi.ReceiveMine();
@@ -97,16 +110,24 @@ void PlayerUnlockTimerFunc(){
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerUnlockTime))
     {
-        loginDone = false;
-        Serial.println("DOOR UNLOCK!");
-        Mp3PlayLargeFolder(1, VD7);
-        ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(YELLOW);
-        DoorOpen();
         has2wifi.ReceiveMine();
-        SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else {
+            Serial.println("DOOR UNLOCK!");
+            Mp3PlayLargeFolder(1, VD7);
+            ReturnNormalState();
+            digitalWrite(RELAY_PIN, HIGH);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(YELLOW);
+            DoorOpen();
+            has2wifi.ReceiveMine();
+            SubSerialFlush();    
+        }                                                       //시리얼 통신 버퍼 flush
     }
 }
 
@@ -122,15 +143,23 @@ void TaggerUnlockTimerFunc(){
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
-        loginDone = false;
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("DOOR UNLOCK!");
-        ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH); 
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(PURPLE);
-        DoorOpen();
-        SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else {
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("DOOR UNLOCK!");
+            ReturnNormalState();
+            digitalWrite(RELAY_PIN, HIGH); 
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(PURPLE);
+            DoorOpen();
+            SubSerialFlush(); 
+        }                                                          //시리얼 통신 버퍼 flush
     }
 }
 
@@ -144,18 +173,27 @@ void GhostUnlockTimerFunc(){
     RoundNeoUp(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
-        loginDone = false;
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("GHOST OPEN");
-        ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(BLUE);
-        GhostDoorOpen();
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-        AllNeoOn(GREEN);
-        SubSerialFlush();                                                        //시리얼 통신 버퍼 flush
-        delay(1000);
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else{
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("GHOST OPEN");
+            ReturnNormalState();
+            digitalWrite(RELAY_PIN, HIGH);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(BLUE);
+            GhostDoorOpen();
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+            AllNeoOn(GREEN);
+            SubSerialFlush();                                                        //시리얼 통신 버퍼 flush
+            delay(1000);
+            has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+        }
     }
     
 }
@@ -170,17 +208,25 @@ void GhostLockTimerFunc(){
     RoundNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
-        loginDone = false;
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("GHOST OPEN");
-        ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(BLUE);
-        GhostDoorOpen();
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
-        AllNeoOn(YELLOW);
-        SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
-        delay(1000);
+        has2wifi.ReceiveMine();
+        DataChanged();
+        // Serial.println("strCurState:" + String(strCurState));
+        if(strCurState != "activate"){
+            Serial.println("debuff on");
+        }
+        else {
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("GHOST OPEN");
+            ReturnNormalState();
+            digitalWrite(RELAY_PIN, HIGH);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(BLUE);
+            GhostDoorOpen();
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+            AllNeoOn(YELLOW);
+            SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
+            delay(1000);
+            has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+        }
     }
 }
