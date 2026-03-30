@@ -32,7 +32,7 @@ EspSoftwareSerial 라이브러리는 핀을 생성자가 아닌 `begin()` 에서
 
 ```cpp
 // 변경 전 (버그)
-myDFPlayer.setTimeOut(1000);   // begin() 이전에 호출 → 의미 없음 + 오동작
+myDFPlayer.setTimeOut(1000);
 myDFPlayer.begin(MP3Serial);
 
 // 변경 후
@@ -75,9 +75,18 @@ myDFPlayer.begin(MP3Serial, false);
 ```
 
 **이유:**
-두 번째 인자 `false` = ACK 응답을 기다리지 않음.
-복잡한 시스템에서는 통신 노이즈나 타이밍으로 ACK 수신이 실패할 수 있어
-ACK 없이도 초기화 성공으로 처리하도록 변경.
+`begin()` 호출 시 ESP32는 DFPlayer에게 초기화 명령 패킷을 보냄.
+ACK(Acknowledge)란 DFPlayer가 "명령 받았어" 라고 돌려보내는 응답 패킷임.
+
+```
+ESP32  →  DFPlayer : [초기화 명령 패킷]
+DFPlayer →  ESP32  : [ACK 패킷]  ← 오면 begin() = true
+                                    안 오면 begin() = false → 초기화 실패 처리
+```
+
+기존 `begin(MP3Serial)` 는 ACK를 기다렸다가 안 오면 실패로 판단했음.
+복잡한 시스템에서는 다른 초기화 코드들과의 타이밍 충돌이나 통신 노이즈로
+ACK가 유실될 수 있어서 `false` 로 설정해 ACK 없이도 초기화 성공 처리.
 
 ---
 
@@ -91,8 +100,21 @@ while (myDFPlayer.available()) myDFPlayer.read();  // 추가
 ```
 
 **이유:**
-DFPlayer는 초기화 완료 시 상태 바이트를 시리얼로 자동 전송함.
-이를 비우지 않으면 이후 `available()` 체크 시 쓰레기값이 남아 오동작 가능.
+DFPlayer는 전원 켜지면서 아무도 안 물어봤는데 혼자 "나 켜졌어, SD 마운트 됐어" 같은
+상태 패킷을 ESP32 쪽으로 자동으로 쏴버림. 이게 수신 버퍼에 그대로 쌓임.
+
+이 상태에서 게임 중 `Mp3PlayLargeFolder()` 가 `myDFPlayer.available()` 을 체크하면:
+
+```cpp
+if (myDFPlayer.available())       // 버퍼에 뭔가 있음 → true
+{
+    myDFPlayer.playLargeFolder(); // 근데 그게 초기화 찌꺼기 패킷이었음
+}
+```
+
+실제 재생 완료 응답인지, 초기화 찌꺼기인지 구분 못 하고 엉뚱하게 동작할 수 있음.
+`while (myDFPlayer.available()) myDFPlayer.read()` 로 초기화 직후 버퍼를 싹 비워서
+이후 통신을 깨끗한 상태에서 시작.
 
 ---
 
