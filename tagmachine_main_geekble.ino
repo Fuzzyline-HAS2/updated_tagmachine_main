@@ -20,7 +20,7 @@ void setup() {
     Mp3_Setup();
     pinMode(RELAY_PIN, OUTPUT);
 //  has2wifi.Setup("city");
-    has2wifi.Setup("badland");
+    has2wifi.Setup("badland_ruins", "Code3824@");
     DataChanged();
     GameSetting();
 

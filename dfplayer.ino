@@ -2,24 +2,21 @@
 bool dfPlayerReady = false;
 
 void Mp3_Setup(){
-  MP3Serial.begin(9600);
-  Serial.println("DFRobot DFPlayer Mini Demo");
-  Serial.println("Initializing DFPlayer ... (May take 3~5 seconds)");
-  myDFPlayer.setTimeOut(1000);
-  if (!myDFPlayer.begin(MP3Serial)) {
-    Serial.println("Unable to begin:");
-    Serial.println("1.Please recheck the connection!");
-    Serial.println("2.Please insert the SD card!");
+  MP3Serial.begin(9600, SWSERIAL_8N1, DFPLAYER_RX_PIN, DFPLAYER_TX_PIN, false);
+  delay(2000);  // DFPlayer 전원 인가 후 부팅 대기
+  Serial.println("Initializing DFPlayer ...");
+  if (!myDFPlayer.begin(MP3Serial, false)) {  // false = ACK 없이 초기화
+    Serial.println("DFPlayer 초기화 실패 - 배선/SD카드 확인");
     dfPlayerReady = false;
-    Serial.println("DFPlayer skipped. Continuing without audio.");
-    return;  // begin 실패 시 후속 명령 건너뛰기
+    return;
   }
   dfPlayerReady = true;
-  Serial.println(F("DFPlayer Mini online."));
-  myDFPlayer.setTimeOut(500);
+  Serial.println("DFPlayer Mini online.");
   myDFPlayer.volume(30);
   myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
   myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);
+  delay(1000);
+  while (myDFPlayer.available()) myDFPlayer.read();  // 버퍼 비우기
 }//void MP3_SETUP
 
 

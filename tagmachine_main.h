@@ -68,7 +68,7 @@ int debuffTimerId;
 int gameTimerCnt = 0;
 bool SubSerialTimerStart = false;
 //****************************************DFPlayer SETUP****************************************************************
-SoftwareSerial MP3Serial(DFPLAYER_RX_PIN, DFPLAYER_TX_PIN);
+SoftwareSerial MP3Serial;
 DFRobotDFPlayerMini myDFPlayer;
 void Mp3_Setup();
 enum{VD1 = 1, VD2, VD3, VD4, VD5, VD6, VD7, VD8, VD9, VD10, VD11};
