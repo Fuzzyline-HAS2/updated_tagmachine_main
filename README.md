@@ -3,6 +3,29 @@ tagmachine_main ttgo 코드
 
 ---
 
+### 최종 `Mp3_Setup()` 코드
+
+```cpp
+void Mp3_Setup(){
+  MP3Serial.begin(9600, SWSERIAL_8N1, DFPLAYER_RX_PIN, DFPLAYER_TX_PIN, false);
+  delay(2000);                          // DFPlayer 부팅 대기
+  Serial.println("Initializing DFPlayer ...");
+  if (!myDFPlayer.begin(MP3Serial, false)) {  // ACK 없이 초기화
+    Serial.println("DFPlayer 초기화 실패 - 배선/SD카드 확인");
+    dfPlayerReady = false;
+    return;
+  }
+  dfPlayerReady = true;
+  Serial.println("DFPlayer Mini online.");
+  myDFPlayer.volume(30);
+  myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
+  myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);
+  delay(1000);
+  while (myDFPlayer.available()) myDFPlayer.read();  // 버퍼 비우기
+}
+```
+
+---
 ## DFPlayer Mini 수정 이력 (2026-03-30)
 
 ### 문제
@@ -135,25 +158,3 @@ void lightColor(Adafruit_NeoPixel& strip, int* col) {
 헬퍼 함수로 분리하고 `lightColor(pixels[X], color[Y])` 형태로 모두 교체.
 
 ---
-
-### 최종 `Mp3_Setup()` 코드
-
-```cpp
-void Mp3_Setup(){
-  MP3Serial.begin(9600, SWSERIAL_8N1, DFPLAYER_RX_PIN, DFPLAYER_TX_PIN, false);
-  delay(2000);                          // DFPlayer 부팅 대기
-  Serial.println("Initializing DFPlayer ...");
-  if (!myDFPlayer.begin(MP3Serial, false)) {  // ACK 없이 초기화
-    Serial.println("DFPlayer 초기화 실패 - 배선/SD카드 확인");
-    dfPlayerReady = false;
-    return;
-  }
-  dfPlayerReady = true;
-  Serial.println("DFPlayer Mini online.");
-  myDFPlayer.volume(30);
-  myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
-  myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);
-  delay(1000);
-  while (myDFPlayer.available()) myDFPlayer.read();  // 버퍼 비우기
-}
-```
