@@ -12,9 +12,14 @@ void CommnunicationBeetle(){
     else if(command[0] == 'R'){
       Serial.println("Beetle Reset Success");
     }
-    else if(command[0] == 'G'){   // Packet ex.  "T1:GxP0_T2:GxP0_T3:GxP0"
+    else if(command[0] == 'M'){
+      digitalWrite(RELAY_PIN, HIGH);
+      delay(500);
+      digitalWrite(RELAY_PIN, LOW);
+    }
+    else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상이면 태그로 처리)
       mainRfidTagged = false;
-      Serial.println(command.substring(0,4));
+      Serial.println("Sub Beetle Tag: " + command.substring(0,4));
       CheckingPlayers(command.substring(0,4));
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);
@@ -22,11 +27,6 @@ void CommnunicationBeetle(){
       }
       subSerialTimerId = SubSerialTimer.setInterval(1000,SubSerialTimerFunc);
       SubSerialTimerStart = true;
-    }
-    else if(command[0] == 'M'){
-      digitalWrite(RELAY_PIN, HIGH);
-      delay(500);
-      digitalWrite(RELAY_PIN, LOW);
     }
     while(toSubSerial.available())
       toSubSerial.read();
@@ -36,4 +36,41 @@ void CommnunicationBeetle(){
 void SubSerialFlush(){
   while(toSubSerial.available())      //시리얼 통신 버퍼 flush
       toSubSerial.read();
+}
+
+void MainSerialFlush(){
+  while(toMainSerial.available())     //Main Beetle 시리얼 통신 버퍼 flush
+      toMainSerial.read();
+}
+
+/**
+ * @brief Main Beetle 시리얼 통신 처리 (Sub Beetle의 CommnunicationBeetle과 동일 구조)
+ * WifiIntervalFunc에서 호출되어 모든 게임 상태에서 W 핸드셰이크 처리
+ * activate 상태에서는 WhichTagged → ptrRfidMain에서도 호출되어 태그 데이터 처리
+ */
+void CommnunicationMainBeetle(){
+  if(toMainSerial.available() > 0){
+    String command = toMainSerial.readStringUntil('\n');
+    Serial.println("Main Beetle: " + command);
+
+    if(command[0] == 'W'){
+      Serial.println("Main Beetle Init Success");
+      toMainSerial.println("W");
+    }
+    else if(command[0] == 'R'){
+      Serial.println("Main Beetle Reset Success");
+    }
+    else if(command[0] == 'M'){
+      digitalWrite(RELAY_PIN, HIGH);
+      delay(500);
+      digitalWrite(RELAY_PIN, LOW);
+    }
+    else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상)
+      mainRfidTagged = true;
+      Serial.println("TAGGGED (Main Beetle)");
+      CheckingPlayers(command.substring(0, 4));
+    }
+    while(toMainSerial.available())
+      toMainSerial.read();
+  }
 }

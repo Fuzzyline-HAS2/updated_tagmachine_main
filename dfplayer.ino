@@ -1,30 +1,34 @@
 //****************************************mp3_setup()****************************************************************
+bool dfPlayerReady = false;
+
 void Mp3_Setup(){
-  //Serial.println();
-  MP3Serial.begin(9600, SERIAL_8N1, DFPLAYER_RX_PIN, DFPLAYER_TX_PIN); 
+  MP3Serial.begin(9600);
   Serial.println("DFRobot DFPlayer Mini Demo");
   Serial.println("Initializing DFPlayer ... (May take 3~5 seconds)");
-  myDFPlayer.setTimeOut(1000); //Set serial communictaion time out 1000 ms
-  if (!myDFPlayer.begin(MP3Serial)) { //Use softwareSerial to communicate with mp3.
+  myDFPlayer.setTimeOut(1000);
+  if (!myDFPlayer.begin(MP3Serial)) {
     Serial.println("Unable to begin:");
     Serial.println("1.Please recheck the connection!");
     Serial.println("2.Please insert the SD card!");
-    // while(true);
+    dfPlayerReady = false;
+    Serial.println("DFPlayer skipped. Continuing without audio.");
+    return;  // begin 실패 시 후속 명령 건너뛰기
   }
+  dfPlayerReady = true;
   Serial.println(F("DFPlayer Mini online."));
-  myDFPlayer.setTimeOut(500); //Set serial communictaion time out 500ms
-  myDFPlayer.volume(30);  //Set volume value (0~30).
+  myDFPlayer.setTimeOut(500);
+  myDFPlayer.volume(30);
   myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
-  //myDFPlayer.enableDAC();  //Enable On-chip DAC
   myDFPlayer.outputDevice(DFPLAYER_DEVICE_SD);
-
 }//void MP3_SETUP
 
 
 void Mp3PlayLargeFolder(uint8_t folder_number, uint16_t file_number)
 {
+  if(!dfPlayerReady) return;  // DFPlayer 미초기화 시 스킵
   static uint8_t play_error_count = 0; // MP3 파일이 처음 실행되면
-  if ((String)(const char *)shift_machine["selected_language"] == "EN")
+  const char* lang = (const char *)shift_machine["selected_language"];
+  if (lang != nullptr && String(lang) == "EN")
   {
     folder_number = 2 + folder_number;
   }

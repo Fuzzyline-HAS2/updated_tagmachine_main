@@ -19,7 +19,8 @@ void TimerRun(){
  */
 void WifiIntervalFunc(){
     has2wifi.Loop(DataChanged);
-    CommnunicationBeetle();
+    CommnunicationBeetle();         // Sub Beetle
+    CommnunicationMainBeetle();     // Main Beetle
 }
 
 /**
@@ -39,6 +40,8 @@ void SubSerialTimerFunc(){
     ptrRfidFail();
     while(toSubSerial.available())
       toSubSerial.read();
+    while(toMainSerial.available())
+      toMainSerial.read();
 }
 void DebuffTimerFunc(){
     DebuffTimer.deleteTimer(debuffTimerId);
@@ -51,7 +54,7 @@ void DebuffTimerFunc(){
  * @brief 일반 상태로 돌아가는 함수
  */
 void ReturnNormalState(){           
-    ptrRfidMain = RfidLoopMain;
+    ptrRfidMain = CommnunicationMainBeetle;
     ptrRfidSub = CommnunicationBeetle;
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
@@ -65,6 +68,7 @@ void ReturnNormalState(){
     
     Serial.println("Return Normal State");
     SubSerialFlush();                                                               //시리얼 통신 버퍼 flush
+    MainSerialFlush();                                                              //Main Beetle 시리얼 버퍼 flush
 }
 
 /** 
@@ -94,7 +98,8 @@ void PlayerLockTimerFunc(){
             has2wifi.ReceiveMine();
             ReturnNormalState();
             RoundNeoEffect(GREEN);
-            SubSerialFlush();         
+            SubSerialFlush();
+            MainSerialFlush();
         }                                                     //시리얼 통신 버퍼 flush
     }
 }
@@ -126,7 +131,8 @@ void PlayerUnlockTimerFunc(){
             RoundNeoEffect(YELLOW);
             DoorOpen();
             has2wifi.ReceiveMine();
-            SubSerialFlush();    
+            SubSerialFlush();
+            MainSerialFlush();
         }                                                       //시리얼 통신 버퍼 flush
     }
 }
@@ -158,7 +164,8 @@ void TaggerUnlockTimerFunc(){
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             DoorOpen();
-            SubSerialFlush(); 
+            SubSerialFlush();
+            MainSerialFlush();
         }                                                          //시리얼 통신 버퍼 flush
     }
 }
@@ -190,12 +197,13 @@ void GhostUnlockTimerFunc(){
             GhostDoorOpen();
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             AllNeoOn(GREEN);
-            SubSerialFlush();                                                        //시리얼 통신 버퍼 flush
+            SubSerialFlush();
+            MainSerialFlush();
             delay(1000);
             has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
         }
     }
-    
+
 }
 
 /**
@@ -224,7 +232,8 @@ void GhostLockTimerFunc(){
             GhostDoorOpen();
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
             AllNeoOn(YELLOW);
-            SubSerialFlush();                                                           //시리얼 통신 버퍼 flush
+            SubSerialFlush();
+            MainSerialFlush();
             delay(1000);
             has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
         }

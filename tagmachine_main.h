@@ -5,7 +5,7 @@
 const int rfid_num = 1; // 설치된 pn532의 개수
 
 //****************************************WIFI****************************************************************
-HAS2_Wifi has2wifi("http://172.30.1.44");
+HAS2_Wifi has2wifi("http://172.30.1.43");
 void DataChanged();
 void SettingFunc(void);
 void ActivateFunc(void);
@@ -42,8 +42,11 @@ void DoorOpen();
 String strCurState = "";
 //****************************************Serial Communication*********************************************************
 void CommnunicationBeetle();
+void CommnunicationMainBeetle();
 void SubSerialFlush();
-HardwareSerial toSubSerial(1); //
+void MainSerialFlush();
+HardwareSerial toSubSerial(1);
+HardwareSerial toMainSerial(2);
 bool tagState = false;
 //****************************************SimpleTimer SETUP****************************************************************
 SimpleTimer GameTimer;
@@ -65,7 +68,7 @@ int debuffTimerId;
 int gameTimerCnt = 0;
 bool SubSerialTimerStart = false;
 //****************************************DFPlayer SETUP****************************************************************
-HardwareSerial MP3Serial(2);
+SoftwareSerial MP3Serial(DFPLAYER_RX_PIN, DFPLAYER_TX_PIN);
 DFRobotDFPlayerMini myDFPlayer;
 void Mp3_Setup();
 enum{VD1 = 1, VD2, VD3, VD4, VD5, VD6, VD7, VD8, VD9, VD10, VD11};
@@ -99,14 +102,9 @@ Adafruit_NeoPixel pixels[NeopixelNum] = {Adafruit_NeoPixel(NumPixels[LINE], MAIN
                                          Adafruit_NeoPixel(NumPixels[ROUND], SUB_ROUND_NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800)};
                                          
 //****************************************RFID SETUP****************************************************************
-Adafruit_PN532 nfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS1);
-
 bool mainRfidTagged = false;
 
-bool rfid_init_complete;
-void RfidInit(void);
-void RfidLoopMain(void);
-void CheckingPlayers(uint8_t rfidData[32]);
+void CheckingPlayers(String tagUser);
 
 void Login(char role);
 void LoginTimerSelector(char role);

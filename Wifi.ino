@@ -72,7 +72,7 @@ void ActivateFunc(void){
     ptrCurrentMode = WhichTagged;
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
-    ptrRfidMain = RfidLoopMain;
+    ptrRfidMain = CommnunicationMainBeetle;
     ptrRfidSub = CommnunicationBeetle;
 }
 void ReadyFunc(void){
