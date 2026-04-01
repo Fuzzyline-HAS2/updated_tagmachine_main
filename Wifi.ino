@@ -1,5 +1,13 @@
+void UpdateGameTime(){
+    playerLockTime = (int)my["player_lock_time"];
+    playerUnlockTime = (int)my["player_unlock_time"];
+    taggerUnlockTime = (int)my["tagger_unlock_time"];
+    ghostOpenTime = (int)my["ghost_open_time"];
+}
+
 void DataChanged()
 {
+  UpdateGameTime();
   static StaticJsonDocument<1000> cur;  //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
   if((String)(const char*)my["game_state"] != (String)(const char*)cur["game_state"]){  
     if((String)(const char*)my["game_state"] == "setting"){
