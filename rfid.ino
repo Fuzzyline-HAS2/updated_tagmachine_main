@@ -122,15 +122,20 @@ void LoginTimerSelector(char role){
     }
     else if(role == 'T')
     {
-      Mp3PlayLargeFolder(1, VD1);
-      Serial.println("Tagger Door Open");
-      digitalWrite(RELAY_PIN, HIGH);
-      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-      RoundNeoEffect(PURPLE);
-      AllNeoOn(PURPLE);
-      DoorOpen();
-      AllNeoOn(YELLOW);
-      ReturnNormalState();
+      if(taggerUnlockTime == 0){
+        Mp3PlayLargeFolder(1, VD1);
+        Serial.println("Tagger Door Open (instant)");
+        digitalWrite(RELAY_PIN, HIGH);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+        RoundNeoEffect(PURPLE);
+        AllNeoOn(PURPLE);
+        DoorOpen();
+        ReturnNormalState();
+      } else {
+        ptrGameTimer = TaggerUnlockTimerFunc;
+        ptrRfidFail = UnlockFail;
+        ptrRfidMode = WaitRfid;
+      }
     }
   }
   else if((String)(const char*)my["device_state"] == "debuff")
@@ -220,7 +225,6 @@ void LoginTimerSelector(char role){
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
       RoundNeoEffect(PURPLE);
       DoorOpen();
-      AllNeoOn(YELLOW);
       ReturnNormalState();
     }
   }

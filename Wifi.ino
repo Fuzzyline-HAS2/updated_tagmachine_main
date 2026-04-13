@@ -38,6 +38,9 @@ void DataChanged()
         strCurState = "activate";
         ActivateFunc();
     }
+    else if((String)(const char*)my["device_state"] == "github") {
+        ota.check();
+    }
   }
   if((String)(const char*)my["device_state"] == "debuff"){ 
     strCurState = "debuff";

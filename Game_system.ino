@@ -9,6 +9,12 @@ void DoorOpen(){
     if(strCurState == "debuff"){  //debuff 인경우위해서?
         Serial.println("DEBUFF OPEN");
     }
+    else if(playerLockTime == 0 && playerUnlockTime == 0 && ghostOpenTime == 0){  // 뉴비모드: 문 열린 후 즉시 lock 복귀
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+        RoundNeoEffectDown(BLACK);
+        has2wifi.Loop(DataChanged);
+        AllNeoOn(GREEN);
+    }
     else{
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
         RoundNeoEffectDown(BLACK);
