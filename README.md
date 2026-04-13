@@ -1,5 +1,5 @@
-# tagmachine_main
-tagmachine_main ESP32 코드
+# updated_tagmachine_main
+updated_tagmachine_main ESP32 코드
 
 ---
 
@@ -11,7 +11,7 @@ tagmachine_main ESP32 코드
 
 | # | 파일 | 변경 내용 | 이유 |
 |---|---|---|---|
-| 1 | `tagmachine_main.h` | `SoftwareSerial MP3Serial(RX,TX)` → `SoftwareSerial MP3Serial` | EspSoftwareSerial은 핀을 `begin()`에서 지정해야 함 |
+| 1 | `updated_tagmachine_main.h` | `SoftwareSerial MP3Serial(RX,TX)` → `SoftwareSerial MP3Serial` | EspSoftwareSerial은 핀을 `begin()`에서 지정해야 함 |
 | 2 | `dfplayer.ino` | `MP3Serial.begin(9600)` → `MP3Serial.begin(9600, SWSERIAL_8N1, RX, TX, false)` | 위와 동일, begin()에서 핀 지정 |
 | 3 | `dfplayer.ino` | `setTimeOut(1000)` 제거 (begin 이전 호출) | 객체 미초기화 상태에서 타임아웃 설정 → 통신 오동작 |
 | 4 | `dfplayer.ino` | `begin()` 전 `delay(2000)` 추가 | DFPlayer SD카드 마운트까지 1~2초 필요. 단독 테스트와 달리 tagmachine은 다른 init이 빠르게 끝나 대기 시간 부족 |
