@@ -54,6 +54,7 @@ void WaitFunc(){
 
 }
 void SettingFunc(void){
+    UpdateGameTime();
     Serial.println("SETTING");
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
@@ -68,6 +69,7 @@ void SettingFunc(void){
 
 }
 void ActivateFunc(void){
+    UpdateGameTime();
     Serial.println("ACTIVATE");
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
@@ -84,6 +86,7 @@ void ActivateFunc(void){
     ptrRfidSub = CommnunicationBeetle;
 }
 void ReadyFunc(void){
+    UpdateGameTime();
     Serial.println("READY");
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
@@ -97,8 +100,5 @@ void ReadyFunc(void){
     ptrRfidMode = WaitRfid;
 }
 void GameSetting(){
-    playerLockTime = (int)my["player_lock_time"];
-    playerUnlockTime = (int)my["player_unlock_time"];
-    taggerUnlockTime = (int)my["tagger_unlock_time"];
-    ghostOpenTime = (int)my["ghost_open_time"];
+    UpdateGameTime();
 }
