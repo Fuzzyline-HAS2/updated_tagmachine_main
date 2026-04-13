@@ -47,6 +47,7 @@ void WhichTagged();
 void DoorOpen();
 
 String strCurState = "";
+String strMode = "";
 //****************************************Serial Communication*********************************************************
 void CommnunicationBeetle();
 void CommnunicationMainBeetle();

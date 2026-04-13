@@ -3,6 +3,7 @@ void UpdateGameTime(){
     playerUnlockTime = (int)my["player_unlock_time"];
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
+    strMode = (String)(const char*)my["mode"];
 }
 
 void DataChanged()
