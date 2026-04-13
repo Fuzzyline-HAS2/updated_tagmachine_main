@@ -1,5 +1,5 @@
-#ifndef _DONE_ITEMBOX_CODE_
-#define _DONE_ITEMBOX_CODE_
+#ifndef _UPDATED_TAGMACHINE_MAIN_
+#define _UPDATED_TAGMACHINE_MAIN_
 
 #include "Library_and_pin.h"
 const int rfid_num = 1; // 설치된 pn532의 개수
