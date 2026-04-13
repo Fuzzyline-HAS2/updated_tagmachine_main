@@ -36,8 +36,14 @@ void DataChanged()
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", (String)(const char*)cur["device_state"]);
     }
     else if((String)(const char*)my["device_state"] == "activate"){
-        strCurState = "activate";
-        ActivateFunc();
+        if(strMode == "easy"){
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+            strCurState = "lock";
+            AllNeoOn(GREEN);
+        } else {
+            strCurState = "activate";
+            ActivateFunc();
+        }
     }
     else if((String)(const char*)my["device_state"] == "github") {
         ota.check();
