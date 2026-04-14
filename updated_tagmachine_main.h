@@ -83,6 +83,8 @@ enum{VD1 = 1, VD2, VD3, VD4, VD5, VD6, VD7, VD8, VD9, VD10, VD11};
 bool send_mp3_err = false;
 //****************************************Neopixel SETUP****************************************************************
 void NeopixelInit();
+#define DEFAULT_NEO_BRIGHTNESS 255  // 기본 밝기 (서버값 0 또는 100 초과 시 사용)
+int neoPixelBrightness = DEFAULT_NEO_BRIGHTNESS;
 void NeoBlink(int neo, int neoColor, int cnt, int blinkTime);
 const int NumPixels[3] = {16,60,10};
 const int NeopixelNum = 5;

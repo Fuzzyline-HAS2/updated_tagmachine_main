@@ -8,6 +8,7 @@ void NeopixelInit()
   for (int i = 0; i < NeopixelNum; ++i)
   {
     pixels[i].begin();
+    pixels[i].setBrightness(DEFAULT_NEO_BRIGHTNESS);
   }
   for (int i = 0; i < NeopixelNum; ++i)
   {

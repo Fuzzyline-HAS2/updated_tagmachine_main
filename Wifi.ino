@@ -4,6 +4,21 @@ void UpdateGameTime(){
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
     strMode = (String)(const char*)my["mode"];
+
+    int rawBrightness = (int)my["brightness"];
+    int newBrightness;
+    if(rawBrightness <= 0 || rawBrightness > 100){
+        newBrightness = DEFAULT_NEO_BRIGHTNESS;
+    } else {
+        newBrightness = map(rawBrightness, 1, 100, 1, 255);
+    }
+    if(newBrightness != neoPixelBrightness){
+        neoPixelBrightness = newBrightness;
+        for(int i = 0; i < NeopixelNum; i++){
+            pixels[i].setBrightness(neoPixelBrightness);
+            pixels[i].show();
+        }
+    }
 }
 
 void DataChanged()
