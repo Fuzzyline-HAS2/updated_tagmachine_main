@@ -129,7 +129,6 @@ void PlayerUnlockTimerFunc(){
             Mp3PlayLargeFolder(1, VD7);
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
-            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(YELLOW);
             DoorOpen();
             has2wifi.ReceiveMine();
@@ -164,7 +163,6 @@ void TaggerUnlockTimerFunc(){
             Serial.println("DOOR UNLOCK!");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
-            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             DoorOpen();
             SubSerialFlush();

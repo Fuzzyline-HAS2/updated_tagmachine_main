@@ -86,7 +86,6 @@ void LoginTimerSelector(char role){
         Serial.println("DOOR UNLOCK! (instant)");
         ReturnNormalState();
         digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(GREEN);
         DoorOpen();
         SubSerialFlush();
@@ -126,7 +125,6 @@ void LoginTimerSelector(char role){
         Mp3PlayLargeFolder(1, VD1);
         Serial.println("Tagger Door Open (instant)");
         digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
         RoundNeoEffect(PURPLE);
         AllNeoOn(PURPLE);
         DoorOpen();
@@ -222,7 +220,6 @@ void LoginTimerSelector(char role){
       Mp3PlayLargeFolder(1, VD1);
       Serial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
-      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
       RoundNeoEffect(PURPLE);
       DoorOpen();
       ReturnNormalState();
@@ -243,7 +240,6 @@ void LockFail()
     Mp3PlayLargeFolder(1, VD1);
     Serial.println("Lock Fail Door Open");
     digitalWrite(RELAY_PIN, HIGH);
-    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(YELLOW);
     AllNeoOn(YELLOW);
     DoorOpen();
