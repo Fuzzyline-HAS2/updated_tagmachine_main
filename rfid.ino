@@ -230,13 +230,14 @@ void LoginTimerSelector(char role){
   }
 }
 void LockFail()
-{ 
+{
   has2wifi.ReceiveMine();
   DataChanged();
   // Serial.println("strCurState:" + String(strCurState));
   if(strCurState != "activate"){
       Serial.println("debuff on");
       loginDone = false;
+      ReturnNormalState();
   }
   else{
     Mp3PlayLargeFolder(1, VD1);
@@ -250,13 +251,14 @@ void LockFail()
   }
 }
 void UnlockFail()
-{ 
+{
   has2wifi.ReceiveMine();
   DataChanged();
   // Serial.println("strCurState:" + String(strCurState));
   if(strCurState != "lock"){
       Serial.println("debuff on");
       loginDone = false;
+      ReturnNormalState();
   }
   else{
     Mp3PlayLargeFolder(1, VD6);

@@ -22,6 +22,11 @@ void DataChanged()
     else if((String)(const char*)my["game_state"] == "activate"){
         strCurState = "activate";
         ActivateFunc();
+        // ActivateFunc가 YELLOW로 바꾼 뒤, device_state가 lock이면 GREEN으로 재적용
+        if((String)(const char*)my["device_state"] == "lock"){
+            strCurState = "lock";
+            AllNeoOn(GREEN);
+        }
     }
   }
   if((String)(const char*)my["device_state"] != (String)(const char*)cur["device_state"]){  

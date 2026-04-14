@@ -10,6 +10,7 @@ void DoorOpen(){
         Serial.println("DEBUFF OPEN");
     }
     else if(strMode == "easy"){  // 뉴비모드: 문 열린 후 즉시 lock 복귀
+        has2wifi.Loop(DataChanged); // open 상태가 서버에 표시될 시간 확보
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
         RoundNeoEffectDown(BLACK);
         has2wifi.Loop(DataChanged);

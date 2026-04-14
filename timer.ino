@@ -89,6 +89,7 @@ void PlayerLockTimerFunc(){
         if(strCurState != "activate"){
             Serial.println("debuff on");
             loginDone = false;
+            ReturnNormalState();
         }
         else {
             Serial.println("debuff off");
@@ -121,6 +122,7 @@ void PlayerUnlockTimerFunc(){
         if(strCurState != "lock"){
             Serial.println("debuff on");
             loginDone = false;
+            ReturnNormalState();
         }
         else {
             Serial.println("DOOR UNLOCK!");
@@ -155,12 +157,13 @@ void TaggerUnlockTimerFunc(){
         if(strCurState != "lock"){
             Serial.println("debuff on");
             loginDone = false;
+            ReturnNormalState();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
             Serial.println("DOOR UNLOCK!");
             ReturnNormalState();
-            digitalWrite(RELAY_PIN, HIGH); 
+            digitalWrite(RELAY_PIN, HIGH);
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             DoorOpen();
@@ -186,6 +189,7 @@ void GhostUnlockTimerFunc(){
         if(strCurState != "lock"){
             Serial.println("debuff on");
             loginDone = false;
+            ReturnNormalState();
         }
         else{
             Mp3PlayLargeFolder(1, VD1);
@@ -221,6 +225,8 @@ void GhostLockTimerFunc(){
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
             Serial.println("debuff on");
+            loginDone = false;
+            ReturnNormalState();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
