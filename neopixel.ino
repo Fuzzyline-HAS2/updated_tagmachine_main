@@ -32,6 +32,21 @@ void AllNeoOn(int neoColor){
         lightColor(pixels[i], color[neoColor]);
 }
 
+// 유령 문 열기 효과 조명
+// easy 모드: 동그라미(ROUND) → BLUE, 라인(LINE) → GREEN
+// 일반 모드: 전체 BLUE
+void GhostNeoOn(){
+    if(strMode == "easy"){
+        lightColor(pixels[LINE],      color[GREEN]);
+        lightColor(pixels[LINE_SUB],  color[GREEN]);
+        lightColor(pixels[ROUND],     color[BLUE]);
+        lightColor(pixels[ROUND_SUB], color[BLUE]);
+        lightColor(pixels[ONBOARD],   color[BLUE]);
+    } else {
+        AllNeoOn(BLUE);
+    }
+}
+
 void LineNeoDown(int changeColr, int baseColor, int cnt){
   for(int i = 0; i < NumPixels[LINE]; i++){
     pixels[LINE].setPixelColor(i,pixels[LINE].Color(color[baseColor][0],color[baseColor][1],color[baseColor][2]));
