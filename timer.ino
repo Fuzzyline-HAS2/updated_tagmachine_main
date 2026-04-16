@@ -19,8 +19,8 @@ void TimerRun(){
  */
 void WifiIntervalFunc(){
     has2wifi.Loop(DataChanged);
-    CommnunicationBeetle();         // Sub Beetle
-    ReadMainNfc();                  // Main PN532 (SPI 직접)
+    ptrRfidSub();   // Sub Beetle (포인터로 호출 - 로그인 중 WaitFunc 존중)
+    ptrRfidMain();  // Main PN532  (포인터로 호출 - 로그인 중 WaitFunc 존중)
 }
 
 /**
@@ -51,7 +51,7 @@ void DebuffTimerFunc(){
 /**
  * @brief 일반 상태로 돌아가는 함수
  */
-void ReturnNormalState(){           
+void ReturnNormalState(){
     ptrRfidMain = ReadMainNfc;
     ptrRfidSub = CommnunicationBeetle;
     ptrRfidMode = Login;
@@ -59,6 +59,8 @@ void ReturnNormalState(){
     gameTimerCnt = 0;
 
     loginDone = false;
+    loginRole = 'P';       // 이전 역할 초기화
+    strLastTagUser = "";   // 이전 태그 초기화
     GameTimer.deleteTimer(gameTimerId); 
     SubSerialTimer.deleteTimer(subSerialTimerId);   
     WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료

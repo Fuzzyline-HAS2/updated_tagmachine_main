@@ -89,14 +89,20 @@ void SettingFunc(void){
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
     GameTimer.deleteTimer(gameTimerId);
-    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
+    WifiTimer.deleteTimer(wifiTimerId);
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
-    
+
+    loginDone = false;
+    loginRole = 'P';
+    strLastTagUser = "";
+
     AllNeoOn(WHITE);
     digitalWrite(RELAY_PIN, HIGH);
     ptrCurrentMode = WaitFunc;
     ptrRfidMode = WaitRfid;
-
+    ptrRfidFail = WaitFunc;
+    ptrRfidMain = WaitFunc;
+    ptrRfidSub = CommnunicationBeetle;
 }
 void ActivateFunc(void){
     UpdateGameTime();
@@ -104,8 +110,12 @@ void ActivateFunc(void){
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
     GameTimer.deleteTimer(gameTimerId);
-    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
+    WifiTimer.deleteTimer(wifiTimerId);
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
+    loginDone = false;
+    loginRole = 'P';
+    strLastTagUser = "";
 
     AllNeoOn(YELLOW);
     digitalWrite(RELAY_PIN, LOW);
@@ -121,13 +131,20 @@ void ReadyFunc(void){
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
     GameTimer.deleteTimer(gameTimerId);
-    WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
+    WifiTimer.deleteTimer(wifiTimerId);
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
+    loginDone = false;
+    loginRole = 'P';
+    strLastTagUser = "";
 
     AllNeoOn(RED);
     digitalWrite(RELAY_PIN, HIGH);
     ptrCurrentMode = WaitFunc;
     ptrRfidMode = WaitRfid;
+    ptrRfidFail = WaitFunc;
+    ptrRfidMain = WaitFunc;
+    ptrRfidSub = CommnunicationBeetle;
 }
 void GameSetting(){
     UpdateGameTime();

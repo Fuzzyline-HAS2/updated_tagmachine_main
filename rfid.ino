@@ -36,7 +36,10 @@ void CheckingPlayers(String tagUser) //어떤 카드가 들어왔는지 확인�
         ptrRfidMode(loginRole);
       }
       else{
-        Serial.println("Different TAG deteced");
+        Serial.println("Different TAG detected");
+        loginDone = false;      // 불일치 시 즉시 로그인 상태 초기화
+        loginRole = 'P';
+        strLastTagUser = "";
         ptrRfidFail();
       }
     }
@@ -104,10 +107,10 @@ void LoginTimerSelector(char role){
       ReturnNormalState();
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-      AllNeoOn(BLUE);
+      AllNeoOn(GREEN);
       GhostDoorOpen();
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-      AllNeoOn(BLUE);
+      AllNeoOn(GREEN);
       SubSerialFlush();
       MainSerialFlush();
       delay(1000);
@@ -194,10 +197,10 @@ void LoginTimerSelector(char role){
       ReturnNormalState();
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-      AllNeoOn(BLUE);
+      AllNeoOn(GREEN);
       GhostDoorOpen();
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
-      AllNeoOn(BLUE);
+      AllNeoOn(GREEN);
       SubSerialFlush();
       MainSerialFlush();
       delay(1000);

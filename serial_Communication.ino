@@ -45,17 +45,32 @@ void MainSerialFlush(){
 /**
  * @brief Main PN532 직접 SPI 태그 읽기
  * WifiIntervalFunc 및 WhichTagged → ptrRfidMain 에서 호출
+ * tagmachine_main과 동일하게 NTAG Page 7 데이터(역할 코드)를 읽어 has2wifi.Receive에 전달함
  */
 void ReadMainNfc(){
+  static bool cardPresent = false;
+
   uint8_t uid[7];
   uint8_t uidLength;
-  if (mainNfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 100)) {
-    mainRfidTagged = true;
-    String tagData = "";
-    for (uint8_t i = 0; i < 4; i++) {
-      tagData += (char)uid[i];
+  uint8_t data[32];
+
+  if (mainNfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 50)) {
+    if (!cardPresent) {   // 카드가 새로 올려진 첫 순간만 처리
+      cardPresent = true;
+      mainRfidTagged = true;
+      if (mainNfc.ntag2xx_ReadPage(7, data)) {
+        String tagData = "";
+        for (uint8_t i = 0; i < 4; i++) {
+          tagData += (char)data[i];
+        }
+        Serial.println("Main NFC Tag detected");
+        CheckingPlayers(tagData);
+      } else {
+        Serial.println("Main NFC: Page 7 read failed");
+        cardPresent = false;  // 읽기 실패 시 재시도 허용
+      }
     }
-    Serial.println("Main NFC Tag detected");
-    CheckingPlayers(tagData);
+  } else {
+    cardPresent = false;  // 카드 제거 → 다음 감지 허용
   }
 }
