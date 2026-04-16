@@ -47,11 +47,11 @@ String strCurState = "";
 String strMode = "";
 //****************************************Serial Communication*********************************************************
 void CommnunicationBeetle();
-void CommnunicationMainBeetle();
+void ReadMainNfc();
 void SubSerialFlush();
 void MainSerialFlush();
 HardwareSerial toSubSerial(1);
-HardwareSerial toMainSerial(2);
+Adafruit_PN532 mainNfc(PN532_SCK, PN532_MISO, PN532_MOSI, PN532_SS1);
 bool tagState = false;
 //****************************************SimpleTimer SETUP****************************************************************
 SimpleTimer GameTimer;

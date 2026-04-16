@@ -20,7 +20,7 @@ void TimerRun(){
 void WifiIntervalFunc(){
     has2wifi.Loop(DataChanged);
     CommnunicationBeetle();         // Sub Beetle
-    CommnunicationMainBeetle();     // Main Beetle
+    ReadMainNfc();                  // Main PN532 (SPI 직접)
 }
 
 /**
@@ -40,8 +40,6 @@ void SubSerialTimerFunc(){
     ptrRfidFail();
     while(toSubSerial.available())
       toSubSerial.read();
-    while(toMainSerial.available())
-      toMainSerial.read();
 }
 void DebuffTimerFunc(){
     DebuffTimer.deleteTimer(debuffTimerId);
@@ -54,7 +52,7 @@ void DebuffTimerFunc(){
  * @brief 일반 상태로 돌아가는 함수
  */
 void ReturnNormalState(){           
-    ptrRfidMain = CommnunicationMainBeetle;
+    ptrRfidMain = ReadMainNfc;
     ptrRfidSub = CommnunicationBeetle;
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;

@@ -39,38 +39,23 @@ void SubSerialFlush(){
 }
 
 void MainSerialFlush(){
-  while(toMainSerial.available())     //Main Beetle 시리얼 통신 버퍼 flush
-      toMainSerial.read();
+  // SPI 통신으로 전환됨 (toMainSerial 제거)
 }
 
 /**
- * @brief Main Beetle 시리얼 통신 처리 (Sub Beetle의 CommnunicationBeetle과 동일 구조)
- * WifiIntervalFunc에서 호출되어 모든 게임 상태에서 W 핸드셰이크 처리
- * activate 상태에서는 WhichTagged → ptrRfidMain에서도 호출되어 태그 데이터 처리
+ * @brief Main PN532 직접 SPI 태그 읽기
+ * WifiIntervalFunc 및 WhichTagged → ptrRfidMain 에서 호출
  */
-void CommnunicationMainBeetle(){
-  if(toMainSerial.available() > 0){
-    String command = toMainSerial.readStringUntil('\n');
-    Serial.println("Main Beetle: " + command);
-
-    if(command[0] == 'W'){
-      Serial.println("Main Beetle Init Success");
-      toMainSerial.println("W");
+void ReadMainNfc(){
+  uint8_t uid[7];
+  uint8_t uidLength;
+  if (mainNfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 100)) {
+    mainRfidTagged = true;
+    String tagData = "";
+    for (uint8_t i = 0; i < 4; i++) {
+      tagData += (char)uid[i];
     }
-    else if(command[0] == 'R'){
-      Serial.println("Main Beetle Reset Success");
-    }
-    else if(command[0] == 'M'){
-      digitalWrite(RELAY_PIN, HIGH);
-      delay(500);
-      digitalWrite(RELAY_PIN, LOW);
-    }
-    else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상)
-      mainRfidTagged = true;
-      Serial.println("TAGGGED (Main Beetle)");
-      CheckingPlayers(command.substring(0, 4));
-    }
-    while(toMainSerial.available())
-      toMainSerial.read();
+    Serial.println("Main NFC Tag detected");
+    CheckingPlayers(tagData);
   }
 }

@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+#include <Adafruit_PN532.h>
 #include <Adafruit_NeoPixel.h>
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
@@ -14,13 +15,16 @@
 
 #define DFPLAYER_RX_PIN 39
 #define DFPLAYER_TX_PIN 33
-#define SUB_BEETLE_RX_PIN 19
-#define SUB_BEETLE_TX_PIN 23
-#define MAIN_BEETLE_RX_PIN 2
-#define MAIN_BEETLE_TX_PIN 15
+#define BEETLE_RX_PIN 19
+#define BEETLE_TX_PIN 23
 
-#define MAIN_LINE_NEOPIXEL_PIN       13
-#define MAIN_ROUND_NEOPIXEL_PIN      14
+#define PN532_SCK      14
+#define PN532_MISO     2
+#define PN532_MOSI     15
+#define PN532_SS1      13
+
+#define MAIN_LINE_NEOPIXEL_PIN       25
+#define MAIN_ROUND_NEOPIXEL_PIN      26
 #define SUB_LINE_NEOPIXEL_PIN       5
 #define SUB_ROUND_NEOPIXEL_PIN      18
 #define ONBOARD_NEOPIXEL_PIN    27

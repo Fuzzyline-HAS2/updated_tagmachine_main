@@ -58,7 +58,7 @@ void Login(char role)
   gameTimerCnt = 0;
   if(mainRfidTagged == true)
   {
-    ptrRfidMain = CommnunicationMainBeetle;
+    ptrRfidMain = ReadMainNfc;
     ptrRfidSub = WaitFunc;
     LoginTimerSelector(role);
   }

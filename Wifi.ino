@@ -112,7 +112,7 @@ void ActivateFunc(void){
     ptrCurrentMode = WhichTagged;
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
-    ptrRfidMain = CommnunicationMainBeetle;
+    ptrRfidMain = ReadMainNfc;
     ptrRfidSub = CommnunicationBeetle;
 }
 void ReadyFunc(void){
