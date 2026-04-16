@@ -5,7 +5,7 @@
 const int rfid_num = 1; // 설치된 pn532의 개수
 
 //****************************************WIFI****************************************************************
-HAS2_Wifi has2wifi("http://172.30.1.43");
+HAS2_Wifi has2wifi("http://172.30.1.44");
 SecureOTA ota(
     "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/beetle_2/update.bin",
     "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/beetle_2/version.txt",
@@ -19,6 +19,7 @@ void ActivateFunc(void);
 void ReadyFunc(void);
 void GameSetting();
 void WaitFunc();
+void WaitRfid(char role);
 void WifiIntervalLoop(unsigned long intervalValue);
 unsigned long wifiInterval = 0;
 int wifiNum = 0;
@@ -26,18 +27,14 @@ struct WIFISSID
 {
     String strDevice;
 };
-struct WIFISSID wifissid[5] = { {"badland_auto"}, 
-                                {"badland_ruins"}, 
-                                {"badland_shoot"}, 
-                                {"badland_prison"}, 
-                                {"badland_chack"}};
+struct WIFISSID wifissid[6] = {{"HAS2_food"}, {"HAS2_office"}, {"HAS2_gun"}, {"HAS2_bar"}, {"HAS2_house"}, {"tp-link"}};
 //****************************************Pointer System****************************************************************
-void (*ptrCurrentMode)();   //현재모드 저장용 포인터 함수
-void (*ptrRfidMode)(char inputRole);      //rfid모드 저장용 포인터 함수
-void (*ptrRfidFail)();      //rfidFaile모드 저장용 포인터 함수
-void (*ptrRfidMain)();      //rfid 메인 저장용 포인터 함수
-void (*ptrRfidSub)();      //rfid 서브 저장용 포인터 함수
-void (*ptrGameTimer)();      //게임 타이머에 들어가는 포인터 함수
+void (*ptrCurrentMode)()             = WaitFunc;
+void (*ptrRfidMode)(char inputRole)  = WaitRfid;
+void (*ptrRfidFail)()                = WaitFunc;
+void (*ptrRfidMain)()                = WaitFunc;
+void (*ptrRfidSub)()                 = WaitFunc;
+void (*ptrGameTimer)()               = WaitFunc;
 //****************************************Game System****************************************************************
 volatile int playerLockTime = 7;
 volatile int playerUnlockTime = 10;

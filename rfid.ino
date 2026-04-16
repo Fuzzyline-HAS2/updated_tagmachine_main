@@ -104,7 +104,7 @@ void LoginTimerSelector(char role){
       ReturnNormalState();
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-      RoundNeoEffect(BLUE);
+      AllNeoOn(BLUE);
       GhostDoorOpen();
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
       AllNeoOn(BLUE);
@@ -194,7 +194,7 @@ void LoginTimerSelector(char role){
       ReturnNormalState();
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-      RoundNeoEffect(BLUE);
+      AllNeoOn(BLUE);
       GhostDoorOpen();
       has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
       AllNeoOn(BLUE);
