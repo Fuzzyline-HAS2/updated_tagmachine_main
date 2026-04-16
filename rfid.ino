@@ -98,26 +98,20 @@ void LoginTimerSelector(char role){
     }
     else if(role == 'G')
     {
-      if(ghostOpenTime == 0){
-        GameTimer.deleteTimer(gameTimerId);
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("GHOST OPEN (instant)");
-        ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(BLUE);
-        GhostDoorOpen();
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-        AllNeoOn(GREEN);
-        SubSerialFlush();
-        MainSerialFlush();
-        delay(1000);
-        has2wifi.Loop(DataChanged);
-      } else {
-        ptrGameTimer = GhostUnlockTimerFunc;
-        ptrRfidFail = GhostOpenFailLock;
-        ptrRfidMode = WaitRfid;
-      }
+      GameTimer.deleteTimer(gameTimerId);
+      Mp3PlayLargeFolder(1, VD1);
+      Serial.println("GHOST OPEN (instant)");
+      ReturnNormalState();
+      digitalWrite(RELAY_PIN, HIGH);
+      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+      RoundNeoEffect(BLUE);
+      GhostDoorOpen();
+      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+      AllNeoOn(BLUE);
+      SubSerialFlush();
+      MainSerialFlush();
+      delay(1000);
+      has2wifi.Loop(DataChanged);
     }
     else if(role == 'T')
     {
@@ -194,26 +188,20 @@ void LoginTimerSelector(char role){
     }
     else if(role == 'G')
     {
-      if(ghostOpenTime == 0){
-        GameTimer.deleteTimer(gameTimerId);
-        Mp3PlayLargeFolder(1, VD1);
-        Serial.println("GHOST OPEN (instant)");
-        ReturnNormalState();
-        digitalWrite(RELAY_PIN, HIGH);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
-        RoundNeoEffect(BLUE);
-        GhostDoorOpen();
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
-        AllNeoOn(YELLOW);
-        SubSerialFlush();
-        MainSerialFlush();
-        delay(1000);
-        has2wifi.Loop(DataChanged);
-      } else {
-        ptrGameTimer = GhostLockTimerFunc;
-        ptrRfidFail = GhostOpenFailUnlock;
-        ptrRfidMode = WaitRfid;
-      }
+      GameTimer.deleteTimer(gameTimerId);
+      Mp3PlayLargeFolder(1, VD1);
+      Serial.println("GHOST OPEN (instant)");
+      ReturnNormalState();
+      digitalWrite(RELAY_PIN, HIGH);
+      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+      RoundNeoEffect(BLUE);
+      GhostDoorOpen();
+      has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+      AllNeoOn(BLUE);
+      SubSerialFlush();
+      MainSerialFlush();
+      delay(1000);
+      has2wifi.Loop(DataChanged);
     }
     else if(role == 'T')
     {
