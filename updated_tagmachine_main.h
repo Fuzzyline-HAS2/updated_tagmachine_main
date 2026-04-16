@@ -27,7 +27,7 @@ struct WIFISSID
 {
     String strDevice;
 };
-struct WIFISSID wifissid[6] = {{"HAS2_food"}, {"HAS2_office"}, {"HAS2_gun"}, {"HAS2_bar"}, {"HAS2_house"}, {"tp-link"}};
+struct WIFISSID wifissid[5] =  {{"badland_ruins"}, {"badland_shoot"}, {"badland_prison"}, {"badland_check"}, {"badland_auto"}};
 //****************************************Pointer System****************************************************************
 void (*ptrCurrentMode)()             = WaitFunc;
 void (*ptrRfidMode)(char inputRole)  = WaitRfid;

@@ -21,7 +21,7 @@ void setup() {
     TimerInit();
     Mp3_Setup();
     pinMode(RELAY_PIN, OUTPUT);
-    has2wifi.Setup("city");
+    has2wifi.Setup("badland");
     delay(3000);
     ota.setLogStream(Serial);
     ota.setOnSuccess([]() {
