@@ -40,6 +40,7 @@ void DataChanged()
     debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
     ReturnNormalState();
   }
+  GameSetting();
   cur = my; // cur 데이터 그룹에 현재 읽어온 데이터 저장
 }
 void WaitFunc(){
@@ -57,7 +58,7 @@ void SettingFunc(void){
     digitalWrite(RELAY_PIN, HIGH);
     ptrCurrentMode = WaitFunc;
     ptrRfidMode = WaitRfid;
-
+    GameSetting();
 }
 void ActivateFunc(void){
     Serial.println("ACTIVATE");
@@ -74,6 +75,7 @@ void ActivateFunc(void){
     ptrRfidFail = WaitFunc;
     ptrRfidMain = CommnunicationMainBeetle;
     ptrRfidSub = CommnunicationBeetle;
+    GameSetting();
 }
 void ReadyFunc(void){
     Serial.println("READY");
@@ -87,6 +89,7 @@ void ReadyFunc(void){
     digitalWrite(RELAY_PIN, HIGH);
     ptrCurrentMode = WaitFunc;
     ptrRfidMode = WaitRfid;
+    GameSetting();
 }
 void GameSetting(){
     playerLockTime = (int)my["player_lock_time"];
