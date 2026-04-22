@@ -17,7 +17,7 @@ void CommnunicationBeetle(){
       delay(500);
       digitalWrite(RELAY_PIN, LOW);
     }
-    else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상이면 태그로 처리)
+    else if(command[0] == 'G'){
       mainRfidTagged = false;
       Serial.println("Sub Beetle Tag: " + command.substring(0,4));
       CheckingPlayers(command.substring(0,4));
@@ -48,7 +48,6 @@ void MainSerialFlush(){
  * tagmachine_main과 동일하게 NTAG Page 7 데이터(역할 코드)를 읽어 has2wifi.Receive에 전달함
  */
 void ReadMainNfc(){
-  static bool cardPresent = false;
 
   uint8_t uid[7];
   uint8_t uidLength;
@@ -71,6 +70,9 @@ void ReadMainNfc(){
       }
     }
   } else {
-    cardPresent = false;  // 카드 제거 → 다음 감지 허용
+    if (cardPresent) {
+      ptrRfidFail();  // 카드가 빠진 순간 실패 처리
+    }
+    cardPresent = false;
   }
 }

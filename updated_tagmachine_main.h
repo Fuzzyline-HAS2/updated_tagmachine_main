@@ -110,6 +110,7 @@ Adafruit_NeoPixel pixels[NeopixelNum] = {Adafruit_NeoPixel(NumPixels[LINE], MAIN
                                          
 //****************************************RFID SETUP****************************************************************
 bool mainRfidTagged = false;
+bool cardPresent = false;
 
 void CheckingPlayers(String tagUser);
 

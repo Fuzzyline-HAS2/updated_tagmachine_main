@@ -59,8 +59,9 @@ void ReturnNormalState(){
     gameTimerCnt = 0;
 
     loginDone = false;
-    loginRole = 'P';       // 이전 역할 초기화
-    strLastTagUser = "";   // 이전 태그 초기화
+    loginRole = 'P';
+    strLastTagUser = "";
+    cardPresent = false;
     GameTimer.deleteTimer(gameTimerId); 
     SubSerialTimer.deleteTimer(subSerialTimerId);   
     WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
