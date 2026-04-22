@@ -69,6 +69,12 @@ void CommnunicationMainBeetle(){
       mainRfidTagged = true;
       Serial.println("TAGGGED (Main Beetle)");
       CheckingPlayers(command.substring(0, 4));
+      if(SubSerialTimerStart == true){
+        SubSerialTimer.deleteTimer(subSerialTimerId);
+        SubSerialTimerStart = false;
+      }
+      subSerialTimerId = SubSerialTimer.setInterval(1000, SubSerialTimerFunc);
+      SubSerialTimerStart = true;
     }
     while(toMainSerial.available())
       toMainSerial.read();

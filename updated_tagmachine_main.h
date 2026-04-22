@@ -32,6 +32,7 @@ void (*ptrRfidFail)() = nullptr;  // rfidFail모드 저장용 포인터 함수
 void (*ptrRfidMain)() = nullptr;  // rfid 메인 저장용 포인터 함수
 void (*ptrRfidSub)() = nullptr;   // rfid 서브 저장용 포인터 함수
 void (*ptrGameTimer)() = nullptr; // 게임 타이머에 들어가는 포인터 함수
+void NewbieTaggerUnlockTimerFunc();
 //****************************************Game
 //System****************************************************************
 volatile int playerLockTime = 7;
@@ -40,6 +41,12 @@ volatile int taggerUnlockTime = 15;
 volatile int ghostOpenTime = 15;
 void WhichTagged();
 void DoorOpen();
+void NewbiePlayerOpenFunc();
+void NewbieGhostOpenFunc();
+void NewbieLogin(char role);
+void NewbiePlayerOpen();
+void NewbieGhostOpen();
+void NewbieModeSetting();
 
 String strCurState = "";
 //****************************************Serial

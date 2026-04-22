@@ -207,6 +207,41 @@ void GhostUnlockTimerFunc(){
 }
 
 /**
+ * @brief 뉴비모드: 술래가 잠금해제 후 lock 상태로 복귀
+ */
+void NewbieTaggerUnlockTimerFunc(){
+    gameTimerCnt++;
+    RoundNeoToggle(PURPLE, gameTimerCnt);
+    if(gameTimerCnt%3 == 1)
+        if(gameTimerCnt < (taggerUnlockTime - 2))
+            Mp3PlayLargeFolder(1, VD10);
+    LineNeoDown(PURPLE, GREEN, map(gameTimerCnt, 0, taggerUnlockTime, 0, NumPixels[LINE]));
+    if(gameTimerCnt > (taggerUnlockTime))
+    {
+        has2wifi.ReceiveMine();
+        DataChanged();
+        if(strCurState != "lock"){
+            Serial.println("debuff on");
+            loginDone = false;
+        }
+        else {
+            Mp3PlayLargeFolder(1, VD1);
+            Serial.println("DOOR UNLOCK (Newbie)!");
+            ReturnNormalState();
+            ptrRfidMode = NewbieLogin;
+            digitalWrite(RELAY_PIN, HIGH);
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+            RoundNeoEffect(PURPLE);
+            GhostDoorOpen();
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+            AllNeoOn(GREEN);
+            SubSerialFlush();
+            MainSerialFlush();
+        }
+    }
+}
+
+/**
  * @brief 잠겨있지 않은 도어 유령이 잠금해제를 하기위한 함수
  */
 void GhostLockTimerFunc(){      

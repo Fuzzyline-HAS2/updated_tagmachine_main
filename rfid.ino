@@ -126,6 +126,12 @@ void LoginTimerSelector(char role) {
       ReturnNormalState();
     }
   }
+  if ((String)(const char*)my["mode"] == "easy" &&
+      (String)(const char*)my["device_state"] == "lock") {
+    if (role == 'P') NewbiePlayerOpenFunc();
+    else if (role == 'G') NewbieGhostOpenFunc();
+    else if (role == 'T') ptrGameTimer = NewbieTaggerUnlockTimerFunc;
+  }
 }
 void LockFail() {
   has2wifi.ReceiveMine();

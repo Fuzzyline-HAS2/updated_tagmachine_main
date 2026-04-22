@@ -41,6 +41,11 @@ void DataChanged()
     ReturnNormalState();
   }
   GameSetting();
+  NewbieModeSetting();
+  {
+    String _ds = (String)(const char*)my["device_state"];
+    if (_ds == "lock" || _ds == "activate" || _ds == "debuff") strCurState = _ds;
+  }
   cur = my; // cur 데이터 그룹에 현재 읽어온 데이터 저장
 }
 void WaitFunc(){
@@ -76,6 +81,11 @@ void ActivateFunc(void){
     ptrRfidMain = CommnunicationMainBeetle;
     ptrRfidSub = CommnunicationBeetle;
     GameSetting();
+    NewbieModeSetting();
+    if ((String)(const char*)my["mode"] == "easy") {
+        strCurState = "lock";
+        AllNeoOn(GREEN);
+    }
 }
 void ReadyFunc(void){
     Serial.println("READY");
@@ -96,4 +106,10 @@ void GameSetting(){
     playerUnlockTime = (int)my["player_unlock_time"];
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
+}
+void NewbieModeSetting() {
+    if ((String)(const char*)my["mode"] == "easy" &&
+        (String)(const char*)my["game_state"] == "activate") {
+        ptrRfidMode = NewbieLogin;
+    }
 }

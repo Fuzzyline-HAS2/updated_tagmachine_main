@@ -23,3 +23,79 @@ void GhostDoorOpen(){
     RoundNeoEffectDown(BLACK);
     // delay(3000);
 }
+
+// ======================== NEWBIE MODE ========================
+
+void NewbiePlayerOpenFunc() {
+    Mp3PlayLargeFolder(1, VD7);
+    ReturnNormalState();
+    digitalWrite(RELAY_PIN, HIGH);
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+    RoundNeoEffect(GREEN);
+    GhostDoorOpen();
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+    AllNeoOn(GREEN);
+    SubSerialFlush();
+    MainSerialFlush();
+    delay(1000);
+    has2wifi.Loop(DataChanged);
+}
+
+void NewbieGhostOpenFunc() {
+    Mp3PlayLargeFolder(1, VD1);
+    ReturnNormalState();
+    digitalWrite(RELAY_PIN, HIGH);
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+    RoundNeoEffect(BLUE);
+    GhostDoorOpen();
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+    AllNeoOn(GREEN);
+    SubSerialFlush();
+    MainSerialFlush();
+    delay(1000);
+    has2wifi.Loop(DataChanged);
+}
+
+// ======================== NEWBIE MODE ========================
+
+void NewbiePlayerOpen() {
+    ReturnNormalState();
+    ptrRfidMode = NewbieLogin;
+    Mp3PlayLargeFolder(1, VD7);
+    digitalWrite(RELAY_PIN, HIGH);
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+    RoundNeoEffect(GREEN);
+    GhostDoorOpen();
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+    AllNeoOn(GREEN);
+    SubSerialFlush();
+    MainSerialFlush();
+    delay(1000);
+    has2wifi.Loop(DataChanged);
+}
+
+void NewbieGhostOpen() {
+    ReturnNormalState();
+    ptrRfidMode = NewbieLogin;
+    Mp3PlayLargeFolder(1, VD1);
+    digitalWrite(RELAY_PIN, HIGH);
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
+    RoundNeoEffect(BLUE);
+    GhostDoorOpen();
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+    AllNeoOn(GREEN);
+    SubSerialFlush();
+    MainSerialFlush();
+    delay(1000);
+    has2wifi.Loop(DataChanged);
+}
+
+void NewbieLogin(char role) {
+    if (role == 'T') {
+        Login(role);
+    } else if (role == 'P') {
+        NewbiePlayerOpen();
+    } else if (role == 'G') {
+        NewbieGhostOpen();
+    }
+}
