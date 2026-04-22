@@ -28,7 +28,7 @@ void WifiIntervalFunc(){
  */
 void GameTimerFunc(){
     Serial.println("GameTimer");
-    ptrGameTimer();
+    if (ptrGameTimer != nullptr) ptrGameTimer();
 }
 
 /**
@@ -37,7 +37,7 @@ void GameTimerFunc(){
 void SubSerialTimerFunc(){
     SubSerialTimer.deleteTimer(subSerialTimerId);
     SubSerialTimerStart = true;
-    ptrRfidFail();
+    if (ptrRfidFail != nullptr) ptrRfidFail();
     while(toSubSerial.available())
       toSubSerial.read();
     while(toMainSerial.available())

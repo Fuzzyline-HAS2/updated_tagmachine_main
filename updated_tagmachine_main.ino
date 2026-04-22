@@ -42,8 +42,14 @@ void setup() {
         delay(100);
     }
     Serial.println("=== Main Beetle Handshake End ===");
+
+    // setup() 완료 시점에도 ptrCurrentMode가 설정되지 않았으면 WaitFunc로 안전하게 초기화
+    if (ptrCurrentMode == nullptr) {
+        ptrCurrentMode = WaitFunc;
+        Serial.println("[WARN] ptrCurrentMode was nullptr → set to WaitFunc");
+    }
 }
 void loop() {
-    ptrCurrentMode();
+    if (ptrCurrentMode != nullptr) ptrCurrentMode();
     TimerRun();
 }

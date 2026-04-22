@@ -25,12 +25,12 @@ struct WIFISSID wifissid[5] = { {"badland_auto"},
                                 {"badland_prison"}, 
                                 {"badland_chack"}};
 //****************************************Pointer System****************************************************************
-void (*ptrCurrentMode)();   //현재모드 저장용 포인터 함수
-void (*ptrRfidMode)(char inputRole);      //rfid모드 저장용 포인터 함수
-void (*ptrRfidFail)();      //rfidFaile모드 저장용 포인터 함수
-void (*ptrRfidMain)();      //rfid 메인 저장용 포인터 함수
-void (*ptrRfidSub)();      //rfid 서브 저장용 포인터 함수
-void (*ptrGameTimer)();      //게임 타이머에 들어가는 포인터 함수
+void (*ptrCurrentMode)()              = nullptr;  // 현재모드 저장용 포인터 함수 (setup 이전 nullptr → loop에서 null 가드)
+void (*ptrRfidMode)(char inputRole)   = nullptr;  // rfid모드 저장용 포인터 함수
+void (*ptrRfidFail)()                 = nullptr;  // rfidFail모드 저장용 포인터 함수
+void (*ptrRfidMain)()                 = nullptr;  // rfid 메인 저장용 포인터 함수
+void (*ptrRfidSub)()                  = nullptr;  // rfid 서브 저장용 포인터 함수
+void (*ptrGameTimer)()                = nullptr;  // 게임 타이머에 들어가는 포인터 함수
 //****************************************Game System****************************************************************
 volatile int playerLockTime = 7;
 volatile int playerUnlockTime = 10;

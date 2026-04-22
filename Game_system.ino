@@ -1,7 +1,7 @@
 void WhichTagged()
 {
-    ptrRfidMain();
-    ptrRfidSub();
+    if (ptrRfidMain != nullptr) ptrRfidMain();
+    if (ptrRfidSub  != nullptr) ptrRfidSub();
 }
 
 void DoorOpen(){
