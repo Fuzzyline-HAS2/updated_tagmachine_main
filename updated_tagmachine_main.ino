@@ -1,5 +1,5 @@
  ;/**
- * @file Done_ItemBox_code.ino
+ * @file updated_tagmachine_main.ino
  * @author 김병준 (you@domain.com)
  * @brief
  * @version 1.0
@@ -9,7 +9,7 @@
  *
  */
 
-#include "tagmachine_main.h"
+#include "updated_tagmachine_main.h"
 
 void setup() {
     Serial.begin(115200);
