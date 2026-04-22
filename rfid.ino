@@ -49,8 +49,8 @@ void Login(char role)
 { 
   Serial.println("LOGIN");
   loginDone = true;
-  pixels[ROUND].lightColor(color[BLACK]);
-  pixels[ROUND_SUB].lightColor(color[BLACK]);
+  lightColor(pixels[ROUND], color[BLACK]);
+  lightColor(pixels[ROUND_SUB], color[BLACK]);
 
   GameTimer.deleteTimer(gameTimerId);
   gameTimerId = GameTimer.setInterval(1000,GameTimerFunc);

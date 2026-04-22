@@ -1,4 +1,14 @@
+// lightColor: Adafruit_NeoPixel에 없는 메서드를 전역 헬퍼로 구현
+//             픽셀 전체를 지정 색상(rgb 배열)으로 채우고 show() 호출
+void lightColor(Adafruit_NeoPixel &strip, int rgb[3]) {
+  for (int i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, strip.Color(rgb[0], rgb[1], rgb[2]));
+  }
+  strip.show();
+}
+
 void NeopixelInit()
+
 {
   for (int i = 0; i < NeopixelNum; ++i)
   {
@@ -6,24 +16,24 @@ void NeopixelInit()
   }
   for (int i = 0; i < NeopixelNum; ++i)
   {
-    pixels[i].lightColor(color[WHITE]);
+    lightColor(pixels[i], color[WHITE]);
   }
 }
 
 void NeoBlink(int neo, int neoColor, int cnt, int blinkTime){
     for(int i = 0; i < cnt; i++){                          //0.5*10=5초동안 점멸
-        pixels[neo].lightColor(color[BLACK]); //전체 off
-        pixels[neo+3].lightColor(color[BLACK]);
+        lightColor(pixels[neo], color[BLACK]); //전체 off
+        lightColor(pixels[neo+3], color[BLACK]);
         delay(blinkTime);            
-        pixels[neo].lightColor(color[neoColor]); //전체 적색on
-        pixels[neo+3].lightColor(color[neoColor]);
+        lightColor(pixels[neo], color[neoColor]); //전체 적색on
+        lightColor(pixels[neo+3], color[neoColor]);
         delay(blinkTime);                   //전체 적색on
     }
 }
 
 void AllNeoOn(int neoColor){
     for (int i = 0; i < NeopixelNum; ++i)
-        pixels[i].lightColor(color[neoColor]);
+        lightColor(pixels[i], color[neoColor]);
 }
 
 void LineNeoDown(int changeColr, int baseColor, int cnt){
@@ -84,22 +94,22 @@ void RoundNeoEffectDown(int neocolor)
 
 void RoundNeoToggle(int neoColor, int toggle){
   if(toggle%2 == 1){
-    pixels[ROUND].lightColor(color[neoColor]);
-    pixels[ROUND_SUB].lightColor(color[neoColor]);
+    lightColor(pixels[ROUND], color[neoColor]);
+    lightColor(pixels[ROUND_SUB], color[neoColor]);
   }
   else{
-    pixels[ROUND].lightColor(color[BLACK]);
-    pixels[ROUND_SUB].lightColor(color[BLACK]);
+    lightColor(pixels[ROUND], color[BLACK]);
+    lightColor(pixels[ROUND_SUB], color[BLACK]);
   }
 }
 void LineNeoToggle(int neoColor, int toggle){
   if(toggle%2 == 1){
-    pixels[LINE].lightColor(color[neoColor]);
-    pixels[LINE_SUB].lightColor(color[neoColor]);
+    lightColor(pixels[LINE], color[neoColor]);
+    lightColor(pixels[LINE_SUB], color[neoColor]);
   }
   else{
-    pixels[LINE].lightColor(color[BLACK]);
-    pixels[LINE_SUB].lightColor(color[BLACK]);
+    lightColor(pixels[LINE], color[BLACK]);
+    lightColor(pixels[LINE_SUB], color[BLACK]);
   }
 }
 
