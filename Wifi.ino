@@ -19,29 +19,26 @@ void DataChanged()
     }
   }
   if((String)(const char*)my["device_state"] != (String)(const char*)cur["device_state"]){  
-    if((String)(const char*)my["device_state"] == "lock"){ 
-      strCurState = "lock";
-      AllNeoOn(GREEN);
+    String deviceState = (String)(const char*)my["device_state"];
+    if(deviceState == "lock"){
+      strCurState = deviceState;
+      if(loginDone) QueuePendingDeviceState(deviceState);
+      else ApplyDeviceState(deviceState);
     }
-    else if((String)(const char*)my["device_state"] == "mo"){ 
+    else if(deviceState == "mo"){
         digitalWrite(RELAY_PIN, HIGH);
         delay(1000);
         digitalWrite(RELAY_PIN, LOW);
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", (String)(const char*)cur["device_state"]);
     }
-    else if((String)(const char*)my["device_state"] == "activate"){
-        strCurState = "activate";
-        ActivateFunc();
+    else if(deviceState == "activate"){
+        strCurState = deviceState;
+        if(loginDone) QueuePendingDeviceState(deviceState);
+        else ApplyDeviceState(deviceState);
     }
   }
   if((String)(const char*)my["device_state"] == "debuff"){ 
-    strCurState = "debuff";
-    ptrRfidFail = WaitFunc;
-    AllNeoOn(PURPLE);
-    Serial.println("디버프 시작");
-    DebuffTimer.deleteTimer(debuffTimerId);
-    debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
-    ReturnNormalState();
+    ApplyDeviceState("debuff");
   }
   GameSetting();
   NewbieModeSetting();
@@ -50,6 +47,43 @@ void DataChanged()
     if (_ds == "lock" || _ds == "activate" || _ds == "debuff") strCurState = _ds;
   }
   cur = my; // cur 데이터 그룹에 현재 읽어온 데이터 저장
+}
+
+void QueuePendingDeviceState(String deviceState) {
+    pendingDeviceState = deviceState;
+    pendingDeviceStateApply = true;
+    Serial.println("Queue Device State: " + deviceState);
+}
+
+void ApplyPendingDeviceState() {
+    if (!pendingDeviceStateApply || loginDone) return;
+
+    String deviceState = pendingDeviceState;
+    pendingDeviceState = "";
+    pendingDeviceStateApply = false;
+    ApplyDeviceState(deviceState);
+}
+
+void ApplyDeviceState(String deviceState) {
+    if(deviceState == "lock"){
+      strCurState = "lock";
+      AllNeoOn(GREEN);
+    }
+    else if(deviceState == "activate"){
+        strCurState = "activate";
+        ActivateFunc();
+    }
+    else if(deviceState == "debuff"){
+        pendingDeviceState = "";
+        pendingDeviceStateApply = false;
+        strCurState = "debuff";
+        ptrRfidFail = WaitFunc;
+        AllNeoOn(PURPLE);
+        Serial.println("디버프 시작");
+        DebuffTimer.deleteTimer(debuffTimerId);
+        debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
+        ReturnNormalState();
+    }
 }
 void WaitFunc(){
 

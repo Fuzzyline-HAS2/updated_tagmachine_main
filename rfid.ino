@@ -158,7 +158,7 @@ void LockFail() {
   // Serial.println("strCurState:" + String(strCurState));
   if (strCurState != "activate") {
     Serial.println("debuff on");
-    loginDone = false;
+    CancelTagProgress();
   } else {
     Mp3PlayLargeFolder(1, VD1);
     Serial.println("Lock Fail Door Open");

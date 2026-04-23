@@ -12,6 +12,7 @@ void TimerRun(){
     GameTimer.run();
     SubSerialTimer.run();
     DebuffTimer.run();
+    ApplyPendingDeviceState();
 }
 
 /**
@@ -65,6 +66,7 @@ void CancelTagProgress(){
     SubSerialFlush();
     MainSerialFlush();
     Serial.println("Cancel Tag Progress");
+    ApplyPendingDeviceState();
 }
 
 /**
@@ -105,7 +107,7 @@ void PlayerLockTimerFunc(){
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
             Serial.println("debuff on");
-            loginDone = false;
+            CancelTagProgress();
         }
         else {
             Serial.println("debuff off");
@@ -137,7 +139,7 @@ void PlayerUnlockTimerFunc(){
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
             Serial.println("debuff on");
-            loginDone = false;
+            CancelTagProgress();
         }
         else {
             Serial.println("DOOR UNLOCK!");
@@ -202,7 +204,7 @@ void GhostUnlockTimerFunc(){
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
             Serial.println("debuff on");
-            loginDone = false;
+            CancelTagProgress();
         }
         else{
             Mp3PlayLargeFolder(1, VD1);
@@ -275,6 +277,7 @@ void GhostLockTimerFunc(){
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
             Serial.println("debuff on");
+            CancelTagProgress();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
