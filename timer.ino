@@ -237,6 +237,8 @@ void NewbieTaggerUnlockTimerFunc(){
             AllNeoOn(GREEN);
             SubSerialFlush();
             MainSerialFlush();
+            delay(1000);
+            has2wifi.Loop(DataChanged);
         }
     }
 }

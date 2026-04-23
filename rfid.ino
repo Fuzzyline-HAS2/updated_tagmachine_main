@@ -130,7 +130,25 @@ void LoginTimerSelector(char role) {
       (String)(const char*)my["device_state"] == "lock") {
     if (role == 'P') NewbiePlayerOpenFunc();
     else if (role == 'G') NewbieGhostOpenFunc();
-    else if (role == 'T') ptrGameTimer = NewbieTaggerUnlockTimerFunc;
+    else if (role == 'T') {
+      ptrGameTimer = NewbieTaggerUnlockTimerFunc;
+      ptrRfidFail = NewbieTaggerFail;
+    }
+  }
+}
+void NewbieTaggerFail() {
+  has2wifi.ReceiveMine();
+  DataChanged();
+  if (strCurState != "lock") {
+    Serial.println("debuff on");
+    loginDone = false;
+  } else {
+    Mp3PlayLargeFolder(1, VD6);
+    Serial.println("Unlock Fail Door Shut");
+    NeoBlink(ROUND, RED, 5, 500);
+    AllNeoOn(GREEN);
+    ReturnNormalState();
+    ptrRfidMode = NewbieLogin;
   }
 }
 void LockFail() {
