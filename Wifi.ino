@@ -1,7 +1,10 @@
 void DataChanged()
 {
   static StaticJsonDocument<1000> cur;  //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
-  if((String)(const char*)my["game_state"] != (String)(const char*)cur["game_state"]){  
+  if (my["brightness"].as<int>() != cur["brightness"].as<int>()) {
+    UpdateBrightness();
+  }
+  if((String)(const char*)my["game_state"] != (String)(const char*)cur["game_state"]){
     if((String)(const char*)my["game_state"] == "setting"){
         strCurState = "setting";
         SettingFunc();

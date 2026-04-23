@@ -118,6 +118,10 @@ int color[11][3] = {{20, 20, 20}, // WHITE
                     {0, 0, 60},   // ENCODERBLUE2
                     {0, 0, 80}};  // ENCODERBLUE3
 
+#define DEFAULT_BRIGHTNESS 50
+int ledBrightness = DEFAULT_BRIGHTNESS;
+void UpdateBrightness();
+
 const int neopixel_num = 5; // 설치된 네오픽셀의 개수
 
 Adafruit_NeoPixel pixels[NeopixelNum] = {

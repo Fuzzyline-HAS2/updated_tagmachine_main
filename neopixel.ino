@@ -1,21 +1,30 @@
 // lightColor: Adafruit_NeoPixel에 없는 메서드를 전역 헬퍼로 구현
 //             픽셀 전체를 지정 색상(rgb 배열)으로 채우고 show() 호출
-void lightColor(Adafruit_NeoPixel &strip, int rgb[3]) {
-  for (int i = 0; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, strip.Color(rgb[0], rgb[1], rgb[2]));
+void lightColor(Adafruit_NeoPixel &neo, int c[3]) {
+  neo.fill(neo.Color(c[0], c[1], c[2]));
+  neo.show();
+}
+
+void UpdateBrightness() {
+  int serverBrightness = my["brightness"].as<int>();
+  if (serverBrightness <= 0 || serverBrightness > 100) {
+    ledBrightness = DEFAULT_BRIGHTNESS;
+  } else {
+    ledBrightness = map(serverBrightness, 1, 100, 1, 255);
   }
-  strip.show();
+  for (int i = 0; i < NeopixelNum; ++i) {
+    pixels[i].setBrightness(ledBrightness);
+    pixels[i].show();
+  }
 }
 
 void NeopixelInit()
-
 {
-  for (int i = 0; i < NeopixelNum; ++i)
-  {
+  for (int i = 0; i < NeopixelNum; ++i) {
     pixels[i].begin();
+    pixels[i].setBrightness(ledBrightness);
   }
-  for (int i = 0; i < NeopixelNum; ++i)
-  {
+  for (int i = 0; i < NeopixelNum; ++i) {
     lightColor(pixels[i], color[WHITE]);
   }
 }
