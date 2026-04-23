@@ -120,6 +120,8 @@ void ActivateFunc(void){
     GameSetting();
     NewbieModeSetting();
     if ((String)(const char*)my["mode"] == "easy") {
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+        my["device_state"] = "lock";
         strCurState = "lock";
         AllNeoOn(GREEN);
     }
