@@ -61,7 +61,7 @@ void NewbieGhostOpenFunc() {
 void NewbiePlayerOpen() {
     ReturnNormalState();
     ptrRfidMode = NewbieLogin;
-    Mp3PlayLargeFolder(1, VD7);
+    Mp3PlayLargeFolder(1, VD1);
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(GREEN);

@@ -142,7 +142,7 @@ void NewbieTaggerFail() {
   DataChanged();
   if (strCurState != "lock") {
     Serial.println("debuff on");
-    loginDone = false;
+    CancelTagProgress();
   } else {
     Mp3PlayLargeFolder(1, VD6);
     Serial.println("Unlock Fail Door Shut");
@@ -177,7 +177,7 @@ void UnlockFail() {
   // Serial.println("strCurState:" + String(strCurState));
   if (strCurState != "lock") {
     Serial.println("debuff on");
-    loginDone = false;
+    CancelTagProgress();
   } else {
     Mp3PlayLargeFolder(1, VD6);
     Serial.println("Unlock Fail Door Shut");

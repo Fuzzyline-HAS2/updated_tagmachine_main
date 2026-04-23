@@ -36,7 +36,7 @@ void GameTimerFunc(){
  */
 void SubSerialTimerFunc(){
     SubSerialTimer.deleteTimer(subSerialTimerId);
-    SubSerialTimerStart = true;
+    SubSerialTimerStart = false;
     if (ptrRfidFail != nullptr) ptrRfidFail();
     while(toSubSerial.available())
       toSubSerial.read();
@@ -48,6 +48,23 @@ void DebuffTimerFunc(){
     Serial.println("debuff time end");
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
     ReturnNormalState();
+}
+
+void CancelTagProgress(){
+    GameTimer.deleteTimer(gameTimerId);
+    SubSerialTimer.deleteTimer(subSerialTimerId);
+    SubSerialTimerStart = false;
+    gameTimerCnt = 0;
+    loginDone = false;
+
+    ptrRfidMain = CommnunicationMainBeetle;
+    ptrRfidSub = CommnunicationBeetle;
+    ptrRfidMode = Login;
+    ptrRfidFail = WaitFunc;
+
+    SubSerialFlush();
+    MainSerialFlush();
+    Serial.println("Cancel Tag Progress");
 }
 
 /**
@@ -154,7 +171,7 @@ void TaggerUnlockTimerFunc(){
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
             Serial.println("debuff on");
-            loginDone = false;
+            CancelTagProgress();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
@@ -222,7 +239,7 @@ void NewbieTaggerUnlockTimerFunc(){
         DataChanged();
         if(strCurState != "lock"){
             Serial.println("debuff on");
-            loginDone = false;
+            CancelTagProgress();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);

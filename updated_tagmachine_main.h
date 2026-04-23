@@ -142,6 +142,7 @@ bool mainRfidTagged = false;
 
 void CheckingPlayers(String tagUser);
 
+void CancelTagProgress();
 void Login(char role);
 void LoginTimerSelector(char role);
 void LockFail();
