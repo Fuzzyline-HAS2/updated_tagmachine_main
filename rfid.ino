@@ -61,6 +61,7 @@ void Login(char role) {
     ptrRfidSub = CommnunicationBeetle;
     LoginTimerSelector(role);
   }
+  if (loginDone && ptrGameTimer != nullptr) ptrGameTimer();
 }
 
 void WaitRfid(char role) { Serial.println("WAIT RFID"); }
