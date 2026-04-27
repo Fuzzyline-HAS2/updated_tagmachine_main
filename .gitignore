@@ -1,0 +1,6 @@
+secrets.h
+scripts/secrets.py
+build/
+__pycache__/
+*.elf
+ArduinoOutput/

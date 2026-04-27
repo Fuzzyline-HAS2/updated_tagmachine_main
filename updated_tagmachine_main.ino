@@ -9,6 +9,7 @@
  *
  */
 
+#define FIRMWARE_VER 1
 #include "updated_tagmachine_main.h"
 
 void setup() {
@@ -22,6 +23,13 @@ void setup() {
 //  has2wifi.Setup("city");
     has2wifi.Setup("badland_ruins", "Code3824@");
     TelnetInit();
+    ota.setLogStream(Serial);
+    ota.setOnSuccess([]() {
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "setting");
+    });
+    ota.setOnSkip([]() {
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "setting");
+    });
     DataChanged();
     GameSetting();
 

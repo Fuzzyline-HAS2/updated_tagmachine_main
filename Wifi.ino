@@ -36,6 +36,9 @@ void DataChanged()
         if(loginDone) QueuePendingDeviceState(deviceState);
         else ApplyDeviceState(deviceState);
     }
+    else if(deviceState == "github"){
+        ota.check();
+    }
   }
   if((String)(const char*)my["device_state"] == "debuff"){ 
     ApplyDeviceState("debuff");

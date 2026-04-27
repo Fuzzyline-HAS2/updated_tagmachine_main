@@ -20,6 +20,13 @@ const int rfid_num = 1; // 설치된 pn532의 개수
 void TelnetInit();
 void TelnetRun();
 HAS2_Wifi has2wifi("http://172.30.1.43");
+SecureOTA ota(
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/main/update.bin",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/main/version.txt",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/main/update.sig",
+  HMAC_SECRET,
+  FIRMWARE_VER
+);
 void DataChanged();
 void ApplyDeviceState(String deviceState);
 void QueuePendingDeviceState(String deviceState);
