@@ -2,9 +2,23 @@
 #define _UPDATED_TAGMACHINE_MAIN_
 
 #include "Library_and_pin.h"
+
+class TelnetDebugConsole : public Print {
+public:
+  void begin(unsigned long baud);
+  size_t write(uint8_t data) override;
+  size_t write(const uint8_t *buffer, size_t size) override;
+};
+
+extern TelnetDebugConsole DebugSerial;
+
+#define Serial DebugSerial
+
 const int rfid_num = 1; // 설치된 pn532의 개수
 
 //****************************************WIFI****************************************************************
+void TelnetInit();
+void TelnetRun();
 HAS2_Wifi has2wifi("http://172.30.1.43");
 void DataChanged();
 void ApplyDeviceState(String deviceState);

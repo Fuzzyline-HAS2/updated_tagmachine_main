@@ -21,6 +21,7 @@ void setup() {
     pinMode(RELAY_PIN, OUTPUT);
 //  has2wifi.Setup("city");
     has2wifi.Setup("badland_ruins", "Code3824@");
+    TelnetInit();
     DataChanged();
     GameSetting();
 
@@ -52,4 +53,5 @@ void setup() {
 void loop() {
     if (ptrCurrentMode != nullptr) ptrCurrentMode();
     TimerRun();
+    TelnetRun();
 }
