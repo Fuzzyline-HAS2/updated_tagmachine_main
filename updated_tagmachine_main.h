@@ -3,14 +3,19 @@
 
 #include "Library_and_pin.h"
 
-class TelnetDebugConsole : public Print {
+class TelnetDebugConsole : public Stream {
 public:
   void begin(unsigned long baud);
   size_t write(uint8_t data) override;
   size_t write(const uint8_t *buffer, size_t size) override;
+  int available() override { return 0; }
+  int read() override { return -1; }
+  int peek() override { return -1; }
+  void flush() override {}
 };
 
 extern TelnetDebugConsole DebugSerial;
+extern HardwareSerial& _physSerial;
 
 #define Serial DebugSerial
 

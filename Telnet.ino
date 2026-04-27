@@ -1,15 +1,13 @@
-#undef Serial
-
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;
 TelnetDebugConsole DebugSerial;
 
 void TelnetDebugConsole::begin(unsigned long baud) {
-  ::Serial.begin(baud);
+  _physSerial.begin(baud);
 }
 
 size_t TelnetDebugConsole::write(uint8_t data) {
-  ::Serial.write(data);
+  _physSerial.write(data);
   if (telnetClient && telnetClient.connected()) {
     telnetClient.write(data);
   }
@@ -17,7 +15,7 @@ size_t TelnetDebugConsole::write(uint8_t data) {
 }
 
 size_t TelnetDebugConsole::write(const uint8_t *buffer, size_t size) {
-  ::Serial.write(buffer, size);
+  _physSerial.write(buffer, size);
   if (telnetClient && telnetClient.connected()) {
     telnetClient.write(buffer, size);
   }
@@ -54,8 +52,6 @@ void TelnetRun() {
 
   while (telnetClient && telnetClient.connected() && telnetClient.available()) {
     char c = telnetClient.read();
-    ::Serial.write(c);
+    _physSerial.write(c);
   }
 }
-
-#define Serial DebugSerial
