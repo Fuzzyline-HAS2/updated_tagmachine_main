@@ -6,16 +6,16 @@
 class TelnetDebugConsole : public Stream {
 public:
   void begin(unsigned long baud);
+  int available() override;
+  int read() override;
+  int peek() override;
+  void flush() override;
   size_t write(uint8_t data) override;
   size_t write(const uint8_t *buffer, size_t size) override;
-  int available() override { return 0; }
-  int read() override { return -1; }
-  int peek() override { return -1; }
-  void flush() override {}
 };
 
+extern HardwareSerial HardwareDebugSerial;
 extern TelnetDebugConsole DebugSerial;
-extern HardwareSerial& _physSerial;
 
 #define Serial DebugSerial
 
@@ -137,17 +137,17 @@ enum {
   BLUE3
 };
 // Neopixel 색상정보
-int color[11][3] = {{20, 20, 20}, // WHITE
-                    {40, 0, 0},   // RED
-                    {40, 40, 0},  // YELLOW
-                    {0, 40, 0},   // GREEN
-                    {0, 0, 40},   // BLUE
-                    {40, 0, 40},  // PURPLE
-                    {0, 0, 0},    // BLACK
-                    {0, 0, 20},   // ENCODERBLUE0
-                    {0, 0, 40},   // ENCODERBLUE1
-                    {0, 0, 60},   // ENCODERBLUE2
-                    {0, 0, 80}};  // ENCODERBLUE3
+int color[11][3] = {{255, 255, 255}, // WHITE
+                    {255, 0,   0  }, // RED
+                    {255, 255, 0  }, // YELLOW
+                    {0,   255, 0  }, // GREEN
+                    {0,   0,   255}, // BLUE
+                    {255, 0,   255}, // PURPLE
+                    {0,   0,   0  }, // BLACK
+                    {0,   0,   64 }, // ENCODERBLUE0
+                    {0,   0,   128}, // ENCODERBLUE1
+                    {0,   0,   192}, // ENCODERBLUE2
+                    {0,   0,   255}}; // ENCODERBLUE3
 
 #define DEFAULT_BRIGHTNESS 50
 int ledBrightness = DEFAULT_BRIGHTNESS;
