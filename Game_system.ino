@@ -7,7 +7,7 @@ void WhichTagged()
 void DoorOpen(){
     digitalWrite(RELAY_PIN, LOW);
     if(strCurState == "debuff"){  //debuff 인경우위해서?
-        Serial.println("DEBUFF OPEN");
+        DebugSerial.println("DEBUFF OPEN");
     }
     else{
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");

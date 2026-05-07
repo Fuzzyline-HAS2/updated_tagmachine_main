@@ -55,7 +55,7 @@ void DataChanged()
 void QueuePendingDeviceState(String deviceState) {
     pendingDeviceState = deviceState;
     pendingDeviceStateApply = true;
-    Serial.println("Queue Device State: " + deviceState);
+    DebugSerial.println("Queue Device State: " + deviceState);
 }
 
 void ApplyPendingDeviceState() {
@@ -82,7 +82,7 @@ void ApplyDeviceState(String deviceState) {
         strCurState = "debuff";
         ptrRfidFail = WaitFunc;
         AllNeoOn(PURPLE);
-        Serial.println("디버프 시작");
+        DebugSerial.println("디버프 시작");
         DebuffTimer.deleteTimer(debuffTimerId);
         debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
         ReturnNormalState();
@@ -92,7 +92,7 @@ void WaitFunc(){
 
 }
 void SettingFunc(void){
-    Serial.println("SETTING");
+    DebugSerial.println("SETTING");
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
     GameTimer.deleteTimer(gameTimerId);
@@ -106,7 +106,7 @@ void SettingFunc(void){
     GameSetting();
 }
 void ActivateFunc(void){
-    Serial.println("ACTIVATE");
+    DebugSerial.println("ACTIVATE");
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
     GameTimer.deleteTimer(gameTimerId);
@@ -130,7 +130,7 @@ void ActivateFunc(void){
     }
 }
 void ReadyFunc(void){
-    Serial.println("READY");
+    DebugSerial.println("READY");
     DebuffTimer.deleteTimer(debuffTimerId);
     SubSerialTimer.deleteTimer(subSerialTimerId);
     GameTimer.deleteTimer(gameTimerId);

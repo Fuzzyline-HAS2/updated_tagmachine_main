@@ -1,6 +1,6 @@
 void CheckingPlayers(String tagUser) // 어떤 카드가 들어왔는지 확인용
 {
-  Serial.println("tag_user_data : " +
+  DebugSerial.println("tag_user_data : " +
                  tagUser); // 1. 태그한 플레이어의 역할과 생명칩갯수,
                            // 최대생명칩갯수 등 읽어오기
   if (tagUser == "MMMM") { // 스태프카드
@@ -13,28 +13,28 @@ void CheckingPlayers(String tagUser) // 어떤 카드가 들어왔는지 확인�
       has2wifi.Receive(tagUser); // 2. 술래인지, 플레이어인지 구분
       if ((String)(const char *)tag["role"] ==
           "player") { // 3. 태그한 사용자가 플레이어고
-        Serial.println("Player Tagged");
+        DebugSerial.println("Player Tagged");
         loginRole = 'P';
         if (ptrRfidMode != nullptr) ptrRfidMode('P');
       } else if ((String)(const char *)tag["role"] ==
                  "tagger") { // 3. 태그한 사용자가 플레이어고
-        Serial.println("Tagger Tagged");
+        DebugSerial.println("Tagger Tagged");
         loginRole = 'T';
         if (ptrRfidMode != nullptr) ptrRfidMode('T');
       } else if ((String)(const char *)tag["role"] == "ghost" ||
                  (String)(const char *)tag["role"] == "revival") { // 3. 태그한
-        Serial.println("Ghost Tagged");
+        DebugSerial.println("Ghost Tagged");
         loginRole = 'G';
         if (ptrRfidMode != nullptr) ptrRfidMode('G');
       } else {
-        Serial.println("Wrong TAG");
+        DebugSerial.println("Wrong TAG");
       }
     } else {
       if (strLastTagUser == tagUser) { // Login 진행한 태그와 같은지 확인
-        Serial.println("LoginRole: " + String(loginRole));
+        DebugSerial.println("LoginRole: " + String(loginRole));
         if (ptrRfidMode != nullptr) ptrRfidMode(loginRole);
       } else {
-        Serial.println("Different TAG deteced");
+        DebugSerial.println("Different TAG deteced");
         if (ptrRfidFail != nullptr) ptrRfidFail();
       }
     }
@@ -43,7 +43,7 @@ void CheckingPlayers(String tagUser) // 어떤 카드가 들어왔는지 확인�
 }
 
 void Login(char role) {
-  Serial.println("LOGIN");
+  DebugSerial.println("LOGIN");
   loginDone = true;
   lightColor(pixels[ROUND], color[BLACK]);
   lightColor(pixels[ROUND_SUB], color[BLACK]);
@@ -64,9 +64,9 @@ void Login(char role) {
   if (loginDone && ptrGameTimer != nullptr) ptrGameTimer();
 }
 
-void WaitRfid(char role) { Serial.println("WAIT RFID"); }
+void WaitRfid(char role) { DebugSerial.println("WAIT RFID"); }
 void LoginTimerSelector(char role) {
-  Serial.println("LoginTimerSelector");
+  DebugSerial.println("LoginTimerSelector");
   if ((String)(const char *)my["device_state"] == "lock") {
     if (role == 'P') {
       ptrGameTimer = PlayerUnlockTimerFunc;
@@ -93,7 +93,7 @@ void LoginTimerSelector(char role) {
       ReturnNormalState();
     } else if (role == 'T') {
       Mp3PlayLargeFolder(1, VD1);
-      Serial.println("Tagger Door Open");
+      DebugSerial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
 
       RoundNeoEffect(PURPLE);
@@ -106,7 +106,7 @@ void LoginTimerSelector(char role) {
   } else // 도어 UNLOCK 일때
   {
     if (role == 'P') {
-      Serial.println("LoginTimerSelector PlayerSelected");
+      DebugSerial.println("LoginTimerSelector PlayerSelected");
       ptrGameTimer = PlayerLockTimerFunc;
       ptrRfidFail = LockFail;
       ptrRfidMode = WaitRfid;
@@ -116,7 +116,7 @@ void LoginTimerSelector(char role) {
       ptrRfidMode = WaitRfid;
     } else if (role == 'T') {
       Mp3PlayLargeFolder(1, VD1);
-      Serial.println("Tagger Door Open");
+      DebugSerial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char *)my["device_name"], "device_state",
                     "open");
@@ -140,11 +140,11 @@ void NewbieTaggerFail() {
   has2wifi.ReceiveMine();
   DataChanged();
   if (strCurState != "lock") {
-    Serial.println("debuff on");
+    DebugSerial.println("debuff on");
     CancelTagProgress();
   } else {
     Mp3PlayLargeFolder(1, VD6);
-    Serial.println("Unlock Fail Door Shut");
+    DebugSerial.println("Unlock Fail Door Shut");
     NeoBlink(ROUND, RED, 5, 500);
     AllNeoOn(GREEN);
     ReturnNormalState();
@@ -154,13 +154,13 @@ void NewbieTaggerFail() {
 void LockFail() {
   has2wifi.ReceiveMine();
   DataChanged();
-  // Serial.println("strCurState:" + String(strCurState));
+  // DebugSerial.println("strCurState:" + String(strCurState));
   if (strCurState != "activate") {
-    Serial.println("debuff on");
+    DebugSerial.println("debuff on");
     CancelTagProgress();
   } else {
     Mp3PlayLargeFolder(1, VD1);
-    Serial.println("Lock Fail Door Open");
+    DebugSerial.println("Lock Fail Door Open");
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char *)my["device_name"], "device_state",
                   "open");
@@ -173,13 +173,13 @@ void LockFail() {
 void UnlockFail() {
   has2wifi.ReceiveMine();
   DataChanged();
-  // Serial.println("strCurState:" + String(strCurState));
+  // DebugSerial.println("strCurState:" + String(strCurState));
   if (strCurState != "lock") {
-    Serial.println("debuff on");
+    DebugSerial.println("debuff on");
     CancelTagProgress();
   } else {
     Mp3PlayLargeFolder(1, VD6);
-    Serial.println("Unlock Fail Door Shut");
+    DebugSerial.println("Unlock Fail Door Shut");
     NeoBlink(ROUND, RED, 5, 500);
     AllNeoOn(GREEN);
     ReturnNormalState();
@@ -189,13 +189,13 @@ void UnlockFail() {
 void GhostOpenFailUnlock() {
   // has2wifi.ReceiveMine();
   // DataChanged();
-  // // Serial.println("strCurState:" + String(strCurState));
+  // // DebugSerial.println("strCurState:" + String(strCurState));
   // if(strCurState != "lock"){
-  //     Serial.println("debuff on");
+  //     DebugSerial.println("debuff on");
   // }
   // else{
   Mp3PlayLargeFolder(1, VD6);
-  Serial.println("Ghost Door OpenFail");
+  DebugSerial.println("Ghost Door OpenFail");
   NeoBlink(ROUND, RED, 5, 500);
   AllNeoOn(YELLOW);
   ReturnNormalState();
@@ -204,13 +204,13 @@ void GhostOpenFailUnlock() {
 void GhostOpenFailLock() {
   // has2wifi.ReceiveMine();
   // DataChanged();
-  // // Serial.println("strCurState:" + String(strCurState));
+  // // DebugSerial.println("strCurState:" + String(strCurState));
   // if(strCurState != "activate"){
-  //     Serial.println("debuff on");
+  //     DebugSerial.println("debuff on");
   // }
   // else{
   Mp3PlayLargeFolder(1, VD6);
-  Serial.println("Unlock Fail Door Shut");
+  DebugSerial.println("Unlock Fail Door Shut");
   NeoBlink(ROUND, RED, 5, 500);
   AllNeoOn(GREEN);
   ReturnNormalState();

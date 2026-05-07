@@ -2,15 +2,15 @@ void CommnunicationBeetle(){
   // Serial.println("READ");
   if(toSubSerial.available() > 0){
     String command = toSubSerial.readStringUntil('\n'); //추가 시리얼의 값을 수신하여 String으로 저장
-    Serial.println(command);
+    DebugSerial.println(command);
     // Serial.println("received:" + String(command[0])); //기본 시리얼에 추가 시리얼 내용을 출력
-    
+
     if(command[0] == 'W'){
-      Serial.println("Beetle Init Success");
+      DebugSerial.println("Beetle Init Success");
       toSubSerial.println("W");
     }
     else if(command[0] == 'R'){
-      Serial.println("Beetle Reset Success");
+      DebugSerial.println("Beetle Reset Success");
     }
     else if(command[0] == 'M'){
       digitalWrite(RELAY_PIN, HIGH);
@@ -19,7 +19,7 @@ void CommnunicationBeetle(){
     }
     else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상이면 태그로 처리)
       mainRfidTagged = false;
-      Serial.println("Sub Beetle Tag: " + command.substring(0,4));
+      DebugSerial.println("Sub Beetle Tag: " + command.substring(0,4));
       CheckingPlayers(command.substring(0,4));
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);
@@ -51,14 +51,14 @@ void MainSerialFlush(){
 void CommnunicationMainBeetle(){
   if(toMainSerial.available() > 0){
     String command = toMainSerial.readStringUntil('\n');
-    Serial.println("Main Beetle: " + command);
+    DebugSerial.println("Main Beetle: " + command);
 
     if(command[0] == 'W'){
-      Serial.println("Main Beetle Init Success");
+      DebugSerial.println("Main Beetle Init Success");
       toMainSerial.println("W");
     }
     else if(command[0] == 'R'){
-      Serial.println("Main Beetle Reset Success");
+      DebugSerial.println("Main Beetle Reset Success");
     }
     else if(command[0] == 'M'){
       digitalWrite(RELAY_PIN, HIGH);
@@ -67,7 +67,7 @@ void CommnunicationMainBeetle(){
     }
     else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상)
       mainRfidTagged = true;
-      Serial.println("TAGGGED (Main Beetle)");
+      DebugSerial.println("TAGGGED (Main Beetle)");
       CheckingPlayers(command.substring(0, 4));
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);

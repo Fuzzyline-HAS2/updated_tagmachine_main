@@ -28,7 +28,7 @@ void WifiIntervalFunc(){
  * @brief 다중 태그를 인식하기 위한 타이머 함수
  */
 void GameTimerFunc(){
-    Serial.println("GameTimer");
+    DebugSerial.println("GameTimer");
     if (ptrGameTimer != nullptr) ptrGameTimer();
 }
 
@@ -46,7 +46,7 @@ void SubSerialTimerFunc(){
 }
 void DebuffTimerFunc(){
     DebuffTimer.deleteTimer(debuffTimerId);
-    Serial.println("debuff time end");
+    DebugSerial.println("debuff time end");
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
     ReturnNormalState();
 }
@@ -65,7 +65,7 @@ void CancelTagProgress(){
 
     SubSerialFlush();
     MainSerialFlush();
-    Serial.println("Cancel Tag Progress");
+    DebugSerial.println("Cancel Tag Progress");
     ApplyPendingDeviceState();
 }
 
@@ -85,7 +85,7 @@ void ReturnNormalState(){
     WifiTimer.deleteTimer(wifiTimerId);                                          //게임 타이머 종료
     wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
     
-    Serial.println("Return Normal State");
+    DebugSerial.println("Return Normal State");
     SubSerialFlush();                                                               //시리얼 통신 버퍼 flush
     MainSerialFlush();                                                              //Main Beetle 시리얼 버퍼 flush
 }
@@ -97,22 +97,22 @@ void PlayerLockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
     LineNeoUp(GREEN, YELLOW, map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
-    Serial.println(map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
+    DebugSerial.println(map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
     if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
         has2wifi.ReceiveMine();
         DataChanged();
-        // Serial.println("strCurState:" + String(strCurState));
+        // DebugSerial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
-            Serial.println("debuff on");
+            DebugSerial.println("debuff on");
             CancelTagProgress();
         }
         else {
-            Serial.println("debuff off");
+            DebugSerial.println("debuff off");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
-            Serial.println("DOOR LOCK!");
+            DebugSerial.println("DOOR LOCK!");
             Mp3PlayLargeFolder(1, VD4);
             has2wifi.ReceiveMine();
             ReturnNormalState();
@@ -136,13 +136,13 @@ void PlayerUnlockTimerFunc(){
     {
         has2wifi.ReceiveMine();
         DataChanged();
-        // Serial.println("strCurState:" + String(strCurState));
+        // DebugSerial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
-            Serial.println("debuff on");
+            DebugSerial.println("debuff on");
             CancelTagProgress();
         }
         else {
-            Serial.println("DOOR UNLOCK!");
+            DebugSerial.println("DOOR UNLOCK!");
             Mp3PlayLargeFolder(1, VD7);
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
@@ -170,14 +170,14 @@ void TaggerUnlockTimerFunc(){
     {
         has2wifi.ReceiveMine();
         DataChanged();
-        // Serial.println("strCurState:" + String(strCurState));
+        // DebugSerial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
-            Serial.println("debuff on");
+            DebugSerial.println("debuff on");
             CancelTagProgress();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
-            Serial.println("DOOR UNLOCK!");
+            DebugSerial.println("DOOR UNLOCK!");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH); 
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
@@ -201,14 +201,14 @@ void GhostUnlockTimerFunc(){
     {
         has2wifi.ReceiveMine();
         DataChanged();
-        // Serial.println("strCurState:" + String(strCurState));
+        // DebugSerial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
-            Serial.println("debuff on");
+            DebugSerial.println("debuff on");
             CancelTagProgress();
         }
         else{
             Mp3PlayLargeFolder(1, VD1);
-            Serial.println("GHOST OPEN");
+            DebugSerial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
@@ -240,12 +240,12 @@ void NewbieTaggerUnlockTimerFunc(){
         has2wifi.ReceiveMine();
         DataChanged();
         if(strCurState != "lock"){
-            Serial.println("debuff on");
+            DebugSerial.println("debuff on");
             CancelTagProgress();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
-            Serial.println("DOOR UNLOCK (Newbie)!");
+            DebugSerial.println("DOOR UNLOCK (Newbie)!");
             ReturnNormalState();
             ptrRfidMode = NewbieLogin;
             digitalWrite(RELAY_PIN, HIGH);
@@ -274,14 +274,14 @@ void GhostLockTimerFunc(){
     {
         has2wifi.ReceiveMine();
         DataChanged();
-        // Serial.println("strCurState:" + String(strCurState));
+        // DebugSerial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
-            Serial.println("debuff on");
+            DebugSerial.println("debuff on");
             CancelTagProgress();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
-            Serial.println("GHOST OPEN");
+            DebugSerial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");

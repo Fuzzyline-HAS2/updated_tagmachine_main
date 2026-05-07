@@ -3,19 +3,19 @@ bool dfPlayerReady = false;
 
 void Mp3_Setup(){
   MP3Serial.begin(9600);
-  Serial.println("DFRobot DFPlayer Mini Demo");
-  Serial.println("Initializing DFPlayer ... (May take 3~5 seconds)");
+  DebugSerial.println("DFRobot DFPlayer Mini Demo");
+  DebugSerial.println("Initializing DFPlayer ... (May take 3~5 seconds)");
   myDFPlayer.setTimeOut(1000);
   if (!myDFPlayer.begin(MP3Serial)) {
-    Serial.println("Unable to begin:");
-    Serial.println("1.Please recheck the connection!");
-    Serial.println("2.Please insert the SD card!");
+    DebugSerial.println("Unable to begin:");
+    DebugSerial.println("1.Please recheck the connection!");
+    DebugSerial.println("2.Please insert the SD card!");
     dfPlayerReady = false;
-    Serial.println("DFPlayer skipped. Continuing without audio.");
+    DebugSerial.println("DFPlayer skipped. Continuing without audio.");
     return;  // begin 실패 시 후속 명령 건너뛰기
   }
   dfPlayerReady = true;
-  Serial.println(F("DFPlayer Mini online."));
+  DebugSerial.println(F("DFPlayer Mini online."));
   myDFPlayer.setTimeOut(500);
   myDFPlayer.volume(30);
   myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
@@ -43,8 +43,8 @@ void Mp3PlayLargeFolder(uint8_t folder_number, uint16_t file_number)
     {
       myDFPlayer.playLargeFolder(folder_number, file_number);
       play_error_count++;
-      Serial.print("에러횟수 :");
-      Serial.println(play_error_count);
+      DebugSerial.print("에러횟수 :");
+      DebugSerial.println(play_error_count);
     }
     else
     {
