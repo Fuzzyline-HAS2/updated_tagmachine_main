@@ -44,6 +44,16 @@ void DataChanged()
     ApplyDeviceState("debuff");
   }
   GameSetting();
+  if (loginDone && ptrGameTimer != nullptr) {
+    bool lockChanged   = cur["player_lock_time"].as<int>()   != playerLockTime;
+    bool unlockChanged = cur["player_unlock_time"].as<int>() != playerUnlockTime;
+    bool ghostChanged  = cur["ghost_open_time"].as<int>()    != ghostOpenTime;
+    bool shouldFire = false;
+    if (lockChanged   && ptrGameTimer == PlayerLockTimerFunc   && gameTimerCnt > playerLockTime)   shouldFire = true;
+    if (unlockChanged && ptrGameTimer == PlayerUnlockTimerFunc && gameTimerCnt > playerUnlockTime) shouldFire = true;
+    if (ghostChanged  && (ptrGameTimer == GhostUnlockTimerFunc || ptrGameTimer == GhostLockTimerFunc) && gameTimerCnt > ghostOpenTime) shouldFire = true;
+    if (shouldFire) GameTimerFunc();
+  }
   NewbieModeSetting();
   {
     String _ds = (String)(const char*)my["device_state"];
