@@ -1,6 +1,10 @@
 void DataChanged()
 {
-  static StaticJsonDocument<1000> cur;  //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
+  static StaticJsonDocument<1000> cur;
+  DebugSerial.println("[DC] device_state=" + (String)(const char*)my["device_state"] +
+                      " game_state=" + (String)(const char*)my["game_state"] +
+                      " cur_device=" + (String)(const char*)cur["device_state"] +
+                      " loginDone=" + String(loginDone));
   if (my["brightness"].as<int>() != cur["brightness"].as<int>()) {
     UpdateBrightness();
   }
@@ -18,8 +22,9 @@ void DataChanged()
         ActivateFunc();
     }
   }
-  if((String)(const char*)my["device_state"] != (String)(const char*)cur["device_state"]){  
+  if((String)(const char*)my["device_state"] != (String)(const char*)cur["device_state"]){
     String deviceState = (String)(const char*)my["device_state"];
+    DebugSerial.println("[DC] device_state changed: " + (String)(const char*)cur["device_state"] + " -> " + deviceState);
     if(deviceState == "lock"){
       strCurState = deviceState;
       if(loginDone) QueuePendingDeviceState(deviceState);
@@ -49,7 +54,8 @@ void DataChanged()
     String _ds = (String)(const char*)my["device_state"];
     if (_ds == "lock" || _ds == "activate" || _ds == "debuff") strCurState = _ds;
   }
-  cur = my; // cur 데이터 그룹에 현재 읽어온 데이터 저장
+  DebugSerial.println("[DC] end -> strCurState=" + strCurState);
+  cur = my;
 }
 
 void QueuePendingDeviceState(String deviceState) {
