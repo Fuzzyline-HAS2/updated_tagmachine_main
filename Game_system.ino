@@ -59,13 +59,7 @@ void NewbieGhostOpen() {
 }
 
 void NewbieLogin(char role) {
-    if (role == 'T') {
-        Login(role);
-    } else if (role == 'P') {
-        NewbiePlayerOpen();
-    } else if (role == 'G') {
-        NewbieGhostOpen();
-    }
+    Login(role);
 }
 
 void NewbiePlayerUnlockTimerFunc() {
