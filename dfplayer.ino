@@ -43,7 +43,7 @@ void Mp3PlayLargeFolder(uint8_t folder_number, uint16_t file_number)
     {
       myDFPlayer.playLargeFolder(folder_number, file_number);
       play_error_count++;
-      DebugSerial.print("에러횟수 :");
+      DebugSerial.print("Error count: ");
       DebugSerial.println(play_error_count);
     }
     else

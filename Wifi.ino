@@ -82,7 +82,7 @@ void ApplyDeviceState(String deviceState) {
         strCurState = "debuff";
         ptrRfidFail = WaitFunc;
         AllNeoOn(PURPLE);
-        DebugSerial.println("디버프 시작");
+        DebugSerial.println("Debuff start");
         DebuffTimer.deleteTimer(debuffTimerId);
         debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
         ReturnNormalState();
