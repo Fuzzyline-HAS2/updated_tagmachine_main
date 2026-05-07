@@ -10,7 +10,6 @@
  */
 
 #define FIRMWARE_VER 1
-HardwareSerial& _physSerial = Serial;  // capture real UART before #define Serial DebugSerial
 #include "updated_tagmachine_main.h"
 
 void setup() {

@@ -27,7 +27,7 @@ void Mp3PlayLargeFolder(uint8_t folder_number, uint16_t file_number)
 {
   if(!dfPlayerReady) return;  // DFPlayer 미초기화 시 스킵
   static uint8_t play_error_count = 0; // MP3 파일이 처음 실행되면
-  const char* lang = (const char *)shift_machine["selected_language"];
+  const char* lang = (const char *)my["selected_language"];
   if (lang != nullptr && String(lang) == "EN")
   {
     folder_number = 2 + folder_number;

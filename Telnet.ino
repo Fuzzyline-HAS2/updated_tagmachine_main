@@ -1,13 +1,30 @@
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;
+HardwareSerial HardwareDebugSerial(0);
 TelnetDebugConsole DebugSerial;
 
 void TelnetDebugConsole::begin(unsigned long baud) {
-  _physSerial.begin(baud);
+  HardwareDebugSerial.begin(baud);
+}
+
+int TelnetDebugConsole::available() {
+  return HardwareDebugSerial.available();
+}
+
+int TelnetDebugConsole::read() {
+  return HardwareDebugSerial.read();
+}
+
+int TelnetDebugConsole::peek() {
+  return HardwareDebugSerial.peek();
+}
+
+void TelnetDebugConsole::flush() {
+  HardwareDebugSerial.flush();
 }
 
 size_t TelnetDebugConsole::write(uint8_t data) {
-  _physSerial.write(data);
+  HardwareDebugSerial.write(data);
   if (telnetClient && telnetClient.connected()) {
     telnetClient.write(data);
   }
@@ -15,7 +32,7 @@ size_t TelnetDebugConsole::write(uint8_t data) {
 }
 
 size_t TelnetDebugConsole::write(const uint8_t *buffer, size_t size) {
-  _physSerial.write(buffer, size);
+  HardwareDebugSerial.write(buffer, size);
   if (telnetClient && telnetClient.connected()) {
     telnetClient.write(buffer, size);
   }
@@ -52,6 +69,6 @@ void TelnetRun() {
 
   while (telnetClient && telnetClient.connected() && telnetClient.available()) {
     char c = telnetClient.read();
-    _physSerial.write(c);
+    HardwareDebugSerial.write(c);
   }
 }
