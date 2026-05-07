@@ -154,6 +154,7 @@ void GameSetting(){
     playerUnlockTime = (int)my["player_unlock_time"];
     taggerUnlockTime = (int)my["tagger_unlock_time"];
     ghostOpenTime = (int)my["ghost_open_time"];
+    audioFolder = ((String)(const char*)my["language"] == "EN") ? 3 : 1;
 }
 void NewbieModeSetting() {
     if ((String)(const char*)my["mode"] == "easy" &&

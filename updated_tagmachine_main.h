@@ -68,6 +68,7 @@ volatile int playerLockTime = 7;
 volatile int playerUnlockTime = 10;
 volatile int taggerUnlockTime = 15;
 volatile int ghostOpenTime = 15;
+int audioFolder = 1;
 void WhichTagged();
 void DoorOpen();
 void NewbiePlayerOpenFunc();
