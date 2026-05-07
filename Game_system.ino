@@ -67,3 +67,40 @@ void NewbieLogin(char role) {
         NewbieGhostOpen();
     }
 }
+
+void NewbiePlayerUnlockTimerFunc() {
+    gameTimerCnt++;
+    RoundNeoToggle(GREEN, gameTimerCnt);
+    LineNeoDown(YELLOW, GREEN, map(gameTimerCnt, 0, playerUnlockTime, 0, NumPixels[LINE]));
+    if (gameTimerCnt == 1)
+        Mp3PlayLargeFolder(1, VD11);
+    if (gameTimerCnt > playerUnlockTime) {
+        has2wifi.ReceiveMine();
+        DataChanged();
+        if (strCurState != "lock") {
+            DebugSerial.println("debuff on");
+            CancelTagProgress();
+        } else {
+            DebugSerial.println("DOOR UNLOCK (Newbie Player)!");
+            Mp3PlayLargeFolder(1, VD7);
+            NewbiePlayerOpen();
+        }
+    }
+}
+
+void NewbieGhostUnlockTimerFunc() {
+    gameTimerCnt++;
+    RoundNeoUp(BLUE, GREEN, map(gameTimerCnt, 0, ghostOpenTime, 0, NumPixels[ROUND] / 2));
+    if (gameTimerCnt > ghostOpenTime) {
+        has2wifi.ReceiveMine();
+        DataChanged();
+        if (strCurState != "lock") {
+            DebugSerial.println("debuff on");
+            CancelTagProgress();
+        } else {
+            DebugSerial.println("GHOST OPEN (Newbie)!");
+            Mp3PlayLargeFolder(1, VD1);
+            NewbieGhostOpen();
+        }
+    }
+}

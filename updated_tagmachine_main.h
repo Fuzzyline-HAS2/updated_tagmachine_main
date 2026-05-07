@@ -26,9 +26,9 @@ void TelnetInit();
 void TelnetRun();
 HAS2_Wifi has2wifi("http://172.30.1.43");
 SecureOTA ota(
-  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/main/update.bin",
-  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/main/version.txt",
-  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/main/update.sig",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/third_store/update.bin",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/third_store/version.txt",
+  "https://raw.githubusercontent.com/Fuzzyline-HAS2/updated_tagmachine_main/third_store/update.sig",
   HMAC_SECRET,
   FIRMWARE_VER
 );
@@ -76,6 +76,8 @@ void NewbieLogin(char role);
 void NewbiePlayerOpen();
 void NewbieGhostOpen();
 void NewbieModeSetting();
+void NewbiePlayerUnlockTimerFunc();
+void NewbieGhostUnlockTimerFunc();
 
 String strCurState = "";
 String pendingDeviceState = "";

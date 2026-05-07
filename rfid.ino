@@ -129,8 +129,13 @@ void LoginTimerSelector(char role) {
   }
   if ((String)(const char*)my["mode"] == "easy" &&
       (String)(const char*)my["device_state"] == "lock") {
-    if (role == 'P' || role == 'G') NewbieLogin(role);
-    else if (role == 'T') {
+    if (role == 'P') {
+      ptrGameTimer = NewbiePlayerUnlockTimerFunc;
+      ptrRfidFail = UnlockFail;
+    } else if (role == 'G') {
+      ptrGameTimer = NewbieGhostUnlockTimerFunc;
+      ptrRfidFail = GhostOpenFailLock;
+    } else if (role == 'T') {
       ptrGameTimer = NewbieTaggerUnlockTimerFunc;
       ptrRfidFail = NewbieTaggerFail;
     }
