@@ -92,7 +92,7 @@ void LoginTimerSelector(char role) {
       AllNeoOn(PURPLE);
       ReturnNormalState();
     } else if (role == 'T') {
-      Mp3PlayLargeFolder(audioFolder, VD1);
+      Mp3PlayLargeFolder(1, VD1);
       DebugSerial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
 
@@ -115,7 +115,7 @@ void LoginTimerSelector(char role) {
       ptrRfidFail = GhostOpenFailUnlock;
       ptrRfidMode = WaitRfid;
     } else if (role == 'T') {
-      Mp3PlayLargeFolder(audioFolder, VD1);
+      Mp3PlayLargeFolder(1, VD1);
       DebugSerial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char *)my["device_name"], "device_state",
@@ -148,7 +148,7 @@ void NewbieTaggerFail() {
     DebugSerial.println("debuff on");
     CancelTagProgress();
   } else {
-    Mp3PlayLargeFolder(audioFolder, VD6);
+    Mp3PlayLargeFolder(1, VD6);
     DebugSerial.println("Unlock Fail Door Shut");
     NeoBlink(ROUND, RED, 5, 500);
     AllNeoOn(GREEN);
@@ -164,7 +164,7 @@ void LockFail() {
     DebugSerial.println("debuff on");
     CancelTagProgress();
   } else {
-    Mp3PlayLargeFolder(audioFolder, VD1);
+    Mp3PlayLargeFolder(1, VD1);
     DebugSerial.println("Lock Fail Door Open");
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char *)my["device_name"], "device_state",
@@ -183,7 +183,7 @@ void UnlockFail() {
     DebugSerial.println("debuff on");
     CancelTagProgress();
   } else {
-    Mp3PlayLargeFolder(audioFolder, VD6);
+    Mp3PlayLargeFolder(1, VD6);
     DebugSerial.println("Unlock Fail Door Shut");
     NeoBlink(ROUND, RED, 5, 500);
     AllNeoOn(GREEN);
@@ -199,7 +199,7 @@ void GhostOpenFailUnlock() {
   //     DebugSerial.println("debuff on");
   // }
   // else{
-  Mp3PlayLargeFolder(audioFolder, VD6);
+  Mp3PlayLargeFolder(1, VD6);
   DebugSerial.println("Ghost Door OpenFail");
   NeoBlink(ROUND, RED, 5, 500);
   AllNeoOn(YELLOW);
@@ -214,7 +214,7 @@ void GhostOpenFailLock() {
   //     DebugSerial.println("debuff on");
   // }
   // else{
-  Mp3PlayLargeFolder(audioFolder, VD6);
+  Mp3PlayLargeFolder(1, VD6);
   DebugSerial.println("Unlock Fail Door Shut");
   NeoBlink(ROUND, RED, 5, 500);
   AllNeoOn(GREEN);

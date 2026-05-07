@@ -99,7 +99,7 @@ void PlayerLockTimerFunc(){
     LineNeoUp(GREEN, YELLOW, map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
     DebugSerial.println(map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
     if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
-        Mp3PlayLargeFolder(audioFolder, VD11);
+        Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
         has2wifi.ReceiveMine();
@@ -113,7 +113,7 @@ void PlayerLockTimerFunc(){
             DebugSerial.println("debuff off");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             DebugSerial.println("DOOR LOCK!");
-            Mp3PlayLargeFolder(audioFolder, VD4);
+            Mp3PlayLargeFolder(1, VD4);
             has2wifi.ReceiveMine();
             ReturnNormalState();
             RoundNeoEffect(GREEN);
@@ -131,7 +131,7 @@ void PlayerUnlockTimerFunc(){
     RoundNeoToggle(GREEN,gameTimerCnt);
     LineNeoDown(YELLOW, GREEN, map(gameTimerCnt,0,playerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
-        Mp3PlayLargeFolder(audioFolder, VD11);
+        Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerUnlockTime))
     {
         has2wifi.ReceiveMine();
@@ -143,7 +143,7 @@ void PlayerUnlockTimerFunc(){
         }
         else {
             DebugSerial.println("DOOR UNLOCK!");
-            Mp3PlayLargeFolder(audioFolder, VD7);
+            Mp3PlayLargeFolder(1, VD7);
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
@@ -164,7 +164,7 @@ void TaggerUnlockTimerFunc(){
     RoundNeoToggle(PURPLE,gameTimerCnt);
     if(gameTimerCnt%3 == 1)                                                         // 3번마다 "술래 침입시도" 나오게 하기
         if(gameTimerCnt < (taggerUnlockTime - 2))                                   // 마지막에는 효과음 안나오게 해서 짤리지 않게 하는 함수
-            Mp3PlayLargeFolder(audioFolder, VD10);
+            Mp3PlayLargeFolder(1, VD10);
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
@@ -176,7 +176,7 @@ void TaggerUnlockTimerFunc(){
             CancelTagProgress();
         }
         else {
-            Mp3PlayLargeFolder(audioFolder, VD1);
+            Mp3PlayLargeFolder(1, VD1);
             DebugSerial.println("DOOR UNLOCK!");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH); 
@@ -207,7 +207,7 @@ void GhostUnlockTimerFunc(){
             CancelTagProgress();
         }
         else{
-            Mp3PlayLargeFolder(audioFolder, VD1);
+            Mp3PlayLargeFolder(1, VD1);
             DebugSerial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
@@ -233,7 +233,7 @@ void NewbieTaggerUnlockTimerFunc(){
     RoundNeoToggle(PURPLE, gameTimerCnt);
     if(gameTimerCnt%3 == 1)
         if(gameTimerCnt < (taggerUnlockTime - 2))
-            Mp3PlayLargeFolder(audioFolder, VD10);
+            Mp3PlayLargeFolder(1, VD10);
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt, 0, taggerUnlockTime, 0, NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
@@ -244,7 +244,7 @@ void NewbieTaggerUnlockTimerFunc(){
             CancelTagProgress();
         }
         else {
-            Mp3PlayLargeFolder(audioFolder, VD1);
+            Mp3PlayLargeFolder(1, VD1);
             DebugSerial.println("DOOR UNLOCK (Newbie)!");
             ReturnNormalState();
             ptrRfidMode = NewbieLogin;
@@ -280,7 +280,7 @@ void GhostLockTimerFunc(){
             CancelTagProgress();
         }
         else {
-            Mp3PlayLargeFolder(audioFolder, VD1);
+            Mp3PlayLargeFolder(1, VD1);
             DebugSerial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);

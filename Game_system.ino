@@ -29,7 +29,7 @@ void GhostDoorOpen(){
 void NewbiePlayerOpen() {
     ReturnNormalState();
     ptrRfidMode = NewbieLogin;
-    Mp3PlayLargeFolder(audioFolder, VD1);
+    Mp3PlayLargeFolder(1, VD1);
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(GREEN);
@@ -45,7 +45,7 @@ void NewbiePlayerOpen() {
 void NewbieGhostOpen() {
     ReturnNormalState();
     ptrRfidMode = NewbieLogin;
-    Mp3PlayLargeFolder(audioFolder, VD1);
+    Mp3PlayLargeFolder(1, VD1);
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(BLUE);
@@ -67,7 +67,7 @@ void NewbiePlayerUnlockTimerFunc() {
     RoundNeoToggle(GREEN, gameTimerCnt);
     LineNeoDown(YELLOW, GREEN, map(gameTimerCnt, 0, playerUnlockTime, 0, NumPixels[LINE]));
     if (gameTimerCnt == 1)
-        Mp3PlayLargeFolder(audioFolder, VD11);
+        Mp3PlayLargeFolder(1, VD11);
     if (gameTimerCnt > playerUnlockTime) {
         has2wifi.ReceiveMine();
         DataChanged();
@@ -76,7 +76,7 @@ void NewbiePlayerUnlockTimerFunc() {
             CancelTagProgress();
         } else {
             DebugSerial.println("DOOR UNLOCK (Newbie Player)!");
-            Mp3PlayLargeFolder(audioFolder, VD7);
+            Mp3PlayLargeFolder(1, VD7);
             NewbiePlayerOpen();
         }
     }
@@ -93,7 +93,7 @@ void NewbieGhostUnlockTimerFunc() {
             CancelTagProgress();
         } else {
             DebugSerial.println("GHOST OPEN (Newbie)!");
-            Mp3PlayLargeFolder(audioFolder, VD1);
+            Mp3PlayLargeFolder(1, VD1);
             NewbieGhostOpen();
         }
     }
