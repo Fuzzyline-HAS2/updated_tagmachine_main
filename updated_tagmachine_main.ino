@@ -9,7 +9,7 @@
  *
  */
 
-#define FIRMWARE_VER 11
+#define FIRMWARE_VER 2
 #include "updated_tagmachine_main.h"
 
 void setup() {
@@ -21,7 +21,7 @@ void setup() {
     Mp3_Setup();
     pinMode(RELAY_PIN, OUTPUT);
 //  has2wifi.Setup("city");
-    has2wifi.Setup("badland_ruins", "Code3824@");
+    has2wifi.Setup("badland");
     TelnetInit();
     ota.setLogStream(DebugSerial);
     ota.setOnSuccess([]() {
