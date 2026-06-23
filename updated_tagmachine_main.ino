@@ -9,7 +9,7 @@
  *
  */
 
-#define FIRMWARE_VER 2
+#define FIRMWARE_VER 3
 #include "updated_tagmachine_main.h"
 
 void setup() {
@@ -21,7 +21,8 @@ void setup() {
     Mp3_Setup();
     pinMode(RELAY_PIN, OUTPUT);
 //  has2wifi.Setup("city");
-    has2wifi.Setup("badland_ruins", "Code3824@");
+    // badland 모드: 라이브러리가 주변 badland_* 중 RSSI 센 AP로 자동 연결
+    has2wifi.Setup("badland");
     TelnetInit();
     ota.setLogStream(Serial);
     ota.setOnSuccess([]() {
