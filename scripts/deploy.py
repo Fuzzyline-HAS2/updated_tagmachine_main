@@ -52,19 +52,18 @@ def increment_version(current_ver):
 
 def find_newest_bin():
     sketch_dir = os.path.dirname(SKETCH_FILE)
+    sketch_bin_name = os.path.basename(SKETCH_FILE) + ".bin"
     search_patterns = [
-        os.path.join(sketch_dir, "build", "**", "*.bin"),
-        os.path.join(sketch_dir, "**", "*.bin"),
-        os.path.join(BASE_DIR, "build", "**", "*.bin"),
+        os.path.join(sketch_dir, "build", "**", sketch_bin_name),
+        os.path.join(sketch_dir, "**", sketch_bin_name),
+        os.path.join(BASE_DIR, "build", "**", sketch_bin_name),
     ]
     candidates = []
     for pattern in search_patterns:
         candidates.extend(glob.glob(pattern, recursive=True))
-    exclude_keywords = ["merged", "bootloader", "partitions", "boot_app"]
-    candidates = [
-        f for f in candidates
-        if not any(kw in os.path.basename(f).lower() for kw in exclude_keywords)
-    ]
+    candidates = list(dict.fromkeys(candidates))
+    sketch_mtime = os.path.getmtime(SKETCH_FILE)
+    candidates = [f for f in candidates if os.path.getmtime(f) >= sketch_mtime]
     if not candidates:
         return None
     return max(candidates, key=os.path.getmtime)
