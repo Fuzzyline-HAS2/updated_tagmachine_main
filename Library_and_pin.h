@@ -7,7 +7,7 @@
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
 #include "DFRobotDFPlayerMini.h"
-#include <HAS2_Wifi.h>
+#include "HAS2_Wifi.h"
 #include <SimpleTimer.h>
 #include <SecureOTA.h>
 #include "secrets.h"

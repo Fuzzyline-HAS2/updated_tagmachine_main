@@ -103,6 +103,16 @@ void LoginTimerSelector(char role) {
       ReturnNormalState(); // 시리얼 통신 버퍼 flush
       AllNeoOn(PURPLE);
     }
+  } else if ((String)(const char *)my["device_state"] == "tagger") {
+    if (role == 'T') {
+      // 술래 카드: 아무 동작 없음 (Login()이 지운 ROUND만 보라색으로 복귀)
+      AllNeoOn(PURPLE);
+      ReturnNormalState();
+    } else {                          // 'P' 또는 'G' = 술래 외
+      NeoBlink(ROUND, RED, 3, 500);   // 적색 점멸 3초
+      AllNeoOn(PURPLE);               // 보라색 복귀
+      ReturnNormalState();
+    }
   } else // 도어 UNLOCK 일때
   {
     if (role == 'P') {

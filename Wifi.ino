@@ -39,6 +39,9 @@ void DataChanged()
     else if(deviceState == "github"){
         ota.check();
     }
+    else if(deviceState == "tagger"){
+        ApplyDeviceState("tagger");
+    }
   }
   if((String)(const char*)my["device_state"] == "debuff"){ 
     ApplyDeviceState("debuff");
@@ -86,6 +89,16 @@ void ApplyDeviceState(String deviceState) {
         DebuffTimer.deleteTimer(debuffTimerId);
         debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
         ReturnNormalState();
+    }
+    else if(deviceState == "tagger"){
+        strCurState = "tagger";
+        AllNeoOn(PURPLE);                       // 전체 보라색
+        digitalWrite(RELAY_PIN, HIGH);          // 도어 오픈, 계속 유지
+        ptrCurrentMode = WhichTagged;           // 태그 읽기 활성화(상태와 무관하게 보장)
+        ptrRfidMain   = CommnunicationMainBeetle;
+        ptrRfidSub    = CommnunicationBeetle;
+        ptrRfidMode   = Login;
+        ptrRfidFail   = WaitFunc;
     }
 }
 void WaitFunc(){
