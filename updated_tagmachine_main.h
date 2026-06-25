@@ -70,6 +70,7 @@ volatile int taggerUnlockTime = 15;
 volatile int ghostOpenTime = 15;
 void WhichTagged();
 void DoorOpen();
+void ServerDoorOpen();
 void NewbiePlayerOpenFunc();
 void NewbieGhostOpenFunc();
 void NewbieLogin(char role);

@@ -41,6 +41,9 @@ void DataChanged()
         if(loginDone) QueuePendingDeviceState(deviceState);
         else ApplyDeviceState(deviceState);
     }
+    else if(deviceState == "open"){
+        ServerDoorOpen();
+    }
     else if(deviceState == "github"){
         ota.check();
     }
@@ -52,7 +55,7 @@ void DataChanged()
   NewbieModeSetting();
   {
     String _ds = (String)(const char*)my["device_state"];
-    if (_ds == "lock" || _ds == "activate" || _ds == "debuff") strCurState = _ds;
+    if (_ds == "lock" || _ds == "activate" || _ds == "debuff" || _ds == "open") strCurState = _ds;
   }
   DebugSerial.println("[DC] end -> strCurState=" + strCurState);
   cur = my;
@@ -76,7 +79,9 @@ void ApplyPendingDeviceState() {
 void ApplyDeviceState(String deviceState) {
     if(deviceState == "lock"){
       strCurState = "lock";
-      AllNeoOn(GREEN);
+      if ((String)(const char*)my["game_state"] != "ready") {
+          AllNeoOn(GREEN);
+      }
     }
     else if(deviceState == "activate"){
         strCurState = "activate";

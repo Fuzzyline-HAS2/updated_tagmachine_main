@@ -24,6 +24,35 @@ void GhostDoorOpen(){
     // delay(3000);
 }
 
+void ServerDoorOpen() {
+    DebugSerial.println("SERVER DOOR OPEN");
+    ReturnNormalState();
+    pendingDeviceState = "";
+    pendingDeviceStateApply = false;
+    strCurState = "open";
+
+    digitalWrite(RELAY_PIN, HIGH);
+    RoundNeoEffect(YELLOW);
+    delay(500);
+
+    digitalWrite(RELAY_PIN, LOW);
+    RoundNeoEffectDown(BLACK);
+
+    bool newbieMode = (String)(const char*)my["mode"] == "easy";
+    String nextState = newbieMode ? "lock" : "activate";
+    int nextColor = newbieMode ? GREEN : YELLOW;
+
+    has2wifi.Send((String)(const char*)my["device_name"], "device_state", nextState);
+    my["device_state"] = nextState;
+    strCurState = nextState;
+    AllNeoOn(nextColor);
+    if (newbieMode) {
+        ptrRfidMode = NewbieLogin;
+    }
+    SubSerialFlush();
+    MainSerialFlush();
+}
+
 // ======================== NEWBIE MODE ========================
 
 void NewbiePlayerOpen() {
