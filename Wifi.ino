@@ -74,6 +74,7 @@ void ApplyDeviceState(String deviceState) {
     if(deviceState == "lock"){
       strCurState = "lock";
       AllNeoOn(GREEN);
+      digitalWrite(RELAY_PIN, LOW);            // 도어 잠금(닫힘) - tagger 등 오픈 상태에서 복귀 시 보장
     }
     else if(deviceState == "activate"){
         strCurState = "activate";
@@ -85,6 +86,7 @@ void ApplyDeviceState(String deviceState) {
         strCurState = "debuff";
         ptrRfidFail = WaitFunc;
         AllNeoOn(PURPLE);
+        digitalWrite(RELAY_PIN, LOW);            // 디버프 대기 중 도어 잠금(닫힘)
         Serial.println("디버프 시작");
         DebuffTimer.deleteTimer(debuffTimerId);
         debuffTimerId = DebuffTimer.setInterval(60000,DebuffTimerFunc);
