@@ -9,7 +9,7 @@
  *
  */
 
-#define FIRMWARE_VER 6
+#define FIRMWARE_VER 7
 #include "updated_tagmachine_main.h"
 
 void setup() {
@@ -23,6 +23,8 @@ void setup() {
 //  has2wifi.Setup("city");
     // badland 모드: 라이브러리가 주변 badland_* 중 RSSI 센 AP로 자동 연결
     has2wifi.Setup("badland");
+    // 현재 펌웨어 버전을 서버 device.esp_version 컬럼에 보고 (부팅 시 1회)
+    has2wifi.Send((String)(const char*)my["device_name"], "esp_version", String(FIRMWARE_VER));
     TelnetInit();
     ota.setLogStream(Serial);
     ota.setOnSuccess([]() {
