@@ -9,7 +9,7 @@
  *
  */
 
-#define FIRMWARE_VER 5
+#define FIRMWARE_VER 6
 #define PARTITION_VER 1
 #include "updated_tagmachine_main.h"
 
