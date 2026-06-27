@@ -63,6 +63,9 @@ void CancelTagProgress(){
     ptrRfidMode = Login;
     ptrRfidFail = WaitFunc;
 
+    WifiTimer.deleteTimer(wifiTimerId);                                          // WiFi 폴링 재시작 (ReturnNormalState와 동일)
+    wifiTimerId = WifiTimer.setInterval(2000,WifiIntervalFunc);
+
     SubSerialFlush();
     MainSerialFlush();
     Serial.println("Cancel Tag Progress");
@@ -162,10 +165,11 @@ void PlayerUnlockTimerFunc(){
 void TaggerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(PURPLE,gameTimerCnt);
+    LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
+    // #6: NeoPixel show() 모두 끝낸 뒤 오디오(SoftwareSerial) 호출 → 인터럽트 충돌/데드락 회피
     if(gameTimerCnt%3 == 1)                                                         // 3번마다 "술래 침입시도" 나오게 하기
         if(gameTimerCnt < (taggerUnlockTime - 2))                                   // 마지막에는 효과음 안나오게 해서 짤리지 않게 하는 함수
             Mp3PlayLargeFolder(1, VD10);
-    LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
         has2wifi.ReceiveMine();
@@ -231,10 +235,11 @@ void GhostUnlockTimerFunc(){
 void NewbieTaggerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(PURPLE, gameTimerCnt);
+    LineNeoDown(PURPLE, GREEN, map(gameTimerCnt, 0, taggerUnlockTime, 0, NumPixels[LINE]));
+    // #6: NeoPixel show() 모두 끝낸 뒤 오디오(SoftwareSerial) 호출 → 인터럽트 충돌/데드락 회피
     if(gameTimerCnt%3 == 1)
         if(gameTimerCnt < (taggerUnlockTime - 2))
             Mp3PlayLargeFolder(1, VD10);
-    LineNeoDown(PURPLE, GREEN, map(gameTimerCnt, 0, taggerUnlockTime, 0, NumPixels[LINE]));
     if(gameTimerCnt > (taggerUnlockTime))
     {
         has2wifi.ReceiveMine();

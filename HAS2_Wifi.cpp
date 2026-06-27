@@ -265,12 +265,16 @@ void HAS2_Wifi::SaveLastWifi(const char *new_ssid, const char *new_password)
 
 void HAS2_Wifi::MaintainWifi()
 {
-  ScanBadlandNetworks(false);
-
+  // 연결이 정상이면 블로킹 스캔을 건너뛴다.
+  // (WiFi.scanNetworks()는 2~4초간 loop 전체를 멈추므로,
+  //  연결돼 있을 때는 주기 스캔을 돌지 않는다 - 고정 설치라 로밍 불필요)
   if (WiFi.status() == WL_CONNECTED)
   {
     return;
   }
+
+  // 끊겼을 때만 강제 스캔 후 재연결 시도
+  ScanBadlandNetworks(true);
 
   _has2DebugPrint->println("WiFi disconnected. Reconnecting...");
   if (!TryConnectOrdered())
