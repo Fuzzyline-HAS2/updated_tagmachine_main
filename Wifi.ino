@@ -31,6 +31,12 @@ void DataChanged()
         digitalWrite(RELAY_PIN, LOW);
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", (String)(const char*)cur["device_state"]);
     }
+    else if(deviceState == "open"){
+        digitalWrite(RELAY_PIN, HIGH);
+        delay(1000);
+        digitalWrite(RELAY_PIN, LOW);
+        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+    }
     else if(deviceState == "activate"){
         strCurState = deviceState;
         if(loginDone) QueuePendingDeviceState(deviceState);
