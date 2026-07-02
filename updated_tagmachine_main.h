@@ -86,6 +86,9 @@ void CommnunicationBeetle();
 void CommnunicationMainBeetle();
 void SubSerialFlush();
 void MainSerialFlush();
+void SendBeetleTag(int idx, const char *field, const String &tagUser);
+enum { BEETLE_SUB = 0, BEETLE_MAIN };
+unsigned long beetleSendLastMs[2] = {0, 0}; // 채널별 서버 전송 스로틀용 (1초)
 HardwareSerial toSubSerial(1);
 HardwareSerial toMainSerial(2);
 bool tagState = false;

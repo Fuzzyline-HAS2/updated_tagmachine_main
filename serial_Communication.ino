@@ -20,6 +20,7 @@ void CommnunicationBeetle(){
     else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상이면 태그로 처리)
       mainRfidTagged = false;
       Serial.println("Sub Beetle Tag: " + command.substring(0,4));
+      SendBeetleTag(BEETLE_SUB, "sub_beetle_player", command.substring(0,4));
       CheckingPlayers(command.substring(0,4));
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);
@@ -31,6 +32,18 @@ void CommnunicationBeetle(){
     while(toSubSerial.available())
       toSubSerial.read();
   }
+}
+
+/**
+ * @brief 비틀 태그값 서버 전송 (채널별 1초 스로틀, 스태프 카드 제외)
+ * @param idx BEETLE_SUB / BEETLE_MAIN
+ */
+void SendBeetleTag(int idx, const char *field, const String &tagUser){
+  if(tagUser == "MMMM") return;   // 스태프 카드는 서버 전송 제외
+  unsigned long now = millis();
+  if(beetleSendLastMs[idx] != 0 && now - beetleSendLastMs[idx] < 1000) return;
+  beetleSendLastMs[idx] = now;
+  has2wifi.Send((String)(const char *)my["device_name"], field, tagUser);
 }
 
 void SubSerialFlush(){
@@ -68,6 +81,7 @@ void CommnunicationMainBeetle(){
     else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상)
       mainRfidTagged = true;
       Serial.println("TAGGGED (Main Beetle)");
+      SendBeetleTag(BEETLE_MAIN, "main_beetle_player", command.substring(0, 4));
       CheckingPlayers(command.substring(0, 4));
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);
