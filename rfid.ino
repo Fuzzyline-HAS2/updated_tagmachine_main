@@ -144,7 +144,8 @@ void LoginTimerSelector(char role) {
       RoundNeoEffect(PURPLE);
       AllNeoOn(PURPLE);
       DoorOpen();
-      AllNeoOn(YELLOW);
+      if (strCurState != "tagger") // DoorOpen 중 tagger 적용 시 노랑으로 덮어쓰지 않음
+        AllNeoOn(YELLOW);
       ReturnNormalState();
     }
   }

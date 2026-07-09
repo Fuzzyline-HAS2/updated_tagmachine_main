@@ -218,6 +218,7 @@ void GhostUnlockTimerFunc(){
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(BLUE);
             GhostDoorOpen();
+            if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 lock으로 덮어쓰지 않음
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             AllNeoOn(GREEN);
             SubSerialFlush();
@@ -257,6 +258,7 @@ void NewbieTaggerUnlockTimerFunc(){
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             GhostDoorOpen();
+            if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 lock으로 덮어쓰지 않음
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             AllNeoOn(GREEN);
             SubSerialFlush();
@@ -292,6 +294,7 @@ void GhostLockTimerFunc(){
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(BLUE);
             GhostDoorOpen();
+            if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 activate로 덮어쓰지 않음
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
             AllNeoOn(YELLOW);
             SubSerialFlush();

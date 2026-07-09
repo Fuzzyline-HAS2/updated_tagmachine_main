@@ -113,6 +113,21 @@ void ApplyDeviceState(String deviceState) {
         ptrRfidFail   = WaitFunc;
     }
 }
+
+/**
+ * @brief device_state 전송 직전 서버가 tagger로 바뀌었는지 확인 (진행 중 수신된 tagger 명령 유실 방지)
+ * @return true면 tagger 적용 완료 - 호출측은 이후 전송/연출을 건너뛰어야 함
+ */
+bool TaggerOverrideCheck(){
+    has2wifi.ReceiveMine();
+    if((String)(const char*)my["device_state"] == "tagger"){
+        ApplyDeviceState("tagger");
+        SubSerialFlush();
+        MainSerialFlush();
+        return true;
+    }
+    return false;
+}
 void WaitFunc(){
 
 }
