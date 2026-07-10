@@ -9,7 +9,7 @@
  *
  */
 
-#define FIRMWARE_VER 16
+#define FIRMWARE_VER 17
 #include "updated_tagmachine_main.h"
 
 void setup() {
