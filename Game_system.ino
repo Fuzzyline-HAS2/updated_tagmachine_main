@@ -10,9 +10,11 @@ void DoorOpen(){
         Serial.println("DEBUFF OPEN");
     }
     else{
+        if(TaggerOverrideCheck()) return; // 전송 직전 tagger 수신 시 activate로 덮어쓰지 않음
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
         RoundNeoEffectDown(BLACK);
         has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+        if(strCurState == "tagger") return; // Loop에서 tagger 적용 시 노랑/도어잠금으로 덮어쓰지 않음
         AllNeoOn(YELLOW);
     }
     digitalWrite(RELAY_PIN, LOW);
@@ -34,6 +36,7 @@ void NewbiePlayerOpen() {
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(GREEN);
     GhostDoorOpen();
+    if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 lock으로 덮어쓰지 않음
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
     AllNeoOn(GREEN);
     SubSerialFlush();
@@ -50,6 +53,7 @@ void NewbieGhostOpen() {
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(BLUE);
     GhostDoorOpen();
+    if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 lock으로 덮어쓰지 않음
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
     AllNeoOn(GREEN);
     SubSerialFlush();
