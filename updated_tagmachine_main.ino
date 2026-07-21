@@ -9,7 +9,7 @@
  *
  */
 
-#define FIRMWARE_VER 3
+#define FIRMWARE_VER 4
 #include "updated_tagmachine_main.h"
 #include <esp_task_wdt.h>
 
