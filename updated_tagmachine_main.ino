@@ -11,6 +11,7 @@
 
 #define FIRMWARE_VER 3
 #include "updated_tagmachine_main.h"
+#include <esp_task_wdt.h>
 
 void setup() {
     Serial.begin(115200);
@@ -60,8 +61,16 @@ void setup() {
         ptrCurrentMode = WaitFunc;
         Serial.println("[WARN] ptrCurrentMode was nullptr → set to WaitFunc");
     }
+    esp_task_wdt_deinit();
+    {
+        esp_task_wdt_config_t wdt_cfg = { .timeout_ms = 12000, .idle_core_mask = 0, .trigger_panic = true };
+        esp_task_wdt_init(&wdt_cfg);
+    }
+    esp_task_wdt_add(NULL);
+    Serial.println("[WDT] 12s watchdog started");
 }
 void loop() {
+    esp_task_wdt_reset();
     if (ptrCurrentMode != nullptr) ptrCurrentMode();
     TimerRun();
     TelnetRun();
