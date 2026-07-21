@@ -105,23 +105,28 @@ void PlayerLockTimerFunc(){
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
+        CrashLogSave("PL_recv");
         has2wifi.ReceiveMine();
         DataChanged();
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
             Serial.println("debuff on");
             CancelTagProgress();
+            CrashLogClear();
         }
         else {
             Serial.println("debuff off");
+            CrashLogSave("PL_snd");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             Serial.println("DOOR LOCK!");
             Mp3PlayLargeFolder(1, VD4);
+            CrashLogSave("PL_recv2");
             has2wifi.ReceiveMine();
             ReturnNormalState();
             RoundNeoEffect(GREEN);
             SubSerialFlush();
             MainSerialFlush();
+            CrashLogClear();
         }                                                     //시리얼 통신 버퍼 flush
     }
 }
@@ -137,24 +142,29 @@ void PlayerUnlockTimerFunc(){
         Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerUnlockTime))
     {
+        CrashLogSave("PU_recv");
         has2wifi.ReceiveMine();
         DataChanged();
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
             Serial.println("debuff on");
             CancelTagProgress();
+            CrashLogClear();
         }
         else {
             Serial.println("DOOR UNLOCK!");
             Mp3PlayLargeFolder(1, VD7);
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
+            CrashLogSave("PU_snd");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(YELLOW);
             DoorOpen();
+            CrashLogSave("PU_recv2");
             has2wifi.ReceiveMine();
             SubSerialFlush();
             MainSerialFlush();
+            CrashLogClear();
         }                                                       //시리얼 통신 버퍼 flush
     }
 }
@@ -172,18 +182,21 @@ void TaggerUnlockTimerFunc(){
             Mp3PlayLargeFolder(1, VD10);
     if(gameTimerCnt > (taggerUnlockTime))
     {
+        CrashLogSave("TU_recv");
         has2wifi.ReceiveMine();
         DataChanged();
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
             Serial.println("debuff on");
             CancelTagProgress();
+            CrashLogClear();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
             Serial.println("DOOR UNLOCK!");
             ReturnNormalState();
-            digitalWrite(RELAY_PIN, HIGH); 
+            digitalWrite(RELAY_PIN, HIGH);
+            CrashLogSave("TU_snd");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             DoorOpen();
@@ -203,28 +216,35 @@ void GhostUnlockTimerFunc(){
     RoundNeoUp(BLUE, GREEN, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
+        CrashLogSave("GU_recv");
         has2wifi.ReceiveMine();
         DataChanged();
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "lock"){
             Serial.println("debuff on");
             CancelTagProgress();
+            CrashLogClear();
         }
         else{
             Mp3PlayLargeFolder(1, VD1);
             Serial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
+            CrashLogSave("GU_snd");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(BLUE);
             GhostDoorOpen();
-            if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 lock으로 덮어쓰지 않음
+            CrashLogSave("GU_ovr");
+            if(TaggerOverrideCheck()) { CrashLogClear(); return; }
+            CrashLogSave("GU_snd2");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             AllNeoOn(GREEN);
             SubSerialFlush();
             MainSerialFlush();
             delay(1000);
+            CrashLogSave("GU_loop");
             has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+            CrashLogClear();
         }
     }
 
@@ -243,11 +263,13 @@ void NewbieTaggerUnlockTimerFunc(){
             Mp3PlayLargeFolder(1, VD10);
     if(gameTimerCnt > (taggerUnlockTime))
     {
+        CrashLogSave("NTU_recv");
         has2wifi.ReceiveMine();
         DataChanged();
         if(strCurState != "lock"){
             Serial.println("debuff on");
             CancelTagProgress();
+            CrashLogClear();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
@@ -255,16 +277,21 @@ void NewbieTaggerUnlockTimerFunc(){
             ReturnNormalState();
             ptrRfidMode = NewbieLogin;
             digitalWrite(RELAY_PIN, HIGH);
+            CrashLogSave("NTU_snd");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             GhostDoorOpen();
-            if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 lock으로 덮어쓰지 않음
+            CrashLogSave("NTU_ovr");
+            if(TaggerOverrideCheck()) { CrashLogClear(); return; }
+            CrashLogSave("NTU_snd2");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             AllNeoOn(GREEN);
             SubSerialFlush();
             MainSerialFlush();
             delay(1000);
+            CrashLogSave("NTU_loop");
             has2wifi.Loop(DataChanged);
+            CrashLogClear();
         }
     }
 }
@@ -279,28 +306,35 @@ void GhostLockTimerFunc(){
     RoundNeoUp(BLUE, YELLOW, map(gameTimerCnt,0,ghostOpenTime,0,NumPixels[ROUND]/2));
     if(gameTimerCnt > (ghostOpenTime))
     {
+        CrashLogSave("GL_recv");
         has2wifi.ReceiveMine();
         DataChanged();
         // Serial.println("strCurState:" + String(strCurState));
         if(strCurState != "activate"){
             Serial.println("debuff on");
             CancelTagProgress();
+            CrashLogClear();
         }
         else {
             Mp3PlayLargeFolder(1, VD1);
             Serial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
+            CrashLogSave("GL_snd");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(BLUE);
             GhostDoorOpen();
-            if(TaggerOverrideCheck()) return; // 연출 중 tagger 수신 시 activate로 덮어쓰지 않음
+            CrashLogSave("GL_ovr");
+            if(TaggerOverrideCheck()) { CrashLogClear(); return; }
+            CrashLogSave("GL_snd2");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
             AllNeoOn(YELLOW);
             SubSerialFlush();
             MainSerialFlush();
             delay(1000);
+            CrashLogSave("GL_loop");
             has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
+            CrashLogClear();
         }
     }
 }
