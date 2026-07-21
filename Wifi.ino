@@ -43,7 +43,9 @@ void DataChanged()
         else ApplyDeviceState(deviceState);
     }
     else if(deviceState == "github"){
+        esp_task_wdt_delete(NULL);
         ota.check();
+        esp_task_wdt_add(NULL);
     }
     else if(deviceState == "tagger"){
         ApplyDeviceState("tagger");
