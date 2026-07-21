@@ -42,10 +42,6 @@ void ReadyFunc(void);
 void GameSetting();
 void WaitFunc();
 void WifiIntervalLoop(unsigned long intervalValue);
-void CrashLogSave(const char* tag);
-void CrashLogClear();
-void CrashLogLoad();
-void CrashLogSendIfPending();
 unsigned long wifiInterval = 0;
 int wifiNum = 0;
 struct WIFISSID {

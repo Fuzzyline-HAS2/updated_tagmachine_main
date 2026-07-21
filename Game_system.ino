@@ -10,15 +10,11 @@ void DoorOpen(){
         Serial.println("DEBUFF OPEN");
     }
     else{
-        CrashLogSave("DO_ovr");
-        if(TaggerOverrideCheck()) { CrashLogClear(); return; }
-        CrashLogSave("DO_snd");
+        if(TaggerOverrideCheck()) return; // 전송 직전 tagger 수신 시 activate로 덮어쓰지 않음
         has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
         RoundNeoEffectDown(BLACK);
-        CrashLogSave("DO_loop");
         has2wifi.Loop(DataChanged); //LOCK -> ACTIVATE 바뀐것을 업데이트 받기 위함
-        CrashLogClear();
-        if(strCurState == "tagger") return;
+        if(strCurState == "tagger") return; // Loop에서 tagger 적용 시 노랑/도어잠금으로 덮어쓰지 않음
         AllNeoOn(YELLOW);
     }
     digitalWrite(RELAY_PIN, LOW);
