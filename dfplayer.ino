@@ -6,7 +6,7 @@ void Mp3_Setup(){
   Serial.println("DFRobot DFPlayer Mini Demo");
   Serial.println("Initializing DFPlayer ... (May take 3~5 seconds)");
   myDFPlayer.setTimeOut(1000);
-  if (!myDFPlayer.begin(MP3Serial)) {
+  if (!myDFPlayer.begin(MP3Serial, false)) {
     Serial.println("Unable to begin:");
     Serial.println("1.Please recheck the connection!");
     Serial.println("2.Please insert the SD card!");
