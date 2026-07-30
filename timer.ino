@@ -101,8 +101,8 @@ void PlayerLockTimerFunc(){
     RoundNeoToggle(GREEN,gameTimerCnt);
     LineNeoUp(GREEN, YELLOW, map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
     Serial.println(map(gameTimerCnt,0,playerLockTime,0,NumPixels[LINE]));
-    if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
-        Mp3PlayLargeFolder(1, VD11);
+    // if(gameTimerCnt == 1)  // [DFPlayer 비활성화] 3번마다 "도어잠금 효과음"
+    //     Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerLockTime))
     {
         has2wifi.ReceiveMine();
@@ -116,7 +116,7 @@ void PlayerLockTimerFunc(){
             Serial.println("debuff off");
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
             Serial.println("DOOR LOCK!");
-            Mp3PlayLargeFolder(1, VD4);
+            // Mp3PlayLargeFolder(1, VD4);  // [DFPlayer 비활성화]
             has2wifi.ReceiveMine();
             ReturnNormalState();
             RoundNeoEffect(GREEN);
@@ -133,8 +133,8 @@ void PlayerUnlockTimerFunc(){
     gameTimerCnt++;
     RoundNeoToggle(GREEN,gameTimerCnt);
     LineNeoDown(YELLOW, GREEN, map(gameTimerCnt,0,playerUnlockTime,0,NumPixels[LINE]));
-    if(gameTimerCnt == 1)                                                         // 3번마다 "도어잠금 효과음" 나오게 하기
-        Mp3PlayLargeFolder(1, VD11);
+    // if(gameTimerCnt == 1)  // [DFPlayer 비활성화] 3번마다 "도어잠금 효과음"
+    //     Mp3PlayLargeFolder(1, VD11);
     if(gameTimerCnt > (playerUnlockTime))
     {
         has2wifi.ReceiveMine();
@@ -146,7 +146,7 @@ void PlayerUnlockTimerFunc(){
         }
         else {
             Serial.println("DOOR UNLOCK!");
-            Mp3PlayLargeFolder(1, VD7);
+            // Mp3PlayLargeFolder(1, VD7);  // [DFPlayer 비활성화]
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
@@ -167,9 +167,9 @@ void TaggerUnlockTimerFunc(){
     RoundNeoToggle(PURPLE,gameTimerCnt);
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt,0,taggerUnlockTime,0,NumPixels[LINE]));
     // #6: NeoPixel show() 모두 끝낸 뒤 오디오(SoftwareSerial) 호출 → 인터럽트 충돌/데드락 회피
-    if(gameTimerCnt%3 == 1)                                                         // 3번마다 "술래 침입시도" 나오게 하기
-        if(gameTimerCnt < (taggerUnlockTime - 2))                                   // 마지막에는 효과음 안나오게 해서 짤리지 않게 하는 함수
-            Mp3PlayLargeFolder(1, VD10);
+    // if(gameTimerCnt%3 == 1)  // [DFPlayer 비활성화] 3번마다 "술래 침입시도"
+    //     if(gameTimerCnt < (taggerUnlockTime - 2))
+    //         Mp3PlayLargeFolder(1, VD10);
     if(gameTimerCnt > (taggerUnlockTime))
     {
         has2wifi.ReceiveMine();
@@ -180,10 +180,10 @@ void TaggerUnlockTimerFunc(){
             CancelTagProgress();
         }
         else {
-            Mp3PlayLargeFolder(1, VD1);
+            // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
             Serial.println("DOOR UNLOCK!");
             ReturnNormalState();
-            digitalWrite(RELAY_PIN, HIGH); 
+            digitalWrite(RELAY_PIN, HIGH);
             has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
             RoundNeoEffect(PURPLE);
             DoorOpen();
@@ -211,7 +211,7 @@ void GhostUnlockTimerFunc(){
             CancelTagProgress();
         }
         else{
-            Mp3PlayLargeFolder(1, VD1);
+            // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
             Serial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);
@@ -238,9 +238,9 @@ void NewbieTaggerUnlockTimerFunc(){
     RoundNeoToggle(PURPLE, gameTimerCnt);
     LineNeoDown(PURPLE, GREEN, map(gameTimerCnt, 0, taggerUnlockTime, 0, NumPixels[LINE]));
     // #6: NeoPixel show() 모두 끝낸 뒤 오디오(SoftwareSerial) 호출 → 인터럽트 충돌/데드락 회피
-    if(gameTimerCnt%3 == 1)
-        if(gameTimerCnt < (taggerUnlockTime - 2))
-            Mp3PlayLargeFolder(1, VD10);
+    // if(gameTimerCnt%3 == 1)  // [DFPlayer 비활성화]
+    //     if(gameTimerCnt < (taggerUnlockTime - 2))
+    //         Mp3PlayLargeFolder(1, VD10);
     if(gameTimerCnt > (taggerUnlockTime))
     {
         has2wifi.ReceiveMine();
@@ -250,7 +250,7 @@ void NewbieTaggerUnlockTimerFunc(){
             CancelTagProgress();
         }
         else {
-            Mp3PlayLargeFolder(1, VD1);
+            // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
             Serial.println("DOOR UNLOCK (Newbie)!");
             ReturnNormalState();
             ptrRfidMode = NewbieLogin;
@@ -287,7 +287,7 @@ void GhostLockTimerFunc(){
             CancelTagProgress();
         }
         else {
-            Mp3PlayLargeFolder(1, VD1);
+            // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
             Serial.println("GHOST OPEN");
             ReturnNormalState();
             digitalWrite(RELAY_PIN, HIGH);

@@ -103,7 +103,7 @@ void LoginTimerSelector(char role) {
       AllNeoOn(PURPLE);
       ReturnNormalState();
     } else if (role == 'T') {
-      Mp3PlayLargeFolder(1, VD1);
+      // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
       Serial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
 
@@ -136,7 +136,7 @@ void LoginTimerSelector(char role) {
       ptrRfidFail = GhostOpenFailUnlock;
       ptrRfidMode = WaitRfid;
     } else if (role == 'T') {
-      Mp3PlayLargeFolder(1, VD1);
+      // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
       Serial.println("Tagger Door Open");
       digitalWrite(RELAY_PIN, HIGH);
       has2wifi.Send((String)(const char *)my["device_name"], "device_state",
@@ -165,7 +165,7 @@ void NewbieTaggerFail() {
     Serial.println("debuff on");
     CancelTagProgress();
   } else {
-    Mp3PlayLargeFolder(1, VD6);
+    // Mp3PlayLargeFolder(1, VD6);  // [DFPlayer 비활성화]
     Serial.println("Unlock Fail Door Shut");
     NeoBlink(ROUND, RED, 2, 150);   // 5,500(5초 블로킹) -> 2,150(~0.6초): loop freeze 방지
     AllNeoOn(GREEN);
@@ -181,7 +181,7 @@ void LockFail() {
     Serial.println("debuff on");
     CancelTagProgress();
   } else {
-    Mp3PlayLargeFolder(1, VD1);
+    // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
     Serial.println("Lock Fail Door Open");
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char *)my["device_name"], "device_state",
@@ -200,7 +200,7 @@ void UnlockFail() {
     Serial.println("debuff on");
     CancelTagProgress();
   } else {
-    Mp3PlayLargeFolder(1, VD6);
+    // Mp3PlayLargeFolder(1, VD6);  // [DFPlayer 비활성화]
     Serial.println("Unlock Fail Door Shut");
     NeoBlink(ROUND, RED, 2, 150);   // 5,500(5초 블로킹) -> 2,150(~0.6초): loop freeze 방지
     AllNeoOn(GREEN);
@@ -216,7 +216,7 @@ void GhostOpenFailUnlock() {
   //     Serial.println("debuff on");
   // }
   // else{
-  Mp3PlayLargeFolder(1, VD6);
+  // Mp3PlayLargeFolder(1, VD6);  // [DFPlayer 비활성화]
   Serial.println("Ghost Door OpenFail");
   NeoBlink(ROUND, RED, 2, 150);   // 5,500(5초 블로킹) -> 2,150(~0.6초): loop freeze 방지
   AllNeoOn(YELLOW);
@@ -231,7 +231,7 @@ void GhostOpenFailLock() {
   //     Serial.println("debuff on");
   // }
   // else{
-  Mp3PlayLargeFolder(1, VD6);
+  // Mp3PlayLargeFolder(1, VD6);  // [DFPlayer 비활성화]
   Serial.println("Unlock Fail Door Shut");
   NeoBlink(ROUND, RED, 2, 150);   // 5,500(5초 블로킹) -> 2,150(~0.6초): loop freeze 방지
   AllNeoOn(GREEN);

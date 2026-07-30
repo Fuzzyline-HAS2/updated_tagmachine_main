@@ -31,7 +31,7 @@ void GhostDoorOpen(){
 void NewbiePlayerOpen() {
     ReturnNormalState();
     ptrRfidMode = NewbieLogin;
-    Mp3PlayLargeFolder(1, VD1);
+    // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(GREEN);
@@ -48,7 +48,7 @@ void NewbiePlayerOpen() {
 void NewbieGhostOpen() {
     ReturnNormalState();
     ptrRfidMode = NewbieLogin;
-    Mp3PlayLargeFolder(1, VD1);
+    // Mp3PlayLargeFolder(1, VD1);  // [DFPlayer 비활성화]
     digitalWrite(RELAY_PIN, HIGH);
     has2wifi.Send((String)(const char*)my["device_name"], "device_state", "open");
     RoundNeoEffect(BLUE);

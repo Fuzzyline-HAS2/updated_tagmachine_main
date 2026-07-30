@@ -11,7 +11,7 @@
 
 #define FIRMWARE_VER 5
 #include "updated_tagmachine_main.h"
-#include <esp_task_wdt.h>
+// #include <esp_task_wdt.h>  // [WDT 비활성화]
 
 void setup() {
     Serial.begin(115200);
@@ -19,7 +19,7 @@ void setup() {
     toMainSerial.begin(9600, SERIAL_8N1, MAIN_BEETLE_RX_PIN, MAIN_BEETLE_TX_PIN);
     NeopixelInit();
     TimerInit();
-    Mp3_Setup();
+    // Mp3_Setup();  // [DFPlayer 비활성화]
     pinMode(RELAY_PIN, OUTPUT);
 //  has2wifi.Setup("city");
     // badland 모드: 라이브러리가 주변 badland_* 중 RSSI 센 AP로 자동 연결
@@ -61,16 +61,17 @@ void setup() {
         ptrCurrentMode = WaitFunc;
         Serial.println("[WARN] ptrCurrentMode was nullptr → set to WaitFunc");
     }
-    esp_task_wdt_deinit();
-    {
-        esp_task_wdt_config_t wdt_cfg = { .timeout_ms = 12000, .idle_core_mask = 0, .trigger_panic = true };
-        esp_task_wdt_init(&wdt_cfg);
-    }
-    esp_task_wdt_add(NULL);
-    Serial.println("[WDT] 12s watchdog started");
+    // [WDT 비활성화] DFPlayer 원인 분리 테스트용 주석처리
+    // esp_task_wdt_deinit();
+    // {
+    //     esp_task_wdt_config_t wdt_cfg = { .timeout_ms = 12000, .idle_core_mask = 0, .trigger_panic = true };
+    //     esp_task_wdt_init(&wdt_cfg);
+    // }
+    // esp_task_wdt_add(NULL);
+    // Serial.println("[WDT] 12s watchdog started");
 }
 void loop() {
-    esp_task_wdt_reset();
+    // esp_task_wdt_reset();  // [WDT 비활성화]
     if (ptrCurrentMode != nullptr) ptrCurrentMode();
     TimerRun();
     TelnetRun();

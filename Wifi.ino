@@ -43,9 +43,9 @@ void DataChanged()
         else ApplyDeviceState(deviceState);
     }
     else if(deviceState == "github"){
-        esp_task_wdt_delete(NULL);
+        // esp_task_wdt_delete(NULL);  // [WDT 비활성화]
         ota.check();
-        esp_task_wdt_add(NULL);
+        // esp_task_wdt_add(NULL);  // [WDT 비활성화]
     }
     else if(deviceState == "tagger"){
         ApplyDeviceState("tagger");

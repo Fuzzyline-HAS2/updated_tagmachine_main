@@ -112,11 +112,13 @@ int debuffTimerId;
 
 int gameTimerCnt = 0;
 bool SubSerialTimerStart = false;
-//****************************************DFPlayer
-//SETUP****************************************************************
-SoftwareSerial MP3Serial(DFPLAYER_RX_PIN, DFPLAYER_TX_PIN);
-DFRobotDFPlayerMini myDFPlayer;
-void Mp3_Setup();
+// [DFPlayer 비활성화] DFPlayer 원인 분리 테스트용 주석처리
+// //****************************************DFPlayer SETUP
+// SoftwareSerial MP3Serial(DFPLAYER_RX_PIN, DFPLAYER_TX_PIN);
+// DFRobotDFPlayerMini myDFPlayer;
+// void Mp3_Setup();
+// enum { VD1 = 1, VD2, VD3, VD4, VD5, VD6, VD7, VD8, VD9, VD10, VD11 };
+// bool send_mp3_err = false;
 enum { VD1 = 1, VD2, VD3, VD4, VD5, VD6, VD7, VD8, VD9, VD10, VD11 };
 bool send_mp3_err = false;
 //****************************************Neopixel
