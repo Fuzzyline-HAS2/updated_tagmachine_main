@@ -8,8 +8,8 @@ void TimerInit(){
     // DebuffTimer.deleteTimer(debuffTimerId);
 }
 void TimerRun(){
+    GameTimer.run();    // 게이지 틱을 WiFi HTTP 앞에 둬서 서버 RTT가 틱 간격에 실리지 않게 함
     WifiTimer.run();
-    GameTimer.run();
     SubSerialTimer.run();
     DebuffTimer.run();
     ApplyPendingDeviceState();

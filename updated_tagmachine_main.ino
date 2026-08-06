@@ -24,6 +24,7 @@ void setup() {
 //  has2wifi.Setup("city");
     // badland 모드: 라이브러리가 주변 badland_* 중 RSSI 센 AP로 자동 연결
     has2wifi.Setup("badland");
+    WiFi.setSleep(false);   // 모뎀 슬립 해제: HTTP 응답이 DTIM까지 대기하며 생기는 지연 편차 제거
     // 현재 펌웨어 버전을 서버 device.esp_version 컬럼에 보고 (부팅 시 1회)
     has2wifi.Send((String)(const char*)my["device_name"], "esp_version", String(FIRMWARE_VER));
     TelnetInit();
