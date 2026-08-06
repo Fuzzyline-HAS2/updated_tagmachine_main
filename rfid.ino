@@ -11,7 +11,6 @@ void CheckingPlayers(String tagUser) // 어떤 카드가 들어왔는지 확인�
     if (loginDone == false) // 로그인할때만 체크함
     {
       has2wifi.Receive(tagUser); // 2. 술래인지, 플레이어인지 구분
-      has2wifi.Send((String)(const char *)my["device_name"], "tagged_player", tagUser);
       if ((String)(const char *)tag["role"] ==
           "player") { // 3. 태그한 사용자가 플레이어고
         Serial.println("Player Tagged");
