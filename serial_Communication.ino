@@ -20,8 +20,8 @@ void CommnunicationBeetle(){
     else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상이면 태그로 처리)
       mainRfidTagged = false;
       Serial.println("Sub Beetle Tag: " + command.substring(0,4));
-      SendBeetleTag(BEETLE_SUB, "sub_beetle_player", command.substring(0,4));
       CheckingPlayers(command.substring(0,4));
+      SendBeetleTag(BEETLE_SUB, "sub_beetle_player", command.substring(0,4));   // 기록용 전송이라 네오픽셀 반응 뒤로 (태그->LED 지연에서 제외)
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);
         SubSerialTimerStart = false;
@@ -81,8 +81,8 @@ void CommnunicationMainBeetle(){
     else if(command.length() >= 4){   // NFC 태그 데이터 (4자 이상)
       mainRfidTagged = true;
       Serial.println("TAGGGED (Main Beetle)");
-      SendBeetleTag(BEETLE_MAIN, "main_beetle_player", command.substring(0, 4));
       CheckingPlayers(command.substring(0, 4));
+      SendBeetleTag(BEETLE_MAIN, "main_beetle_player", command.substring(0, 4));  // 기록용 전송이라 네오픽셀 반응 뒤로 (태그->LED 지연에서 제외)
       if(SubSerialTimerStart == true){
         SubSerialTimer.deleteTimer(subSerialTimerId);
         SubSerialTimerStart = false;
