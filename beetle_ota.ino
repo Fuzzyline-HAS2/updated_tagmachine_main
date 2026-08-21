@@ -2,13 +2,13 @@
 // beetle_ota.ino
 // ---------------------------------------------------------------------------------
 // Main/Sub Beetle(ESP32-C3)은 자체 WiFi가 없어 GitHub에서 직접 OTA를 받을 수 없다.
-// 그래서 TTGO가 대신 GitHub Release(HAS1_tagmachine_sub 태그)에서 update.bin을
+// 그래서 TTGO가 대신 GitHub Release(tagmachine_sub 태그)에서 update.bin을
 // 다운로드하면서 HMAC-SHA256 서명을 검증하고(SecureOTA.cpp의 _execOTA와 동일한 신뢰
 // 모델), 검증에 성공한 바이트만 UART로 그대로 릴레이한다. Beetle은 받은 바이트를
 // Update.h(자체 OTA 파티션)에 흘려 넣기만 하면 되므로, Beetle 쪽에는 서명 검증 로직이
 // 없다(물리적으로 기기 내부에 유선 연결된 사설 링크이기 때문에 TTGO의 검증을 신뢰).
 //
-// 프레임 포맷은 HAS1_tagmachine_sub/ota.ino와 반드시 동기화해서 유지할 것.
+// 프레임 포맷은 tagmachine_sub/ota.ino와 반드시 동기화해서 유지할 것.
 //   [0xA5][0x5A][TYPE:1][LEN_LO][LEN_HI][PAYLOAD:LEN][CRC16_LO][CRC16_HI]
 //   CRC16(CCITT-FALSE, init 0xFFFF)은 TYPE+LEN+PAYLOAD 구간에 대해 계산한다.
 // =================================================================================
@@ -27,7 +27,7 @@
 #define BEETLE_OTA_TYPE_ACK   0x10
 #define BEETLE_OTA_TYPE_NAK   0x11
 
-#define BEETLE_OTA_MAX_PAYLOAD 512        // HAS1_tagmachine_sub/ota.ino와 반드시 동일해야 함
+#define BEETLE_OTA_MAX_PAYLOAD 512        // tagmachine_sub/ota.ino와 반드시 동일해야 함
 #define BEETLE_OTA_FRAME_TIMEOUT_MS 5000  // 프레임 응답을 기다리는 최대 시간
 #define BEETLE_OTA_MAX_RETRY 3            // 프레임 하나당 재전송 허용 횟수
 
