@@ -49,7 +49,7 @@
 - `ApplyDeviceState()`를 추가했다.
 - 뉴비모드에서 `ActivateFunc()`가 실행되면 서버에 `device_state=lock`을 다시 보내고, 로컬 상태도 즉시 `lock`으로 맞추도록 했다.
 
-### `updated_tagmachine_main.h`
+### `HAS1_tagmachine_main.h`
 
 - 새 함수 선언을 추가했다.
   - `ApplyDeviceState()`
@@ -88,7 +88,7 @@ undefined reference to `CancelTagProgress()'
 
 ### 수정
 
-`timer.ino`에 정확한 이름으로 함수를 정의하고, `updated_tagmachine_main.h`에 선언을 추가했다.
+`timer.ino`에 정확한 이름으로 함수를 정의하고, `HAS1_tagmachine_main.h`에 선언을 추가했다.
 
 ```cpp
 void CancelTagProgress();

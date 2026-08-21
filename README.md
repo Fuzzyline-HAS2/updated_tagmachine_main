@@ -1,4 +1,4 @@
-# updated_tagmachine_main
+# HAS1_tagmachine_main
 
 TTGO ESP32 기반 태그머신 메인 코드입니다.
 

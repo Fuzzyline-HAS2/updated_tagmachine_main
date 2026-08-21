@@ -9,22 +9,31 @@
  *
  */
 
-#define FIRMWARE_VER 7
+#define FIRMWARE_VER 1
 #include "updated_tagmachine_main.h"
 // #include <esp_task_wdt.h>  // [WDT 비활성화]
 
 void setup() {
     Serial.begin(115200);
-    toSubSerial.begin(9600, SERIAL_8N1, SUB_BEETLE_RX_PIN, SUB_BEETLE_TX_PIN);
-    toMainSerial.begin(9600, SERIAL_8N1, MAIN_BEETLE_RX_PIN, MAIN_BEETLE_TX_PIN);
+    // OTA 프레임(최대 512바이트 payload+7바이트 오버헤드)이 몰려도 유실 없이 받도록 여유 있게 확보.
+    toSubSerial.setRxBufferSize(1024);
+    toMainSerial.setRxBufferSize(1024);
+    // 9600은 태그 문자열 정도는 충분하지만 OTA로 수백 KB 펌웨어를 릴레이하기엔 너무 느려(수십 분)
+    // Beetle(HAS1_tagmachine_sub)과 함께 상향했다 — 양쪽 보레이트는 반드시 같아야 한다.
+    toSubSerial.begin(115200, SERIAL_8N1, SUB_BEETLE_RX_PIN, SUB_BEETLE_TX_PIN);
+    toMainSerial.begin(115200, SERIAL_8N1, MAIN_BEETLE_RX_PIN, MAIN_BEETLE_TX_PIN);
     NeopixelInit();
     TimerInit();
     // Mp3_Setup();  // [DFPlayer 비활성화]
     pinMode(RELAY_PIN, OUTPUT);
+    // HAS2_Wifi 내부 로그("Try WiFi:", "WiFi connected", SSID/RSSI/IP 등)는 기본값이
+    // HAS2_Wifi.cpp 안에서 한 번도 begin()되지 않은 별도의 raw Serial(UART0) 객체라
+    // 아무 데도 안 찍힌다 — 이미 초기화된(+Telnet 미러링되는) DebugSerial로 돌려준다.
+    has2wifi.SetDebugPrint(&Serial);
 //  has2wifi.Setup("city");
-    // badland 모드: 라이브러리가 주변 badland_* 중 RSSI 센 AP로 자동 연결
+    // badland 테마: 라이브러리가 주변 badland_* 후보(badland_ruins/auto/shoot) 중
+    // RSSI가 가장 센 AP로 자동 연결하고, 서버 호스트도 badland용(172.30.1.43)으로 맞춘다.
     has2wifi.Setup("badland");
-    WiFi.setSleep(false);   // 모뎀 슬립 해제: HTTP 응답이 DTIM까지 대기하며 생기는 지연 편차 제거
     // 현재 펌웨어 버전을 서버 device.esp_version 컬럼에 보고 (부팅 시 1회)
     has2wifi.Send((String)(const char*)my["device_name"], "esp_version", String(FIRMWARE_VER));
     TelnetInit();

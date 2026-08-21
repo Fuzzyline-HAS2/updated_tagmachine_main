@@ -32,6 +32,15 @@ SecureOTA ota(
   HMAC_SECRET,
   FIRMWARE_VER
 );
+
+// Main/Sub Beetle(ESP32-C3)은 자체 WiFi가 없어 GitHub에서 직접 OTA를 받을 수 없으므로,
+// TTGO가 대신 이 URL들에서 다운로드 + HMAC 서명 검증까지 마친 뒤 UART로 릴레이해준다
+// (beetle_ota.ino). Beetle 쪽은 별도 저장소(github.com/Fuzzyline-HAS2/tagmachine_sub)로
+// 분리되어 있고, 배포는 그 저장소의 scripts/deploy.py가 main 브랜치에 raw 커밋하는 방식으로 담당.
+const char* BEETLE_FIRMWARE_URL = "https://raw.githubusercontent.com/Fuzzyline-HAS2/tagmachine_sub/main/update.bin";
+const char* BEETLE_VERSION_URL  = "https://raw.githubusercontent.com/Fuzzyline-HAS2/tagmachine_sub/main/version.txt";
+const char* BEETLE_SIG_URL      = "https://raw.githubusercontent.com/Fuzzyline-HAS2/tagmachine_sub/main/update.sig";
+void CheckAndUpdateBeetles();
 void DataChanged();
 void ApplyDeviceState(String deviceState);
 void QueuePendingDeviceState(String deviceState);
@@ -187,6 +196,4 @@ void WaitRfid(char role);
 
 bool loginDone = false; // 처음 로그인 하면 true로 바뀌어서 wifi 안쓰게하기위함
 char loginRole = 'P'; // 처음 로그인 하고 나면 role 저장용.
-String strLastTagUser = "";
-int tagMismatchCount = 0; // 진행 중 연속 카드 불일치 횟수(시리얼 손상 오판 방지용)
 #endif

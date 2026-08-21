@@ -1,6 +1,6 @@
 void DataChanged()
 {
-  static StaticJsonDocument<1000> cur;  //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
+  static StaticJsonDocument<2048> cur;  //저장되어 있는 cur과 읽어온 my 값과 비교후 실행
   if (my["brightness"].as<int>() != cur["brightness"].as<int>()) {
     UpdateBrightness();
   }
@@ -35,7 +35,15 @@ void DataChanged()
         digitalWrite(RELAY_PIN, HIGH);
         delay(1000);
         digitalWrite(RELAY_PIN, LOW);
-        has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+        // 뉴비모드는 상시 잠금이 원칙이라 open을 activate로 승격시키면 안 된다.
+        // NewbieTaggerUnlockTimerFunc/NewbiePlayerOpen/NewbieGhostOpen이 "open" 전송 직후
+        // 곧바로 "lock"을 다시 보내긴 하지만, 그 사이에 이 지점이 "open"을 관측하면(백그라운드
+        // WifiTimer 폴링 등) 아래처럼 무조건 activate로 덮어써버려 그 lock 재전송을 무력화한다.
+        if ((String)(const char*)my["mode"] == "easy") {
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "lock");
+        } else {
+            has2wifi.Send((String)(const char*)my["device_name"], "device_state", "activate");
+        }
     }
     else if(deviceState == "activate"){
         strCurState = deviceState;
@@ -44,6 +52,10 @@ void DataChanged()
     }
     else if(deviceState == "github"){
         // esp_task_wdt_delete(NULL);  // [WDT 비활성화]
+        // Beetle 점검을 먼저 한다 — ota.check()가 TTGO 자체 업데이트를 실제로 수행하면
+        // 성공 콜백에서 곧장 ESP.restart()로 이어져 아래 줄까지 실행되지 않기 때문에,
+        // 순서를 반대로 하면 Beetle 업데이트가 통째로 스킵될 수 있다.
+        CheckAndUpdateBeetles();
         ota.check();
         // esp_task_wdt_add(NULL);  // [WDT 비활성화]
     }

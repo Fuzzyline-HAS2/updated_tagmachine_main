@@ -10,7 +10,7 @@ void CheckingPlayers(String tagUser) // 어떤 카드가 들어왔는지 확인�
   } else {
     if (loginDone == false) // 로그인할때만 체크함
     {
-      has2wifi.Receive(tagUser); // 2. 술래인지, 플레이어인지 구분
+      has2wifi.Receive(tagUser); // 2. 술래인지, 플레이어인지 구분 (네오픽셀 연출 시작 전 반드시 필요한 유일한 통신)
       if ((String)(const char *)tag["role"] ==
           "player") { // 3. 태그한 사용자가 플레이어고
         Serial.println("Player Tagged");
@@ -29,25 +29,14 @@ void CheckingPlayers(String tagUser) // 어떤 카드가 들어왔는지 확인�
       } else {
         Serial.println("Wrong TAG");
       }
+      // 응답값을 쓰지 않는 리포트라 SendAsync로 즉시 전송하되 게이지 애니메이션은 막지 않음
+      has2wifi.SendAsync((String)(const char *)my["device_name"], "tagged_player", tagUser);
     } else {
-      if (strLastTagUser == tagUser) { // Login 진행한 태그와 같은지 확인
-        tagMismatchCount = 0;          // 정상 읽기 → 불일치 카운터 리셋
-        Serial.println("LoginRole: " + String(loginRole));
-        if (ptrRfidMode != nullptr) ptrRfidMode(loginRole);
-      } else {
-        // 진행 중 단발성 불일치는 시리얼 손상(예: G1P4->1P4)일 가능성이 높으므로 무시.
-        // 3회 연속 불일치일 때만 실제 다른 카드로 보고 fail 처리.
-        tagMismatchCount++;
-        if (tagMismatchCount >= 3) {
-          Serial.println("Different TAG deteced (x3)");
-          tagMismatchCount = 0;
-          if (ptrRfidFail != nullptr) ptrRfidFail();
-        } else {
-          Serial.println("Mismatch ignored (transient)");
-        }
-      }
+      // 로그인 이후에는 태그 내용이 시리얼 손상(예: G1P4->1P4)으로 달라져도
+      // 실패 처리하지 않고 항상 로그인 당시의 role로 정상 진행(게이지 유지)한다.
+      Serial.println("LoginRole: " + String(loginRole));
+      if (ptrRfidMode != nullptr) ptrRfidMode(loginRole);
     }
-    strLastTagUser = tagUser;
   }
 }
 
@@ -61,7 +50,6 @@ void Login(char role) {
   gameTimerId = GameTimer.setInterval(1000, GameTimerFunc);
   WifiTimer.deleteTimer(wifiTimerId);
   gameTimerCnt = 0;
-  tagMismatchCount = 0;   // 새 로그인 시작 시 불일치 카운터 초기화
   if (mainRfidTagged == true) {
     ptrRfidMain = CommnunicationMainBeetle;
     ptrRfidSub = WaitFunc;
